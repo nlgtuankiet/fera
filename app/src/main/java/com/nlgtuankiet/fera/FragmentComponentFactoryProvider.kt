@@ -1,7 +1,7 @@
 package com.nlgtuankiet.fera
 
 import androidx.fragment.app.Fragment
-import com.nlgtuankiet.fera.dagger.CoreComponent
+import com.nlgtuankiet.fera.core.CoreComponent
 
 interface FragmentComponentFactoryProvider {
   fun get(): FragmentComponent.Factory<*>

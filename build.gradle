@@ -1,0 +1,39 @@
+buildscript {
+  apply from: "gradle/config.gradle"
+  repositories {
+    google()
+    jcenter()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+  }
+  dependencies {
+    classpath "com.android.tools.build:gradle:4.0.0"
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.3.72"
+
+    // TODO refactor
+    classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.0-rc01"
+  }
+}
+
+allprojects {
+  repositories {
+    google()
+    jcenter()
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
+  }
+
+  configurations.all {
+    resolutionStrategy {
+      eachDependency { detail ->
+        if (detail.requested.group == "org.bytedeco"
+            && detail.requested.name != "ffmpeg-platform"
+            && !detail.requested.name.contains("javacpp")
+        ) {
+          detail.useVersion "4.2.2-1.5.3"
+        }
+      }
+    }
+  }
+
+}
+
+

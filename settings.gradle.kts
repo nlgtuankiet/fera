@@ -1,3 +1,5 @@
+include(":domain")
+include(":core")
 include(":home")
 include(":codegen")
 include(":app")

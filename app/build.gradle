@@ -1,0 +1,74 @@
+apply plugin: "com.android.application"
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
+apply plugin: "androidx.navigation.safeargs.kotlin"
+kapt {
+  correctErrorTypes true
+}
+
+android {
+  compileSdkVersion 29
+  buildToolsVersion "29.0.3"
+  testOptions {
+    unitTests.all {
+      testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen { false }
+        showStandardStreams = true
+        exceptionFormat = 'full'
+      }
+    }
+  }
+  defaultConfig {
+    applicationId "com.nlgtuankiet.fera"
+    minSdkVersion 14
+    targetSdkVersion 28
+    versionCode 1
+    versionName "1.0"
+
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  buildTypes {
+    release {
+      minifyEnabled true
+      proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    }
+  }
+  android
+
+  sourceSets {
+    androidTest {
+      java.srcDirs += ['src/test/java/com/nlgtuankiet/fera/share']
+    }
+  }
+  dynamicFeatures += ":home"
+}
+
+dependencies {
+  implementation deps.moshi
+  kapt deps.moshiProcessor
+  implementation deps.dagger
+  kapt deps.daggerProcessor
+  api deps.exec
+  api deps.execKiller
+  implementation deps.ffmpeg
+  api deps.kotlinStdLib
+  api deps.kotlinCoroutine
+  api deps.navigation
+  api deps.navigationDynamic
+
+  api deps.daggerAndroid
+  api(project(":domain"))
+  api(project(":core"))
+  implementation("androidx.core:core-ktx:1.3.0")
+  implementation("androidx.multidex:multidex:2.0.1")
+  api deps.appCompat
+  api deps.fragment
+  api deps.constraintLayout
+  api deps.inject
+  testImplementation("junit:junit:4.12")
+  androidTestImplementation("androidx.test.ext:junit:1.1.1")
+  androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+}
+

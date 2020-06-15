@@ -24,7 +24,7 @@ import javax.inject.Singleton
   ]
 )
 @Singleton
-interface AppComponent: CoreComponent {
+interface AppComponent: com.nlgtuankiet.fera.core.CoreComponent {
   fun inject(app: FeraApplication)
   fun inject(activity: MainActivity)
 

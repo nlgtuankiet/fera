@@ -2,20 +2,9 @@ package com.nlgtuankiet.fera
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.navigation.findNavController
-import com.nlgtuankiet.fera.dagger.DaggerAppComponent
 import com.nlgtuankiet.fera.data.CommandLineFFmpegGateway
-import com.nlgtuankiet.fera.data.ffmpeg.runCommand
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import dagger.android.AndroidInjector
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.bytedeco.ffmpeg.ffprobe
-import org.bytedeco.javacpp.Loader
-import java.lang.Exception
-import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Provider
 

@@ -108,7 +108,7 @@ fun genCodec() {
   buildString {
     appendln(
       """
-      package com.nlgtuankiet.fera.domain.entity
+      package com.nlgtuankiet.fera.domain.domain.entity
       
       inline class CodecCode(val value: String)
 

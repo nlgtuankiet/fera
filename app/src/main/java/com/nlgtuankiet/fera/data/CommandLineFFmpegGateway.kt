@@ -5,8 +5,8 @@ import com.nlgtuankiet.fera.dagger.FFprobePath
 import com.nlgtuankiet.fera.data.ffmpeg.model.FFprobeFormatOutput
 import com.nlgtuankiet.fera.data.ffmpeg.runCommand
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
-import com.nlgtuankiet.fera.domain.entity.Stream
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
+import com.nlgtuankiet.fera.domain.entity.Stream
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject

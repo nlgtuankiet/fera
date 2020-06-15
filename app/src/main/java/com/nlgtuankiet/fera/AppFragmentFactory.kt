@@ -3,9 +3,8 @@ package com.nlgtuankiet.fera
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.nlgtuankiet.fera.dagger.coreComponent
+import com.nlgtuankiet.fera.core.coreComponent
 import javax.inject.Inject
-import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
