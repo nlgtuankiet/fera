@@ -1,4 +1,4 @@
-package com.nlgtuankiet.fera
+package com.nlgtuankiet.fera.core
 
 import androidx.fragment.app.Fragment
 import com.nlgtuankiet.fera.core.CoreComponent

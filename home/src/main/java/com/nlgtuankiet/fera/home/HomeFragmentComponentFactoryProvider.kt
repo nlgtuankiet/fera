@@ -2,9 +2,9 @@ package com.nlgtuankiet.fera.home
 
 import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
-import com.nlgtuankiet.fera.FragmentComponent
-import com.nlgtuankiet.fera.FragmentComponentFactoryProvider
 import com.nlgtuankiet.fera.core.CoreComponent
+import com.nlgtuankiet.fera.core.FragmentComponent
+import com.nlgtuankiet.fera.core.FragmentComponentFactoryProvider
 import dagger.Component
 import javax.inject.Singleton
 

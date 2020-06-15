@@ -5,6 +5,7 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 kapt {
   correctErrorTypes true
 }
+def production = hasProperty("production")
 
 android {
   compileSdkVersion 29
@@ -35,14 +36,15 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
-  android
 
   sourceSets {
     androidTest {
       java.srcDirs += ['src/test/java/com/nlgtuankiet/fera/share']
     }
   }
-  dynamicFeatures += ":home"
+  if (!production) {
+    dynamicFeatures += ":home"
+  }
 }
 
 dependencies {
@@ -61,6 +63,9 @@ dependencies {
   api deps.daggerAndroid
   api(project(":domain"))
   api(project(":core"))
+  if (production) {
+    api(project(":home"))
+  }
   implementation("androidx.core:core-ktx:1.3.0")
   implementation("androidx.multidex:multidex:2.0.1")
   api deps.appCompat
