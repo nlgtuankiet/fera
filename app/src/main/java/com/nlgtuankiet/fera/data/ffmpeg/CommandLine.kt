@@ -10,6 +10,7 @@ import kotlin.coroutines.resumeWithException
 
 // TODO improve .start on a thread pool
 // TODO cancelation not working!
+// TODO enable redirectError cause redirectOutput not working
 suspend fun runCommand(
   command: String,
   onProcess: (String) -> Unit
@@ -30,13 +31,13 @@ suspend fun runCommand(
       }
     )
 
-    .redirectError(
-      object : LogOutputStream() {
-        override fun processLine(line: String) {
-          error.appendln(line)
-        }
-      }
-    )
+//    .redirectError(
+//      object : LogOutputStream() {
+//        override fun processLine(line: String) {
+//          error.appendln(line)
+//        }
+//      }
+//    )
     .start()
 
   continuation.invokeOnCancellation {
