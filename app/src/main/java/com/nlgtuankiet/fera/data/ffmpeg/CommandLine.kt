@@ -9,6 +9,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 // TODO improve .start on a thread pool
+// TODO cancelation not working!
 suspend fun runCommand(
   command: String,
   onProcess: (String) -> Unit
