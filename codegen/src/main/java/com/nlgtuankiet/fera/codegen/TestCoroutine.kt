@@ -1,15 +1,31 @@
-package com.nlgtuankiet.fera.data.ffmpeg
+package com.nlgtuankiet.fera.codegen
 
-import kotlinx.coroutines.suspendCancellableCoroutine
+import kotlinx.coroutines.*
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import org.zeroturnaround.exec.stream.LogOutputStream
 import org.zeroturnaround.process.Processes
+import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
+import kotlin.random.Random
+
+
+suspend fun testCoroutine() = coroutineScope {
+  val job  = launch {
+    runCommand("ffmpeg -y -i http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4 a.mp3") {
+      println(it)
+    }
+  }
+  delay(10000)
+  println("cancel")
+  job.cancel()
+  delay(3000)
+  println("after delay")
+}
 
 // TODO improve .start on a thread pool
-// TODO cancelation not working! (on android only)
+// TODO cancelation not working!
 // TODO enable redirectError cause redirectOutput not working
 suspend fun runCommand(
   command: String,
@@ -26,12 +42,11 @@ suspend fun runCommand(
     .redirectOutput(
       object : LogOutputStream() {
         override fun processLine(line: String) {
-          if (continuation.isActive) {
-            onProcess.invoke(line)
-          }
+          onProcess.invoke(line)
         }
       }
     )
+
 //    .redirectError(
 //      object : LogOutputStream() {
 //        override fun processLine(line: String) {

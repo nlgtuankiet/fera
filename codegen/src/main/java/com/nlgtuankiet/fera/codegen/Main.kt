@@ -1,10 +1,17 @@
 package com.nlgtuankiet.fera.codegen
 
+import kotlinx.coroutines.*
 import org.zeroturnaround.exec.ProcessExecutor
+import org.zeroturnaround.exec.ProcessResult
+import org.zeroturnaround.exec.stream.LogOutputStream
+import org.zeroturnaround.process.Processes
 import java.io.File
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.random.Random
 
-fun main(args: Array<String>) {
-  genCodec()
+suspend fun main(args: Array<String>) {
+  testCoroutine()
 }
 
 inline class CodecCode(val value: String)

@@ -28,8 +28,8 @@ class CommandLineFFmpegGateway @Inject constructor(
     get() = ffprobePathProvider.get()
 
   // for debug only
-  fun executeCommand(command: String) = runBlocking {
-    runCommand("$ffprobePath $command") {
+  suspend fun executeCommand(command: String) {
+    runCommand("$ffmpegPath $command") {
       println(it)
     }
   }
