@@ -1,5 +1,6 @@
 package com.nlgtuankiet.fera.data.ffmpeg
 
+import com.nlgtuankiet.fera.domain.Log
 import kotlinx.coroutines.suspendCancellableCoroutine
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
@@ -9,13 +10,12 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 // TODO improve .start on a thread pool
-// TODO cancelation not working! (on android only)
 // TODO enable redirectError cause redirectOutput not working
 suspend fun runCommand(
   command: String,
   onProcess: (String) -> Unit
 ): Unit = suspendCancellableCoroutine { continuation ->
-  println("command: $command")
+  Log("start command: $command")
   val error = StringBuilder()
   val args = command.splitToSequence(" ")
     .map { it.trim() }
@@ -42,7 +42,7 @@ suspend fun runCommand(
     .start()
 
   continuation.invokeOnCancellation {
-    println("got cancel")
+    Log("cancel command: $command")
     if (!process.future.isDone) {
       // TODO interrupt?
       process.future.cancel(true)
