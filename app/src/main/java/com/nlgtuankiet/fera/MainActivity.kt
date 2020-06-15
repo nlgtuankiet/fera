@@ -24,10 +24,15 @@ class MainActivity : AppCompatActivity() {
   @Inject
   lateinit var commandLineFFmpegGateway: CommandLineFFmpegGateway
 
+  @Inject
+  lateinit var fragmentFactory: AppFragmentFactory
+
   override fun onCreate(savedInstanceState: Bundle?) {
+    DaggerAppComponent.create().inject(this)
+    supportFragmentManager.fragmentFactory = fragmentFactory
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    DaggerAppComponent.create().inject(this)
+
     Executors.newFixedThreadPool(1).execute {
       runBlocking(Dispatchers.IO) {
         try {

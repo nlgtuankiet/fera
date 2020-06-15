@@ -7,6 +7,7 @@ plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("kapt")
+  id("androidx.navigation.safeargs.kotlin")
 }
 
 tasks.withType(Test::class.java) {
@@ -23,6 +24,7 @@ android {
   compileSdkVersion(29)
   buildToolsVersion = "29.0.3"
   defaultConfig {
+    multiDexEnabled = true
     applicationId = "com.nlgtuankiet.fera"
     minSdkVersion(14)
     targetSdkVersion(28)
@@ -47,16 +49,21 @@ android {
       )
     }
   }
+  dynamicFeatures = mutableSetOf(":home")
 }
 
 dependencies {
+  implementation("androidx.navigation:navigation-fragment-ktx:2.1.0")
+  implementation("androidx.navigation:navigation-ui-ktx:2.1.0")
   moshi()
   dagger()
   exec()
   ffmpeg()
   kotlin()
+  navigation()
 
   implementation("androidx.core:core-ktx:1.3.0")
+  implementation("androidx.multidex:multidex:2.0.1")
   implementation("androidx.appcompat:appcompat:1.1.0")
   implementation("androidx.constraintlayout:constraintlayout:1.1.3")
   testImplementation("junit:junit:4.12")

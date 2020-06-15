@@ -14,6 +14,9 @@ fun DependencyHandler.kaptTest(dependencyNotation: Any): Dependency? =
 fun DependencyHandler.kaptAndroidTest(dependencyNotation: Any): Dependency? =
   add("kaptAndroidTest", dependencyNotation)
 
+fun DependencyHandler.androidTestImplementation(dependencyNotation: Any): Dependency? =
+  add("androidTestImplementation", dependencyNotation)
+
 fun DependencyHandler.moshi() {
   implementation("com.squareup.moshi:moshi-kotlin:1.9.3")
   kapt("com.squareup.moshi:moshi-kotlin-codegen:1.9.3")
@@ -44,5 +47,13 @@ fun DependencyHandler.ffmpeg() {
 fun DependencyHandler.kotlin() {
   implementation("org.jetbrains.kotlin:kotlin-stdlib:1.3.72")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7")
+}
+
+fun DependencyHandler.navigation() {
+  val varsion = "2.3.0-rc01"
+  implementation("androidx.navigation:navigation-fragment-ktx:$varsion")
+  implementation("androidx.navigation:navigation-ui-ktx:$varsion")
+  implementation("androidx.navigation:navigation-dynamic-features-fragment:$varsion")
+  androidTestImplementation("androidx.navigation:navigation-testing:$varsion")
 }
 
