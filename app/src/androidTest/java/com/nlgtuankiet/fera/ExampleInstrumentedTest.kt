@@ -1,16 +1,17 @@
 package com.nlgtuankiet.fera
 
 import android.Manifest
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import android.os.Environment
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
+import com.nlgtuankiet.fera.data.ffmpeg.runCommand
 import com.nlgtuankiet.fera.share.testComponent
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertEquals
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.io.File
 
 /**
  * Instrumented test, which will execute on an Android device.
@@ -32,10 +33,17 @@ class ExampleInstrumentedTest {
 
   @Test
   fun useAppContext() = runBlocking {
-    // Context of the app under test.
-    val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-    assertEquals("com.nlgtuankiet.fera", appContext.packageName)
-    val result = getMediaInfo.invoke("/storage/emulated/0/DCIM/Camera/VID_20200516_161726.mp4")
+    val filePath = getFilePath("bunny_720.mp4")
+    println(filePath)
+    val result = getMediaInfo.invoke(filePath)
     println(result)
   }
+
+  private fun getFilePath(name: String): String {
+    return File("${Environment.getExternalStorageDirectory()}/fera_test_resources/$name")
+      .absolutePath
+  }
+
+
+
 }
