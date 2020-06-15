@@ -1,5 +1,6 @@
 buildscript {
 
+  val kotlin_version by extra("1.3.72")
   repositories {
     google()
     jcenter()
@@ -22,6 +23,19 @@ allprojects {
     maven { url = java.net.URI("https://oss.sonatype.org/content/repositories/snapshots") }
     mavenCentral()
   }
+  configurations.all {
+    resolutionStrategy {
+      eachDependency {
+        if (requested.group == "org.bytedeco"
+          && requested.name != "ffmpeg-platform"
+          && !requested.name.contains("javacpp")
+        ) {
+          useVersion("4.2.2-1.5.3")
+        }
+      }
+    }
+  }
+
 }
 
 

@@ -1,14 +1,14 @@
 package com.nlgtuankiet.fera.dagger
 
+import android.app.Application
+import android.content.Context
+import com.nlgtuankiet.fera.FeraApplication
 import com.nlgtuankiet.fera.MainActivity
 import com.nlgtuankiet.fera.data.CommandLineFFmpegGateway
 import com.nlgtuankiet.fera.data.assertNotMainThread
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.squareup.moshi.Moshi
-import dagger.Binds
-import dagger.Component
-import dagger.Module
-import dagger.Provides
+import dagger.*
 import org.bytedeco.ffmpeg.ffmpeg
 import org.bytedeco.ffmpeg.ffprobe
 import org.bytedeco.javacpp.Loader
@@ -24,8 +24,14 @@ import javax.inject.Singleton
   ]
 )
 @Singleton
-interface AppComponent {
+interface AppComponent: CoreComponent {
+  fun inject(app: FeraApplication)
   fun inject(activity: MainActivity)
+
+  @Component.Factory
+  interface Factory {
+    fun create(@BindsInstance app: FeraApplication): AppComponent
+  }
 }
 
 @Module
@@ -43,6 +49,12 @@ object AppModule {
 interface DataBindingModule {
   @Binds
   fun ffmpegGateway(impl: CommandLineFFmpegGateway): FFmpegGateway
+
+  @Binds
+  fun context(impl: FeraApplication): Context
+
+  @Binds
+  fun application(impl: FeraApplication): Application
 }
 
 @Module

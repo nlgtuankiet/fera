@@ -1,3 +1,4 @@
+include(":home")
 include(":codegen")
 include(":app")
 rootProject.name = "Fera"

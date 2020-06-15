@@ -10,6 +10,10 @@ plugins {
   id("androidx.navigation.safeargs.kotlin")
 }
 
+kapt {
+  correctErrorTypes = true
+}
+
 tasks.withType(Test::class.java) {
   testLogging {
     events = setOf(FAILED, PASSED, SKIPPED, STANDARD_OUT, STANDARD_ERROR)
@@ -64,22 +68,12 @@ dependencies {
 
   implementation("androidx.core:core-ktx:1.3.0")
   implementation("androidx.multidex:multidex:2.0.1")
-  implementation("androidx.appcompat:appcompat:1.1.0")
-  implementation("androidx.constraintlayout:constraintlayout:1.1.3")
+  appCompat()
+  fragment()
+  constraintLayout()
+  inject()
   testImplementation("junit:junit:4.12")
   androidTestImplementation("androidx.test.ext:junit:1.1.1")
   androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
 }
 
-configurations.all {
-  resolutionStrategy {
-    eachDependency {
-      if (requested.group == "org.bytedeco"
-        && requested.name != "ffmpeg-platform"
-        && !requested.name.contains("javacpp")
-      ) {
-        useVersion("4.2.2-1.5.3")
-      }
-    }
-  }
-}

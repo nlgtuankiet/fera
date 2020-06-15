@@ -1,20 +1,32 @@
 package com.nlgtuankiet.fera
 
+import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.nlgtuankiet.fera.home.HomeFragment
+import com.nlgtuankiet.fera.dagger.coreComponent
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton
 class AppFragmentFactory @Inject constructor(
-  private val homeFragment: Provider<HomeFragment>
+  private val context: Context
 ): FragmentFactory() {
+  private val nameMapping = mapOf(
+    "com.nlgtuankiet.fera.home.HomeFragment" to "com.nlgtuankiet.fera.home.HomeFragmentComponentFactoryProvider"
+  )
+  private val providerCache = mutableMapOf<String, FragmentComponentFactoryProvider>()
+
   override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
-    return when(loadFragmentClass(classLoader, className)) {
-      HomeFragment::class.java -> homeFragment.get()
-      else -> super.instantiate(classLoader, className)
+    val factoryProviderName = nameMapping[className]
+      ?: return super.instantiate(classLoader, className)
+    val cache = providerCache[className]
+    return if (cache != null) {
+      cache.get().create(context.coreComponent).fragment()
+    } else {
+      val instance = Class.forName(factoryProviderName).newInstance() as FragmentComponentFactoryProvider
+      providerCache[className] = instance
+      instance.get().create(context.coreComponent).fragment()
     }
   }
 }
