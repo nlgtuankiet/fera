@@ -1,6 +1,8 @@
 buildscript {
   apply from: "gradle/config.gradle"
-  ext.production = hasProperty("production")
+  project.ext {
+    dynamic = hasProperty("dynamic")
+  }
   repositories {
     google()
     jcenter()
@@ -16,6 +18,7 @@ buildscript {
 }
 
 allprojects {
+
   repositories {
     google()
     jcenter()

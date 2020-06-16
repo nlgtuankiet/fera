@@ -2,6 +2,9 @@ apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
 apply plugin: "androidx.navigation.safeargs.kotlin"
+
+apply from: "../gradle/config.gradle"
+
 kapt {
   correctErrorTypes true
 }
@@ -22,11 +25,10 @@ android {
   }
   defaultConfig {
     applicationId "com.nlgtuankiet.fera"
-    minSdkVersion 16
-    targetSdkVersion 28
-    versionCode 1
-    versionName "1.0"
-
+    minSdkVersion minSdk
+    targetSdkVersion targetSdk
+    versionCode vcode
+    versionName vname
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 

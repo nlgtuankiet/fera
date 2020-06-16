@@ -1,32 +1,30 @@
-boolean production = hasProperty("production")
-println "production is ${production}"
+apply from: "../gradle/config.gradle"
 
-if (production) {
-  apply plugin: "com.android.library"
-} else {
+if (dynamic) {
   apply plugin: "com.android.dynamic-feature"
+} else {
+  apply plugin: "com.android.library"
 }
 
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
+
 kapt {
   correctErrorTypes true
 }
 
 android {
-  compileSdkVersion 29
-  buildToolsVersion "29.0.3"
+  compileSdkVersion compileSdk
+  buildToolsVersion buildTools
   defaultConfig {
-    minSdkVersion 14
-    targetSdkVersion 29
-    versionCode 1
-    versionName "1.0"
+    minSdkVersion minSdk
+    targetSdkVersion targetSdk
+    versionCode vcode
+    versionName vname
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  if (production) {
-
-  } else {
+  if (dynamic) {
     buildTypes {
       release {}
       debug {}
@@ -34,15 +32,15 @@ android {
   }
   dependencies {
     kapt deps.daggerProcessor
-    if (production) {
+    if (dynamic) {
+      implementation project(":app")
+    } else {
       implementation deps.appCompat
       implementation deps.fragment
       implementation deps.inject
       implementation deps.dagger
       implementation project(":core")
       implementation project(":domain")
-    } else {
-      implementation project(":app")
     }
   }
 }
