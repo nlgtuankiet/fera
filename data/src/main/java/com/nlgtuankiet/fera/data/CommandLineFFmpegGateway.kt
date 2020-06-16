@@ -8,7 +8,6 @@ import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.Stream
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -26,20 +25,6 @@ class CommandLineFFmpegGateway @Inject constructor(
 
   private val ffprobePath: String
     get() = ffprobePathProvider.get()
-
-  // for debug only
-  suspend fun executeFFmpeg(command: String) {
-    runCommand("$ffmpegPath $command") {
-      println(it)
-    }
-  }
-
-  fun executeFFprobe(command: String) = runBlocking {
-    runCommand("$ffprobePath $command") {
-      println(it)
-    }
-  }
-
 
   override suspend fun getMediaInfo(input: String): MediaInfo {
     val jsonResult = buildString {
@@ -71,5 +56,24 @@ class CommandLineFFmpegGateway @Inject constructor(
     return MediaInfo(
       streams = streams
     )
+  }
+
+  // for debug only
+  suspend fun executeFFmpeg(command: String) {
+    runCommand("$ffmpegPath $command") {
+      println(it)
+    }
+  }
+
+  // for debug only
+  override suspend fun test(command: String, useFfmpeg: Boolean) {
+    val program = if (useFfmpeg) {
+      ffmpegPath
+    } else {
+      ffprobePath
+    }
+    runCommand("$program $command") {
+      println(it)
+    }
   }
 }

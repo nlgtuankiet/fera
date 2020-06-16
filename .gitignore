@@ -21,3 +21,4 @@
 .idea/runConfigurations.xml
 */build
 /app/src/main/jniLibs/
+data/src/main/jniLibs
