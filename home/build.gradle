@@ -1,64 +1,48 @@
 boolean production = hasProperty("production")
 println "production is ${production}"
+
 if (production) {
   apply plugin: "com.android.library"
-  apply plugin: "kotlin-android"
-  apply plugin: "kotlin-kapt"
-  kapt {
-    correctErrorTypes true
-  }
-  android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
-    defaultConfig {
-      minSdkVersion 14
-      targetSdkVersion 29
-      versionCode 1
-      versionName "1.0"
-      testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
-  }
-
-  dependencies {
-    implementation deps.appCompat
-    implementation deps.fragment
-    implementation deps.inject
-    implementation deps.dagger
-    implementation project(":core")
-    implementation project(":domain")
-    kapt deps.daggerProcessor
-  }
-
 } else {
   apply plugin: "com.android.dynamic-feature"
-  apply plugin: "kotlin-android"
-  apply plugin: "kotlin-kapt"
+}
 
-  kapt {
-    correctErrorTypes true
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
+kapt {
+  correctErrorTypes true
+}
+
+android {
+  compileSdkVersion 29
+  buildToolsVersion "29.0.3"
+  defaultConfig {
+    minSdkVersion 14
+    targetSdkVersion 29
+    versionCode 1
+    versionName "1.0"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
-  android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
-    defaultConfig {
-      minSdkVersion 14
-      targetSdkVersion 29
-      versionCode 1
-      versionName "1.0"
 
-      testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-    }
+  if (production) {
+
+  } else {
     buildTypes {
       release {}
       debug {}
     }
   }
-
   dependencies {
-    implementation project(":app")
     kapt deps.daggerProcessor
+    if (production) {
+      implementation deps.appCompat
+      implementation deps.fragment
+      implementation deps.inject
+      implementation deps.dagger
+      implementation project(":core")
+      implementation project(":domain")
+    } else {
+      implementation project(":app")
+    }
   }
 }
-
-
-
