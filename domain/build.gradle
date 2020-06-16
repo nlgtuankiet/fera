@@ -8,6 +8,7 @@ dependencies {
   implementation deps.inject
   kapt deps.daggerProcessor
   implementation deps.dagger
+  implementation deps.kotlinCoroutine
 }
 
 sourceCompatibility = "1.7"

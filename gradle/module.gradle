@@ -8,6 +8,7 @@ if (dynamic) {
 
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
+apply plugin: 'com.jakewharton.butterknife'
 
 kapt {
   correctErrorTypes true
@@ -23,6 +24,16 @@ android {
     versionName vname
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
+  buildFeatures {
+    viewBinding true
+  }
 
   if (dynamic) {
     buildTypes {
@@ -35,12 +46,20 @@ android {
     if (dynamic) {
       implementation project(":app")
     } else {
+      implementation deps.mvrx
       implementation deps.appCompat
       implementation deps.fragment
       implementation deps.inject
+      implementation deps.constraintLayout
+      implementation deps.kotlinCoroutine
       implementation deps.moshi
       implementation deps.dagger
       implementation deps.exec
+      implementation deps.epoxy
+      implementation deps.assistedInject
+      kapt deps.assistedInjectProccesor
+      kapt deps.epoxyProcessor
+
       implementation deps.execKiller
       implementation project(":core")
       implementation project(":domain")

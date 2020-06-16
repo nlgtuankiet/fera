@@ -10,6 +10,16 @@ kapt {
 }
 
 android {
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
+  buildFeatures {
+    viewBinding true
+  }
   compileSdkVersion 29
   buildToolsVersion "29.0.3"
   testOptions {
@@ -23,6 +33,7 @@ android {
     }
   }
   defaultConfig {
+    multiDexEnabled true
     applicationId "com.nlgtuankiet.fera"
     minSdkVersion minSdk
     targetSdkVersion targetSdk
@@ -61,6 +72,11 @@ dependencies {
   api deps.kotlinCoroutine
   api deps.navigation
   api deps.navigationDynamic
+  api deps.epoxy
+  api deps.mvrx
+  api deps.assistedInject
+  api deps.kotlinCoroutine
+  kapt deps.assistedInjectProccesor
 
   api deps.daggerAndroid
   api(project(":domain"))

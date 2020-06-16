@@ -5,6 +5,7 @@ import androidx.annotation.Keep
 import com.nlgtuankiet.fera.core.DataComponent
 import com.nlgtuankiet.fera.core.FFmpegPath
 import com.nlgtuankiet.fera.core.FFprobePath
+import com.nlgtuankiet.fera.domain.MediaFileRepository
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.squareup.moshi.Moshi
 import dagger.*
@@ -32,6 +33,9 @@ interface DataComponentImpl : DataComponent {
 interface DataBindingModule {
   @Binds
   fun ffmpegGateway(impl: CommandLineFFmpegGateway): FFmpegGateway
+
+  @Binds
+  fun mediaFileRepository(impl: MediaFileRepositoryImpl): MediaFileRepository
 }
 
 @Module

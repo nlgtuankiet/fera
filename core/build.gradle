@@ -32,5 +32,6 @@ dependencies {
   implementation deps.appCompat
   kapt deps.daggerProcessor
   implementation deps.dagger
+  implementation deps.mvrx
 
 }
