@@ -20,3 +20,4 @@
 .idea/markdown-navigator.xml
 .idea/runConfigurations.xml
 */build
+/app/src/main/jniLibs/

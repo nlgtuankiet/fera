@@ -8,7 +8,6 @@ deps.daggerProcessor = "com.google.dagger:dagger-compiler:$daggerVersion"
 deps.exec = "org.zeroturnaround:zt-exec:1.11"
 deps.execKiller = "org.zeroturnaround:zt-process-killer:1.10"
 
-deps.ffmpeg = "org.bytedeco:ffmpeg-platform:4.2.3-1.5.4-SNAPSHOT"
 deps.kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:1.3.72"
 deps.kotlinCoroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7"
 deps.appCompat = "androidx.appcompat:appcompat:1.1.0"

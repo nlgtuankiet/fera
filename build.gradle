@@ -21,20 +21,6 @@ allprojects {
     jcenter()
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
   }
-
-  configurations.all {
-    resolutionStrategy {
-      eachDependency { detail ->
-        if (detail.requested.group == "org.bytedeco"
-            && detail.requested.name != "ffmpeg-platform"
-            && !detail.requested.name.contains("javacpp")
-        ) {
-          detail.useVersion "4.2.2-1.5.3"
-        }
-      }
-    }
-  }
-
 }
 
 

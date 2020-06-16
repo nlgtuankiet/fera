@@ -44,10 +44,6 @@ fun DependencyHandler.exec() {
   implementation("org.zeroturnaround:zt-process-killer:1.10")
 }
 
-fun DependencyHandler.ffmpeg() {
-  implementation("org.bytedeco:ffmpeg-platform:4.2.3-1.5.4-SNAPSHOT")
-}
-
 fun DependencyHandler.kotlin() {
   api("org.jetbrains.kotlin:kotlin-stdlib:1.3.72")
   api("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7")

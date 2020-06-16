@@ -9,10 +9,8 @@ import com.nlgtuankiet.fera.data.assertNotMainThread
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.squareup.moshi.Moshi
 import dagger.*
-import org.bytedeco.ffmpeg.ffmpeg
-import org.bytedeco.ffmpeg.ffprobe
-import org.bytedeco.javacpp.Loader
 import java.io.File
+import java.nio.file.Files
 import javax.inject.Singleton
 
 
@@ -24,7 +22,7 @@ import javax.inject.Singleton
   ]
 )
 @Singleton
-interface AppComponent: com.nlgtuankiet.fera.core.CoreComponent {
+interface AppComponent : com.nlgtuankiet.fera.core.CoreComponent {
   fun inject(app: FeraApplication)
   fun inject(activity: MainActivity)
 
@@ -59,26 +57,35 @@ interface DataBindingModule {
 
 @Module
 object FFmpegModule {
+
+  @JvmStatic
+  private fun File.find(name: String): File {
+    return Files.walk(this.toPath()).filter {
+      println(it.toFile().absolutePath)
+      it.toFile().run { isFile && this.name == name }
+    }.findFirst().get().toFile()
+  }
+
   @Provides
   @JvmStatic
   @Singleton
   @FFmpegPath
-  fun ffmpegPath(): String {
+  fun ffmpegPath(context: Context): String {
     assertNotMainThread()
-    return Loader.load(ffmpeg::class.java).ensureExecutable()
+    return File(context.packageResourcePath).parentFile!!.find("libffmpeg.so")
+      .absolutePath
+
   }
 
   @Provides
   @JvmStatic
   @Singleton
   @FFprobePath
-  fun ffprobePath(): String {
+  fun ffprobePath(context: Context): String {
     assertNotMainThread()
-    return Loader.load(ffprobe::class.java).ensureExecutable()
+    return File(context.packageResourcePath).parentFile!!.find("libffprobe.so")
+      .absolutePath
   }
 
-  private fun String.ensureExecutable(): String {
-    require(File(this).setExecutable(true))
-    return this
-  }
+
 }
