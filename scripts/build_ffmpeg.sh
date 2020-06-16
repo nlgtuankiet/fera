@@ -5,7 +5,7 @@
 ffmpegSourceDir=$1
 
 #eval "${ffmpegSourceDir}/android.sh ./android.sh -l"
-jniLibsDir="app/src/main/jniLibs"
+jniLibsDir="data/src/main/jniLibs"
 
 mkdir -p "${jniLibsDir}/armeabi-v7a"
 cp "${ffmpegSourceDir}/prebuilt/android-arm/ffmpeg/bin/ffmpeg" "${jniLibsDir}/armeabi-v7a/libffmpeg.so"

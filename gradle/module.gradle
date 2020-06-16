@@ -1,0 +1,49 @@
+apply from: "../gradle/config.gradle"
+
+if (dynamic) {
+  apply plugin: "com.android.dynamic-feature"
+} else {
+  apply plugin: "com.android.library"
+}
+
+apply plugin: "kotlin-android"
+apply plugin: "kotlin-kapt"
+
+kapt {
+  correctErrorTypes true
+}
+
+android {
+  compileSdkVersion compileSdk
+  buildToolsVersion buildTools
+  defaultConfig {
+    minSdkVersion minSdk
+    targetSdkVersion targetSdk
+    versionCode vcode
+    versionName vname
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  if (dynamic) {
+    buildTypes {
+      release {}
+      debug {}
+    }
+  }
+  dependencies {
+    kapt deps.daggerProcessor
+    if (dynamic) {
+      implementation project(":app")
+    } else {
+      implementation deps.appCompat
+      implementation deps.fragment
+      implementation deps.inject
+      implementation deps.moshi
+      implementation deps.dagger
+      implementation deps.exec
+      implementation deps.execKiller
+      implementation project(":core")
+      implementation project(":domain")
+    }
+  }
+}

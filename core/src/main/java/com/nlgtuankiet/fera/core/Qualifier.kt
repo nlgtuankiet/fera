@@ -1,4 +1,4 @@
-package com.nlgtuankiet.fera.dagger
+package com.nlgtuankiet.fera.core
 
 import javax.inject.Qualifier
 

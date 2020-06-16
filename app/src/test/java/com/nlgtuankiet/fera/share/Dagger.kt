@@ -10,9 +10,9 @@ import javax.inject.Singleton
 
 @Component(
   modules = [
-    AppModule::class,
+    AppProvisionModule::class,
     FFmpegModule::class,
-    DataBindingModule::class
+    AppBindingModule::class
   ]
 )
 @Singleton

@@ -1,4 +1,9 @@
-ext.dynamic = hasProperty("dynamic")
+if (project.hasProperty("dynamic")) {
+  ext.dynamic = project.property("dynamic") == true
+} else {
+  ext.dynamic = false
+}
+println "dynamic is $dynamic"
 ext.minSdk = 16
 ext.targetSdk = 28
 ext.vcode = 1
