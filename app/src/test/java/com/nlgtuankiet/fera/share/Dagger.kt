@@ -1,7 +1,10 @@
 package com.nlgtuankiet.fera.share
 
+import com.nlgtuankiet.fera.core.FFmpegPath
+import com.nlgtuankiet.fera.core.FFprobePath
 import com.nlgtuankiet.fera.dagger.AppBindingModule
 import com.nlgtuankiet.fera.dagger.AppProvisionModule
+import com.nlgtuankiet.fera.data.DataBindingModule
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import com.squareup.moshi.Moshi
 import dagger.Component
@@ -11,9 +14,10 @@ import javax.inject.Singleton
 
 @Component(
   modules = [
+    DataBindingModule::class,
+    FakeDataProvisionModule::class,
     AppProvisionModule::class,
-    FFmpegModule::class,
-    AppBindingModule::class
+    AppBindingModule::class,
   ]
 )
 @Singleton
@@ -22,8 +26,25 @@ interface TestComponent {
   fun getMediaInfo(): GetMediaInfo
 }
 
+fun testComponent(): TestComponent {
+  return DaggerTestComponent.create()
+}
+
+fun moshi(): Moshi {
+  return testComponent().moshi()
+}
+
 @Module
-object LocalFFmpegModule {
+object FakeDataProvisionModule {
+
+  @JvmStatic
+  @Provides
+  @Singleton
+  fun moshi(): Moshi {
+    return Moshi.Builder()
+      .build()
+  }
+
   @Provides
   @JvmStatic
   @Singleton
@@ -39,12 +60,4 @@ object LocalFFmpegModule {
   fun ffprobePath(): String {
     return "ffprobe"
   }
-}
-
-fun testComponent(): TestComponent {
-  return DaggerTestComponent.create()
-}
-
-fun moshi(): Moshi {
-  return testComponent().moshi()
 }

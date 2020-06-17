@@ -9,7 +9,5 @@ class GetMediaInfoTest {
 
   @Test
   fun `invoke correct`() = runBlocking {
-    val result = getMediaInfo.invoke("/Users/lap00984/Desktop/Screen Recording 2020-06-14 at 11.58.01.mov")
-    println(result)
   }
 }

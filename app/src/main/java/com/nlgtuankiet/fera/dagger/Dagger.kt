@@ -1,11 +1,9 @@
 package com.nlgtuankiet.fera.dagger
 
-import android.app.Application
 import android.content.Context
 import com.nlgtuankiet.fera.FeraApplication
 import com.nlgtuankiet.fera.MainActivity
 import com.nlgtuankiet.fera.core.DataComponent
-import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
@@ -28,7 +26,7 @@ interface AppComponent : com.nlgtuankiet.fera.core.CoreComponent {
   @Component.Factory
   interface Factory {
     fun create(
-      @BindsInstance app: FeraApplication,
+      @BindsInstance context: Context,
       dataComponent: DataComponent
     ): AppComponent
   }
@@ -38,11 +36,4 @@ interface AppComponent : com.nlgtuankiet.fera.core.CoreComponent {
 object AppProvisionModule
 
 @Module
-interface AppBindingModule {
-
-  @Binds
-  fun context(impl: FeraApplication): Context
-
-  @Binds
-  fun application(impl: FeraApplication): Application
-}
+interface AppBindingModule
