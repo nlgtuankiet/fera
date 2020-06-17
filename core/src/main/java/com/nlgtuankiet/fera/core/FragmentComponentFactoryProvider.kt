@@ -1,13 +1,12 @@
 package com.nlgtuankiet.fera.core
 
 import androidx.fragment.app.Fragment
-import com.nlgtuankiet.fera.core.CoreComponent
 
 interface FragmentComponentFactoryProvider {
   fun get(): FragmentComponent.Factory<*>
 }
 
-interface FragmentComponent<T: Fragment> {
+interface FragmentComponent<T : Fragment> {
   fun fragment(): T
 
   interface Factory<T : Fragment> {

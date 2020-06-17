@@ -14,7 +14,9 @@ shadowJar {
 
 tasks.withType(KotlinCompile).configureEach {
   kotlinOptions {
-    freeCompilerArgs += ["-Xopt-in=kotlin.RequiresOptIn"]
+    freeCompilerArgs += [
+      "-Xopt-in=kotlin.RequiresOptIn"
+    ]
   }
 }
 

@@ -29,7 +29,6 @@ class HomeFragment @Inject constructor(
     binding.content.setController(controller)
   }
 
-
   override fun invalidate() {
     controller.requestModelBuild()
   }

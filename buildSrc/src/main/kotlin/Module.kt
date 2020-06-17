@@ -1,5 +1,4 @@
 import com.android.build.gradle.AppExtension
-import com.android.build.gradle.api.AndroidBasePlugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.KotlinBuildScript
 import org.gradle.kotlin.dsl.dependencies
@@ -27,8 +26,10 @@ fun AppExtension.configDynamicModule() {
 }
 
 fun Project.addDynamicDependencies() {
-  this.dependencies(configuration = {
-    implementation(project(":app"))
-    kapt("com.google.dagger:dagger-compiler:$daggerVersion")
-  })
+  this.dependencies(
+    configuration = {
+      implementation(project(":app"))
+      kapt("com.google.dagger:dagger-compiler:$daggerVersion")
+    }
+  )
 }

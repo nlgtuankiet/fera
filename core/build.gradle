@@ -33,5 +33,4 @@ dependencies {
   kapt deps.daggerProcessor
   implementation deps.dagger
   implementation deps.mvrx
-
 }

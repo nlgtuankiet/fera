@@ -11,7 +11,7 @@ import com.google.cloud.storage.BlobInfo
 import com.google.firebase.FirebaseApp
 import com.google.firebase.FirebaseOptions
 import com.google.firebase.cloud.StorageClient
-import java.util.*
+import java.util.Base64
 
 private val firebaseApp by lazy {
   val serviceAccountStream = Base64.getDecoder()
@@ -57,5 +57,4 @@ class UploadApk : HttpFunction {
 }
 
 fun main(args: Array<String>) {
-
 }

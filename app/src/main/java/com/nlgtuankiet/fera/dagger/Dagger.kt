@@ -5,10 +5,11 @@ import android.content.Context
 import com.nlgtuankiet.fera.FeraApplication
 import com.nlgtuankiet.fera.MainActivity
 import com.nlgtuankiet.fera.core.DataComponent
-import com.squareup.moshi.Moshi
-import dagger.*
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Component
+import dagger.Module
 import javax.inject.Singleton
-
 
 @Component(
   modules = [
@@ -34,9 +35,7 @@ interface AppComponent : com.nlgtuankiet.fera.core.CoreComponent {
 }
 
 @Module
-object AppProvisionModule {
-
-}
+object AppProvisionModule
 
 @Module
 interface AppBindingModule {

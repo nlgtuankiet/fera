@@ -8,7 +8,11 @@ import com.nlgtuankiet.fera.core.FFprobePath
 import com.nlgtuankiet.fera.domain.MediaFileRepository
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.squareup.moshi.Moshi
-import dagger.*
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Component
+import dagger.Module
+import dagger.Provides
 import java.io.File
 import java.nio.file.Files
 import javax.inject.Singleton
@@ -26,7 +30,6 @@ interface DataComponentImpl : DataComponent {
   interface Factory {
     fun create(@BindsInstance context: Context): DataComponent
   }
-
 }
 
 @Module
@@ -75,16 +78,12 @@ object DataProvisionModule {
     return File(context.packageResourcePath).parentFile!!.find("libffprobe.so")
       .absolutePath
   }
-
-
 }
 
 @Keep
-class DataComponentProvider:
+class DataComponentProvider :
   DataComponent.DataComponentProvider {
   override fun get(context: Context): DataComponent {
     return DaggerDataComponentImpl.factory().create(context)
   }
 }
-
-

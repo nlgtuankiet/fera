@@ -1,6 +1,11 @@
 package com.nlgtuankiet.fera.home
 
-import com.airbnb.mvrx.*
+import com.airbnb.mvrx.Async
+import com.airbnb.mvrx.BaseMavericksViewModel
+import com.airbnb.mvrx.MvRxState
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Uninitialized
+import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.domain.entity.MediaFile
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
@@ -33,7 +38,6 @@ class HomeViewModel @Inject constructor(
         }
     }
   }
-
 
   companion object : MvRxViewModelFactory<HomeViewModel, HomeState> {
     override fun create(viewModelContext: ViewModelContext, state: HomeState): HomeViewModel? {

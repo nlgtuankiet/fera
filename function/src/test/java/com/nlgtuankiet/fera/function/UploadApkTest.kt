@@ -1,9 +1,10 @@
 package com.nlgtuankiet.fera.function
 
-import okhttp3.*
+import okhttp3.MultipartBody
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.logging.HttpLoggingInterceptor
-import org.apache.http.client.methods.RequestBuilder
 import org.junit.Test
 
 class UploadApkTest {
@@ -28,7 +29,6 @@ class UploadApkTest {
               override fun log(message: String) {
                 println(message)
               }
-
             }
           ).apply { level = HttpLoggingInterceptor.Level.BODY }
         )

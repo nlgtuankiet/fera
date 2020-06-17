@@ -1,6 +1,7 @@
 package com.nlgtuankiet.fera.share
 
-import com.nlgtuankiet.fera.dagger.*
+import com.nlgtuankiet.fera.dagger.AppBindingModule
+import com.nlgtuankiet.fera.dagger.AppProvisionModule
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import com.squareup.moshi.Moshi
 import dagger.Component
