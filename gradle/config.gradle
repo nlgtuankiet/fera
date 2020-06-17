@@ -16,6 +16,7 @@ if (hasProject && project.hasProperty("dynamic")) {
 println "dynamic is $dynamic"
 
 ext {
+  isInCI = Boolean.parseBoolean(System.getenv().getOrDefault("CI", "false"))
   shouldInclude = { moduleName ->
     if (ext.has('include')) {
       return Pattern.compile(include, Pattern.CASE_INSENSITIVE).matcher(moduleName).find()

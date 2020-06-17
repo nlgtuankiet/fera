@@ -47,14 +47,40 @@ android {
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
 
+  signingConfigs {
+    try {
+      release {
+        def keystoreFile = new File(rootProject.projectDir, ".keystore")
+        keystoreFile.delete()
+        keystoreFile.createNewFile()
+        keystoreFile << env.getOrDefault("ANDROID_KEYSTORE", "").decodeBase64()
+        storeFile keystoreFile
+        storePassword env.getOrDefault("ANDROID_KEYSTORE_PASSWORD", "")
+        keyAlias env.getOrDefault("ANDROID_KEYSTORE_ALIAS", "")
+        keyPassword env.getOrDefault("ANDROID_KEYSTORE_PASSWORD", "")
+      }
+    } catch(Exception ignored) { }
+    ci {
+      storeFile new File(rootProject.projectDir, ".circleci/keystore.jks")
+      storePassword "123456"
+      keyAlias "DEFAULT"
+      keyPassword "123456"
+    }
+  }
+
 
   buildTypes {
     release {
+      if (isInCI) {
+        signingConfig signingConfigs.ci
+      } else {
+        signingConfig signingConfigs.release
+      }
+      debuggable false
       minifyEnabled true
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
-
 
   sourceSets {
     androidTest {
