@@ -86,6 +86,7 @@ dependencies {
   api deps.navigationDynamic
   api deps.epoxy
   api deps.mvrx
+  api deps.okHttp
   api deps.assistedInject
   api deps.kotlinCoroutine
   kapt deps.assistedInjectProccesor

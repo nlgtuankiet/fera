@@ -74,6 +74,8 @@ deps.mvrx = "com.airbnb.android:mvrx:1.5.0-SNAPSHOT"
 deps.assistedInject = 'com.squareup.inject:assisted-inject-annotations:0.5.2'
 deps.assistedInjectProccesor = 'com.squareup.inject:assisted-inject-processor:0.5.2'
 
+deps.okHttp = "com.squareup.okhttp3:okhttp:4.7.2"
+
 def addAllRepositories = { handler ->
   handler.google()
   handler.jcenter()
@@ -82,5 +84,10 @@ def addAllRepositories = { handler ->
   handler.maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
   handler.maven { url 'https://dl.bintray.com/kotlin/kotlin-eap/' }
   handler.maven { url 'https://dl.bintray.com/kotlin/kotlinx/' }
+  handler.maven { url 'https://repo.spring.io/libs-snapshot-local' }
+  handler.maven { url 'https://repo.spring.io/libs-milestone-local' }
+  handler.maven { url 'https://repo.spring.io/release' }
+  handler.maven { url "https://repo.spring.io/milestone" }
+  handler.maven { url "https://repo.spring.io/snapshot" }
 }
 ext.addAllRepositories = addAllRepositories
