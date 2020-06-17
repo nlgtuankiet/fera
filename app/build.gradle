@@ -11,6 +11,7 @@ kapt {
 
 android {
   compileOptions {
+//    coreLibraryDesugaringEnabled true TODO
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
@@ -36,11 +37,13 @@ android {
     multiDexEnabled true
     applicationId "com.nlgtuankiet.fera"
     minSdkVersion minSdk
+    println "min sdk is $minSdk"
     targetSdkVersion targetSdk
     versionCode vcode
     versionName vname
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
   }
+
 
   buildTypes {
     release {
@@ -56,12 +59,21 @@ android {
     }
   }
   if (dynamic) {
-    dynamicFeatures += ":home"
-    dynamicFeatures += ":data"
+    def dynamicModules = [
+        "home",
+        "data",
+    ]
+
+    dynamicModules.forEach { module ->
+      if (shouldInclude(module)) {
+        dynamicFeatures += ":$module".toString()
+      }
+    }
   }
 }
 
 dependencies {
+//  coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.5' TODO
   api deps.moshi
   kapt deps.moshiProcessor
   api deps.dagger

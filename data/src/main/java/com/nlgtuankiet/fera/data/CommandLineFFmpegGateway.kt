@@ -58,12 +58,6 @@ class CommandLineFFmpegGateway @Inject constructor(
     )
   }
 
-  // for debug only
-  suspend fun executeFFmpeg(command: String) {
-    runCommand("$ffmpegPath $command") {
-      println(it)
-    }
-  }
 
   // for debug only
   override suspend fun test(command: String, useFfmpeg: Boolean) {

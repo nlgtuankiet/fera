@@ -1,15 +1,46 @@
-if (project.hasProperty("dynamic")) {
-  ext.dynamic = project.property("dynamic") == true
+import java.util.regex.Pattern
+
+def hasProject = false
+try {
+  project
+  hasProject = true
+} catch(ignored) {
+  hasProject = false
+}
+
+if (hasProject && project.hasProperty("dynamic")) {
+  ext.dynamic = project.property("dynamic") == true || project.property("dynamic") == ""
 } else {
   ext.dynamic = false
 }
 println "dynamic is $dynamic"
-ext.minSdk = 16
-ext.targetSdk = 28
-ext.vcode = 1
-ext.vname = "1.0"
-ext.compileSdk = 29
-ext.buildTools = "29.0.3"
+
+ext {
+  shouldInclude = { moduleName ->
+    if (ext.has('include')) {
+      return Pattern.compile(include, Pattern.CASE_INSENSITIVE).matcher(moduleName).find()
+    }
+    if (ext.has("exclude")) {
+      return !Pattern.compile(exclude, Pattern.CASE_INSENSITIVE).matcher(moduleName).find()
+    }
+    return true
+  }
+
+  maybeInclude = { moduleName ->
+    def defaultModule = ["app", "domain", "core"]
+    if (shouldInclude(moduleName) || defaultModule.contains(moduleName)) {
+      println "include :$moduleName"
+      include(":$moduleName")
+    }
+  }
+
+  minSdk = 16
+  ext.targetSdk = 28
+  ext.vcode = 1
+  ext.vname = "1.0"
+  ext.compileSdk = 29
+  ext.buildTools = "29.0.3"
+}
 
 def daggerVersion = "2.28"
 def deps = [:]

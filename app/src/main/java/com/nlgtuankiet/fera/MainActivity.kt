@@ -24,18 +24,18 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
     GlobalScope.launch(Dispatchers.IO) {
-      kotlin.runCatching {
-        fFmpegGateway.test("")
-      }.onFailure {
-        println(it.message)
-        it.printStackTrace()
-      }
-      kotlin.runCatching {
-        fFmpegGateway.test(useFfmpeg = false, command = "")
-      }.onFailure {
-        println(it.message)
-        it.printStackTrace()
-      }
+//      kotlin.runCatching {
+//        fFmpegGateway.test("")
+//      }.onFailure {
+//        println(it.message)
+//        it.printStackTrace()
+//      }
+//      kotlin.runCatching {
+//        fFmpegGateway.test(useFfmpeg = false, command = "")
+//      }.onFailure {
+//        println(it.message)
+//        it.printStackTrace()
+//      }
     }
   }
 

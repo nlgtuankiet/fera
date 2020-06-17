@@ -1,7 +1,11 @@
-include(":data")
-include(":domain")
-include(":core")
-include(":home")
-include(":codegen")
-include(":app")
+apply from: "gradle/config.gradle"
+//println startParameter.projectProperties.hasProperty("dynamic")
+
+maybeInclude("app")
+maybeInclude("domain")
+maybeInclude("core")
+maybeInclude("home")
+maybeInclude("data")
+maybeInclude("codegen")
+
 rootProject.name = "Fera"

@@ -52,7 +52,6 @@ object DataProvisionModule {
   @JvmStatic
   private fun File.find(name: String): File {
     return Files.walk(this.toPath()).filter {
-      println(it.toFile().absolutePath)
       it.toFile().run { isFile && this.name == name }
     }.findFirst().get().toFile()
   }
@@ -65,7 +64,6 @@ object DataProvisionModule {
     assertNotMainThread()
     return File(context.packageResourcePath).parentFile!!.find("libffmpeg.so")
       .absolutePath
-
   }
 
   @Provides
