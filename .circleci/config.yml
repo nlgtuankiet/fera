@@ -37,10 +37,10 @@ jobs:
           name: danger
           command: bundle install && bundle exec danger --new-comment
       - store_artifacts:
-          path: ./build
+          path: build
           destination: universal.apk
       - store_artifacts:
-          path: ./build
+          path: build
           destination: master.apk
   upload-apk:
     executor: android_executor
