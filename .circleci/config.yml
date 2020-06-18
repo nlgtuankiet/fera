@@ -36,6 +36,12 @@ jobs:
       - run:
           name: danger
           command: bundle install && bundle exec danger --new-comment
+      - store_artifacts:
+          path: ./build
+          destination: universal.apk
+      - store_artifacts:
+          path: ./build
+          destination: master.apk
   upload-apk:
     executor: android_executor
     steps:
@@ -50,6 +56,9 @@ jobs:
       - run:
           name: upload apk
           command: bash ./scripts/upload_master_apk.sh
+      - store_artifacts:
+          path: ./build
+          destination: universal.apk
 
 workflows:
   version: 2
