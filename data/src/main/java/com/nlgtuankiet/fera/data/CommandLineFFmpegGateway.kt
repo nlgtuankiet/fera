@@ -30,7 +30,7 @@ class CommandLineFFmpegGateway @Inject constructor(
     val jsonResult = buildString {
       runCommand(
         command = "$ffprobePath -v quiet -hide_banner -print_format json -show_format " +
-            "-show_streams $input"
+          "-show_streams $input"
       ) { line ->
         append(line)
       }
@@ -57,7 +57,6 @@ class CommandLineFFmpegGateway @Inject constructor(
       streams = streams
     )
   }
-
 
   // for debug only
   override suspend fun test(command: String, useFfmpeg: Boolean) {

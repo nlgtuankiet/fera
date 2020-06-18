@@ -1,0 +1,39 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+plugins {
+  id 'com.github.johnrengelman.shadow' version '6.0.0'
+  id 'application'
+  id 'java'
+}
+apply plugin: 'kotlin'
+apply from: "../gradle/config.gradle"
+
+shadowJar {
+  mergeServiceFiles()
+}
+
+tasks.withType(KotlinCompile).configureEach {
+  kotlinOptions {
+    freeCompilerArgs += [
+      "-Xopt-in=kotlin.RequiresOptIn"
+    ]
+  }
+}
+
+dependencies {
+  implementation deps.kotlinStdLib
+  implementation 'com.google.cloud.functions:functions-framework-api:1.0.0-alpha-2-rc3'
+  implementation 'com.google.firebase:firebase-admin:6.12.2'
+  testImplementation deps.okHttp
+  testImplementation("com.squareup.okhttp3:logging-interceptor:4.7.2")
+  testImplementation("junit:junit:4.12")
+}
+
+application {
+  // Define the main class for the application.
+  mainClassName = "com.nlgtuankiet.fera.function.MainKt"
+}
+
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"

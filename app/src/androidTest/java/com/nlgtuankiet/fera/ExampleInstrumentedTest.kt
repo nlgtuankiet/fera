@@ -3,9 +3,7 @@ package com.nlgtuankiet.fera
 import android.Manifest
 import android.os.Environment
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
-import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
-import com.nlgtuankiet.fera.data.ffmpeg.runCommand
 import com.nlgtuankiet.fera.share.testComponent
 import kotlinx.coroutines.runBlocking
 import org.junit.Rule
@@ -43,7 +41,4 @@ class ExampleInstrumentedTest {
     return File("${Environment.getExternalStorageDirectory()}/fera_test_resources/$name")
       .absolutePath
   }
-
-
-
 }

@@ -8,9 +8,12 @@ import com.nlgtuankiet.fera.core.FFprobePath
 import com.nlgtuankiet.fera.domain.MediaFileRepository
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.squareup.moshi.Moshi
-import dagger.*
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Component
+import dagger.Module
+import dagger.Provides
 import java.io.File
-import java.nio.file.Files
 import javax.inject.Singleton
 
 @Component(
@@ -26,7 +29,6 @@ interface DataComponentImpl : DataComponent {
   interface Factory {
     fun create(@BindsInstance context: Context): DataComponent
   }
-
 }
 
 @Module
@@ -50,10 +52,20 @@ object DataProvisionModule {
   }
 
   @JvmStatic
-  private fun File.find(name: String): File {
-    return Files.walk(this.toPath()).filter {
-      it.toFile().run { isFile && this.name == name }
-    }.findFirst().get().toFile()
+  private fun File.find(name: String): File? {
+    if (isDirectory) {
+      listFiles()?.forEach {
+        val found = it.find(name)
+        if (found != null) {
+          return found
+        }
+      }
+    } else {
+      if (getName() == name) {
+        return this
+      }
+    }
+    return null
   }
 
   @Provides
@@ -62,8 +74,8 @@ object DataProvisionModule {
   @FFmpegPath
   fun ffmpegPath(context: Context): String {
     assertNotMainThread()
-    return File(context.packageResourcePath).parentFile!!.find("libffmpeg.so")
-      .absolutePath
+    return File(context.packageResourcePath).parentFile!!
+      .find("libffmpeg.so")!!.absolutePath
   }
 
   @Provides
@@ -72,19 +84,15 @@ object DataProvisionModule {
   @FFprobePath
   fun ffprobePath(context: Context): String {
     assertNotMainThread()
-    return File(context.packageResourcePath).parentFile!!.find("libffprobe.so")
-      .absolutePath
+    return File(context.packageResourcePath).parentFile!!
+      .find("libffprobe.so")!!.absolutePath
   }
-
-
 }
 
 @Keep
-class DataComponentProvider:
+class DataComponentProvider :
   DataComponent.DataComponentProvider {
   override fun get(context: Context): DataComponent {
     return DaggerDataComponentImpl.factory().create(context)
   }
 }
-
-

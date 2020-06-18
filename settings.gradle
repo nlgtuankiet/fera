@@ -7,5 +7,6 @@ maybeInclude("core")
 maybeInclude("home")
 maybeInclude("data")
 maybeInclude("codegen")
+include(":function")
 
 rootProject.name = "Fera"

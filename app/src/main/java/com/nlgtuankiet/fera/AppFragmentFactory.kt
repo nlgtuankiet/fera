@@ -11,7 +11,7 @@ import javax.inject.Singleton
 @Singleton
 class AppFragmentFactory @Inject constructor(
   private val context: Context
-): FragmentFactory() {
+) : FragmentFactory() {
   private val nameMapping = mapOf(
     "com.nlgtuankiet.fera.home.HomeFragment" to "com.nlgtuankiet.fera.home.HomeFragmentComponentFactoryProvider"
   )

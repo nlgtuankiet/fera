@@ -3,10 +3,10 @@ package com.nlgtuankiet.fera
 import android.app.Application
 import android.content.Context
 import androidx.multidex.MultiDex
-import com.nlgtuankiet.fera.dagger.AppComponent
 import com.nlgtuankiet.fera.core.DataComponent
-import com.nlgtuankiet.fera.dagger.DaggerAppComponent
 import com.nlgtuankiet.fera.core.HasCoreComponent
+import com.nlgtuankiet.fera.dagger.AppComponent
+import com.nlgtuankiet.fera.dagger.DaggerAppComponent
 import dagger.android.AndroidInjector
 
 class FeraApplication : Application(), HasCoreComponent, AndroidInjector<MainActivity> {
@@ -17,7 +17,7 @@ class FeraApplication : Application(), HasCoreComponent, AndroidInjector<MainAct
       .forName("com.nlgtuankiet.fera.data.DataComponentProvider")
       .newInstance().let { it as DataComponent.DataComponentProvider }
       .get(this)
-    appComponent = DaggerAppComponent.factory().create(app = this, dataComponent = dataComponent)
+    appComponent = DaggerAppComponent.factory().create(context = this, dataComponent = dataComponent)
     appComponent.inject(this)
     super.onCreate()
   }

@@ -15,9 +15,11 @@ import com.nlgtuankiet.fera.domain.entity.MediaFile
 import com.nlgtuankiet.fera.domain.entity.MediaType
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.*
-import java.nio.file.Path
-import java.nio.file.Paths
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.onEach
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -25,7 +27,7 @@ import javax.inject.Singleton
 @OptIn(ExperimentalStdlibApi::class)
 class MediaFileRepositoryImpl @Inject constructor(
   private val context: Context
-): MediaFileRepository {
+) : MediaFileRepository {
   private val contentHandler by lazy {
     Handler(Looper.getMainLooper())
   }
@@ -58,7 +60,11 @@ class MediaFileRepositoryImpl @Inject constructor(
     }.distinctUntilChanged().onEach { println(it) }
   }
 
-  private fun getRecentMediaFilesInternal(uri: Uri, type: MediaType, limit: Int): Flow<List<MediaFile>> {
+  private fun getRecentMediaFilesInternal(
+    uri: Uri,
+    type: MediaType,
+    limit: Int
+  ): Flow<List<MediaFile>> {
 
     return query(
       uri = uri,
@@ -83,10 +89,10 @@ class MediaFileRepositoryImpl @Inject constructor(
 
   /**
    *           MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
-  arrayOf(),
-  null,
-  null,
-  MediaStore.Video.Media.DATE_MODIFIED
+   arrayOf(),
+   null,
+   null,
+   MediaStore.Video.Media.DATE_MODIFIED
    */
 
   @OptIn(ExperimentalCoroutinesApi::class)
@@ -111,7 +117,7 @@ class MediaFileRepositoryImpl @Inject constructor(
         val sortStatement = buildString {
           if (sortOrder != null) {
             append(sortOrder)
-            when(sortDirection) {
+            when (sortDirection) {
               SortDirection.Ascending -> append(" ASC")
               SortDirection.Descending -> append(" DESC")
             }

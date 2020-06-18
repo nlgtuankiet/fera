@@ -15,6 +15,9 @@ kapt {
 }
 
 android {
+  lintOptions {
+    checkDependencies true
+  }
   compileSdkVersion compileSdk
   buildToolsVersion buildTools
   defaultConfig {
@@ -44,6 +47,7 @@ android {
   }
   dependencies {
     kapt deps.daggerProcessor
+    kapt deps.moshiProcessor
     if (dynamic) {
       implementation project(":app")
     } else {
@@ -55,6 +59,7 @@ android {
       implementation deps.kotlinCoroutine
       implementation deps.moshi
       implementation deps.dagger
+      implementation deps.okHttp
       implementation deps.exec
       implementation deps.epoxy
       implementation deps.assistedInject

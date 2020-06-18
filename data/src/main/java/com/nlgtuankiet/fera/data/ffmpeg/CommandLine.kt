@@ -47,10 +47,8 @@ suspend fun runCommand(
       // TODO interrupt?
       process.future.cancel(true)
     }
-    if (process.process.isAlive) {
-      // TODO force?
-      Processes.newStandardProcess(process.process).destroyForcefully()
-    }
+    // TODO force?
+    Processes.newStandardProcess(process.process).destroyForcefully()
   }
 
   val result: Result<ProcessResult?> = runCatching { process.future.get() }
@@ -80,6 +78,5 @@ suspend fun runCommand(
           }
         }
       }
-
     }
 }

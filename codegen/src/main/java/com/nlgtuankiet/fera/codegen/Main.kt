@@ -1,14 +1,7 @@
 package com.nlgtuankiet.fera.codegen
 
-import kotlinx.coroutines.*
 import org.zeroturnaround.exec.ProcessExecutor
-import org.zeroturnaround.exec.ProcessResult
-import org.zeroturnaround.exec.stream.LogOutputStream
-import org.zeroturnaround.process.Processes
 import java.io.File
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.random.Random
 
 suspend fun main(args: Array<String>) {
   testCoroutine()
@@ -63,7 +56,8 @@ fun genCodec() {
   """(\w|\.)(\w|\.)(\w|\.)(\w|\.)(\w|\.)(\w|\.) (.+? +)(.*)"""
     .let { codecLineRegex = it.toRegex() }
 
-  val wordRegex = """_(\w)""".toRegex()
+  val wordRegex =
+    """_(\w)""".toRegex()
   val codecs = mutableListOf<SampleCodec>()
   val rawLines = ProcessExecutor()
     .readOutput(true)
@@ -118,7 +112,7 @@ fun genCodec() {
         Subtitle,
         Data,
       }
-    """.trimIndent()
+      """.trimIndent()
     )
     appendln()
     appendln(
@@ -133,7 +127,7 @@ fun genCodec() {
         val canCompressLossy: Boolean,
         val canCompressLossless: Boolean
       )
-    """.trimIndent()
+      """.trimIndent()
     )
     appendln()
     appendln("val codecsMapping = mapOf(")
@@ -188,7 +182,6 @@ fun Appendable.withIndent(indent: String, block: Appendable.() -> Unit) {
     override fun append(c: Char): Appendable {
       error("")
     }
-
   }
   block.invoke(appendable)
 }

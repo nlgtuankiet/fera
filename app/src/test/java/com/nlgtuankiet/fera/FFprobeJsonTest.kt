@@ -13,10 +13,10 @@ class FFprobeJsonTest {
 
   private val moshi = moshi()
 
-
   @Test
   fun `parse json`() {
-    val json = """
+    val json =
+      """
       {
           "streams": [
               {
@@ -144,7 +144,7 @@ class FFprobeJsonTest {
               }
           }
       }
-    """.trimIndent()
+      """.trimIndent()
     val adapter = moshi.adapter(FFprobeFormatOutput::class.java)
     val result = adapter.fromJson(json)
     println(result)

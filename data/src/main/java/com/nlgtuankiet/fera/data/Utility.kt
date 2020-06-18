@@ -7,4 +7,3 @@ fun assertNotMainThread() {
     "On main thread!"
   }
 }
-

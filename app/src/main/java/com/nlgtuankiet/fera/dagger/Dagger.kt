@@ -1,14 +1,13 @@
 package com.nlgtuankiet.fera.dagger
 
-import android.app.Application
 import android.content.Context
 import com.nlgtuankiet.fera.FeraApplication
 import com.nlgtuankiet.fera.MainActivity
 import com.nlgtuankiet.fera.core.DataComponent
-import com.squareup.moshi.Moshi
-import dagger.*
+import dagger.BindsInstance
+import dagger.Component
+import dagger.Module
 import javax.inject.Singleton
-
 
 @Component(
   modules = [
@@ -27,23 +26,14 @@ interface AppComponent : com.nlgtuankiet.fera.core.CoreComponent {
   @Component.Factory
   interface Factory {
     fun create(
-      @BindsInstance app: FeraApplication,
+      @BindsInstance context: Context,
       dataComponent: DataComponent
     ): AppComponent
   }
 }
 
 @Module
-object AppProvisionModule {
-
-}
+object AppProvisionModule
 
 @Module
-interface AppBindingModule {
-
-  @Binds
-  fun context(impl: FeraApplication): Context
-
-  @Binds
-  fun application(impl: FeraApplication): Application
-}
+interface AppBindingModule

@@ -1,19 +1,26 @@
 package com.nlgtuankiet.fera.codegen
 
-import kotlinx.coroutines.*
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import org.zeroturnaround.exec.stream.LogOutputStream
 import org.zeroturnaround.process.Processes
-import java.io.File
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
-import kotlin.random.Random
-
 
 suspend fun testCoroutine() = coroutineScope {
-  val job  = launch {
-    runCommand("ffmpeg -y -i http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_60fps_normal.mp4 a.mp3") {
+  val job = launch {
+    runCommand(
+      "ffmpeg " +
+        "-y " +
+        "-i " +
+        "http://distribution.bbb3d.renderfarming.net/" +
+        "video/mp4/bbb_sunflower_1080p_60fps_normal.mp4 " +
+        "a.mp3"
+    ) {
       println(it)
     }
   }
@@ -80,7 +87,9 @@ suspend fun runCommand(
     }
     .onSuccess {
       if (it == null) {
-        continuation.resumeWithException(RuntimeException("Process run success with cannot get result"))
+        continuation.resumeWithException(
+          RuntimeException("Process run success with cannot get result")
+        )
       } else {
         when {
           error.isNotEmpty() -> {
@@ -88,13 +97,14 @@ suspend fun runCommand(
             continuation.resumeWithException(RuntimeException(error.toString()))
           }
           it.exitValue != 0 -> {
-            continuation.resumeWithException(RuntimeException("Execute failed code: ${it.exitValue}"))
+            continuation.resumeWithException(
+              RuntimeException("Execute failed code: ${it.exitValue}")
+            )
           }
           else -> {
             continuation.resume(Unit)
           }
         }
       }
-
     }
 }

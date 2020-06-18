@@ -39,7 +39,6 @@ class MainActivity : AppCompatActivity() {
     }
   }
 
-
   fun File.listName() {
     if (this.isDirectory) {
       println(this.path)

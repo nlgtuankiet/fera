@@ -1,0 +1,78 @@
+version: 2.1
+
+executors:
+  android_executor:
+    docker:
+      - image: circleci/android:api-29
+    working_directory: ~/fera
+
+jobs:
+  verify-pull-request:
+    executor: android_executor
+    steps:
+      - checkout
+      - run:
+          name: setup
+          command: bash ./scripts/setup.sh
+      - run:
+          name: spotless lint test
+          command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
+          no_output_timeout: 1h
+      - run:
+          name: build release apk
+          command: sh ./scripts/build_release_apk.sh
+          no_output_timeout: 30m
+      - run:
+          name: download master apk
+          command: bash ./scripts/download_master_apk.sh
+      - store_artifacts:
+          path: build/universal.apk
+          destination: universal.apk
+      - store_artifacts:
+          path: build/master.apk
+          destination: master.apk
+      - run:
+          name: danger
+          command: bundle install && bundle exec danger --new-comment
+      - run:
+          name: dynamic build include all
+          command: ./gradlew :app:bundleDebug -Pdynamic
+          no_output_timeout: 30m
+      - run:
+          name: dynamic build exclude all
+          command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
+          no_output_timeout: 30m
+  upload-apk:
+    executor: android_executor
+    steps:
+      - checkout
+      - run:
+          name: setup
+          command: bash ./scripts/setup.sh
+      - run:
+          name: build release apk
+          command: sh ./scripts/build_release_apk.sh
+          no_output_timeout: 30m
+      - run:
+          name: upload apk
+          command: bash ./scripts/upload_master_apk.sh
+      - store_artifacts:
+          path: ./build/universal.apk
+          destination: universal.apk
+
+workflows:
+  version: 2
+  pull-request-flow:
+    jobs:
+      - verify-pull-request:
+          filters:
+            branches:
+              ignore:
+                - master
+  master-flow:
+    jobs:
+      - upload-apk:
+          filters:
+            branches:
+              only:
+                - master
