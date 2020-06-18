@@ -19,29 +19,29 @@ jobs:
           command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
           no_output_timeout: 1h
       - run:
-          name: dynamic build
-          command: ./gradlew :app:bundleDebug -Pdynamic
-          no_output_timeout: 30m
-      - run:
-          name: dynamic build exclude
-          command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
-          no_output_timeout: 30m
-      - run:
           name: build release apk
           command: sh ./scripts/build_release_apk.sh
           no_output_timeout: 30m
       - run:
           name: download master apk
           command: bash ./scripts/download_master_apk.sh
+      - store_artifacts:
+          path: build/universal.apk
+          destination: universal.apk
+      - store_artifacts:
+          path: build/master.apk
+          destination: master.apk
       - run:
           name: danger
           command: bundle install && bundle exec danger --new-comment
-      - store_artifacts:
-          path: build
-          destination: universal.apk
-      - store_artifacts:
-          path: build
-          destination: master.apk
+      - run:
+          name: dynamic build include all
+          command: ./gradlew :app:bundleDebug -Pdynamic
+          no_output_timeout: 30m
+      - run:
+          name: dynamic build exclude all
+          command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
+          no_output_timeout: 30m
   upload-apk:
     executor: android_executor
     steps:
@@ -57,7 +57,7 @@ jobs:
           name: upload apk
           command: bash ./scripts/upload_master_apk.sh
       - store_artifacts:
-          path: ./build
+          path: ./build/universal.apk
           destination: universal.apk
 
 workflows:
