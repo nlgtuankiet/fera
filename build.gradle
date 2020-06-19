@@ -1,3 +1,6 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
 buildscript {
   apply from: "gradle/config.gradle"
   ext {
@@ -17,12 +20,24 @@ buildscript {
   }
 }
 
+static def time() {
+  def format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+  return format.format(new Date())
+}
+
+static def log(message) {
+  println "${time()} message"
+}
+
 plugins {
   id "com.diffplug.gradle.spotless" version "4.3.1"
 }
+log "init plugins"
+
 
 allprojects {
   repositories { handler -> addAllRepositories(handler) }
+  log "after all addAllRepositories"
   apply plugin: 'com.diffplug.gradle.spotless'
   spotless {
     kotlin {
@@ -50,7 +65,10 @@ allprojects {
       greclipse().configFile(project.rootProject.file('scripts/greclipse.properties'))
     }
   }
+  log "after spotless"
 }
+
+log "init all project"
 
 def listProjectHasApk = []
 def installApkDebug = tasks.register("installApkDebug") {
@@ -62,7 +80,10 @@ def installApkDebug = tasks.register("installApkDebug") {
   }
 }
 
+log "init installApkDebug"
+
 subprojects { p ->
+  log "config sub project"
   p.tasks.whenTaskAdded { task ->
     if (task.name == "assembleDebug") {
       listProjectHasApk += p.projectDir.name
@@ -72,6 +93,8 @@ subprojects { p ->
     }
   }
 }
+
+log "init subprojects"
 
 
 
