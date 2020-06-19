@@ -1,5 +1,5 @@
 apply from: "gradle/config.gradle"
-//println startParameter.projectProperties.hasProperty("dynamic")
+println startParameter
 
 maybeInclude("app")
 maybeInclude("domain")
