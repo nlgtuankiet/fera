@@ -8,6 +8,7 @@ apply from: "../gradle/config.gradle"
 application {
   mainClassName "com.nlgtuankiet.fera.codegen.MainKt"
 }
+
 dependencies {
   implementation deps.kotlinStdLib
   implementation deps.exec
