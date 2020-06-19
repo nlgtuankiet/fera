@@ -112,9 +112,6 @@ jobs:
           command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
           no_output_timeout: 1h
       - run:
-          name: Merge lint report
-          command: bash ./scripts/merge-lint-report.sh
-      - run:
           name: Danger lint
           command: bundle exec danger --new-comment --dangerfile=lint.danger
       - store_artifacts:

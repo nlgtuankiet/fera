@@ -1,4 +1,6 @@
-android_lint.report_file = "build/reports/lint/lint-report.xml"
-android_lint.skip_gradle_task = true
-android_lint.severity = "Warning"
-android_lint.lint(inline_mode: true)
+Dir["*/build/reports/lint-results-debug.xml"].each do |file|
+  android_lint.report_file = file
+  android_lint.skip_gradle_task = true
+  android_lint.severity = "Warning"
+  android_lint.lint(inline_mode: true)
+end
