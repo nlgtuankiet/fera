@@ -6,14 +6,20 @@ executors:
       - image: circleci/android:api-29
     working_directory: ~/fera
 
-jobs:
-  compare-apk:
-    executor: android_executor
+commands:
+  init:
+    description: "Initialize project"
     steps:
       - checkout
       - run:
           name: setup
           command: bash ./scripts/setup.sh
+
+jobs:
+  compare-apk:
+    executor: android_executor
+    steps:
+      - init
       - run:
           name: build release apk
           command: sh ./scripts/build_release_apk.sh
@@ -30,6 +36,42 @@ jobs:
       - run:
           name: danger
           command: bundle install && bundle exec danger --new-comment
+  lint-debug:
+    executor: android_executor
+    steps:
+      - init
+      - run:
+          name: lint debug
+          command: ./gradlew lintDebug
+          no_output_timeout: 1h
+  test-debug:
+    executor: android_executor
+    steps:
+      - init
+      - run:
+          name: test debug
+          command: ./gradlew testDebugUnitTest
+          no_output_timeout: 1h
+  spotless-verify:
+    executor: android_executor
+    steps:
+      - init
+      - run:
+          name: spotless verify
+          command: ./gradlew spotlessCheck
+          no_output_timeout: 1h
+  dynamic-build:
+    executor: android_executor
+    steps:
+      - init
+      - run:
+          name: dynamic build include all modules
+          command: ./gradlew :app:bundleDebug -Pdynamic
+          no_output_timeout: 30m
+      - run:
+          name: dynamic build exclude all modules
+          command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
+          no_output_timeout: 30m
   verify-pull-request:
     executor: android_executor
     steps:
@@ -74,8 +116,18 @@ workflows:
   version: 2
   pull-request-flow:
     jobs:
-      - verify-pull-request:
-          filters:
+      - lint-debug:
+          - filters:
+            branches:
+                ignore:
+                  - master
+      - test-debug:
+          - filters:
+            branches:
+              ignore:
+                - master
+      - spotless-verify:
+          - filters:
             branches:
               ignore:
                 - master
