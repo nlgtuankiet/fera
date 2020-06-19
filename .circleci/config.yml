@@ -116,6 +116,16 @@ workflows:
   version: 2
   pull-request-flow:
     jobs:
+      - compare-apk:
+          filters:
+            branches:
+              ignore:
+                - master
+      - dynamic-build:
+          filters:
+            branches:
+              ignore:
+                - master
       - lint-debug:
           filters:
             branches:
@@ -127,16 +137,6 @@ workflows:
               ignore:
                 - master
       - spotless-verify:
-          filters:
-            branches:
-              ignore:
-                - master
-      - compare-apk:
-          filters:
-            branches:
-              ignore:
-                - master
-      - dynamic-build:
           filters:
             branches:
               ignore:
