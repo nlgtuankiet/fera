@@ -5,6 +5,8 @@ if (isInCI) {
 }
 println startParameter
 
+println "kotlin.compiler.execution.strategy is: " + System.getProperty("kotlin.compiler.execution.strategy")
+
 maybeInclude("app")
 maybeInclude("domain")
 maybeInclude("core")
