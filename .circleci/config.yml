@@ -44,6 +44,15 @@ jobs:
           name: lint debug
           command: ./gradlew lintDebug
           no_output_timeout: 1h
+      - run:
+          name: merge lint report
+          command: bash ./scripts/merge-lint-report.sh
+      - run:
+          name: danger
+          command: bundle install && bundle exec danger --new-comment --dangerfile=lint.danger
+      - store_artifacts:
+          path: ./
+          destination: lint-results-debug.html
   test-debug:
     executor: android_executor
     steps:
@@ -116,31 +125,31 @@ workflows:
   version: 2
   pull-request-flow:
     jobs:
-      - compare-apk:
-          filters:
-            branches:
-              ignore:
-                - master
-      - dynamic-build:
-          filters:
-            branches:
-              ignore:
-                - master
+#      - compare-apk:
+#          filters:
+#            branches:
+#              ignore:
+#                - master
+#      - dynamic-build:
+#          filters:
+#            branches:
+#              ignore:
+#                - master
       - lint-debug:
           filters:
             branches:
               ignore:
                 - master
-      - test-debug:
-          filters:
-            branches:
-              ignore:
-                - master
-      - spotless-verify:
-          filters:
-            branches:
-              ignore:
-                - master
+#      - test-debug:
+#          filters:
+#            branches:
+#              ignore:
+#                - master
+#      - spotless-verify:
+#          filters:
+#            branches:
+#              ignore:
+#                - master
   master-flow:
     jobs:
       - upload-apk:
