@@ -2,6 +2,11 @@
 set -e
 source ./scripts/copy_ffmpeg.sh
 
+cleanSystem() {
+  ls -lha ~/.gradle/daemon/
+  rm -rf ~/.gradle/daemon/
+}
+
 systemInfo() {
   echo "check system info"
 
@@ -57,6 +62,7 @@ setupGcloud() {
   gcloud auth activate-service-account --key-file=ci_sa.json
 }
 
+cleanSystem
 systemInfo
 setupMvRx
 setupCiGradleProperty
