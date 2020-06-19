@@ -11,7 +11,7 @@ kapt {
 
 android {
   lintOptions {
-    //    disable 'ObsoleteLintCustomCheck'
+    disable 'ObsoleteLintCustomCheck'
     abortOnError false
   }
   compileOptions {
