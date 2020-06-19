@@ -7,17 +7,13 @@ executors:
     working_directory: ~/fera
 
 jobs:
-  verify-pull-request:
+  compare-apk:
     executor: android_executor
     steps:
       - checkout
       - run:
           name: setup
           command: bash ./scripts/setup.sh
-      - run:
-          name: spotless lint test
-          command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
-          no_output_timeout: 1h
       - run:
           name: build release apk
           command: sh ./scripts/build_release_apk.sh
@@ -31,6 +27,20 @@ jobs:
       - store_artifacts:
           path: build/master.apk
           destination: master.apk
+      - run:
+          name: danger
+          command: bundle install && bundle exec danger --new-comment
+  verify-pull-request:
+    executor: android_executor
+    steps:
+      - checkout
+      - run:
+          name: setup
+          command: bash ./scripts/setup.sh
+      - run:
+          name: spotless lint test
+          command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
+          no_output_timeout: 1h
       - run:
           name: danger
           command: bundle install && bundle exec danger --new-comment
@@ -65,6 +75,11 @@ workflows:
   pull-request-flow:
     jobs:
       - verify-pull-request:
+          filters:
+            branches:
+              ignore:
+                - master
+      - compare-apk:
           filters:
             branches:
               ignore:
