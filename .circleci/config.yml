@@ -188,7 +188,8 @@ workflows:
             branches:
               only:
                 - master
-  test-flow:
+
+  nightly:
     triggers:
       - schedule:
           cron: "*/4 * * * *"
