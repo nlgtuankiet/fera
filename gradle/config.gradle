@@ -2,6 +2,8 @@ import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
 def hasProject = false
+
+ext.defaultModules = ["domain", "core"]
 try {
   project
   hasProject = true
@@ -11,6 +13,7 @@ try {
 
 if (hasProject && project.hasProperty("dynamic")) {
   ext.dynamic = project.property("dynamic") == true || project.property("dynamic") == ""
+  ext.dynamic = ext.dynamic && !defaultModules.contains(project.name)
 } else {
   ext.dynamic = false
 }
@@ -39,10 +42,12 @@ ext {
   }
 
   maybeInclude = { moduleName ->
-    def defaultModule = ["app", "domain", "core"]
-    if (shouldInclude(moduleName) || defaultModule.contains(moduleName)) {
+    if (shouldInclude(moduleName) || defaultModules.contains(moduleName)) {
       println "include :$moduleName"
       include(":$moduleName")
+    }
+    if (moduleName == "app") {
+      include(":app")
     }
   }
 
