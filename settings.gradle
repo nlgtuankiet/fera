@@ -17,11 +17,11 @@ buildCache {
   local {
     enabled = true
   }
-//  remote(HttpBuildCache) {
-//    url = 'http://209.97.161.3:80/cache/'
-//    allowUntrustedServer = true
-//    push = true
-//  }
+  //  remote(HttpBuildCache) {
+  //    url = 'http://209.97.161.3:80/cache/'
+  //    allowUntrustedServer = true
+  //    push = true
+  //  }
 }
 
 if (isInCI) {
