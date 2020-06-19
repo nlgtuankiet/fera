@@ -17,6 +17,7 @@ kapt {
 android {
   lintOptions {
     checkDependencies true
+    disable 'ObsoleteLintCustomCheck'
   }
   compileSdkVersion compileSdk
   buildToolsVersion buildTools
