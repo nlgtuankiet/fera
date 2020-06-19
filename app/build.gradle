@@ -10,6 +10,10 @@ kapt {
 }
 
 android {
+  lintOptions {
+    disable 'ObsoleteLintCustomCheck'
+    abortOnError false
+  }
   compileOptions {
     //    coreLibraryDesugaringEnabled true
     sourceCompatibility JavaVersion.VERSION_1_8
@@ -34,9 +38,6 @@ android {
     }
   }
   defaultConfig {
-    lintOptions {
-      abortOnError false
-    }
     multiDexEnabled true
     applicationId "com.nlgtuankiet.fera"
     minSdkVersion minSdk
