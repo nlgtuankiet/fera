@@ -51,8 +51,14 @@ jobs:
           name: danger
           command: bundle install && bundle exec danger --new-comment --dangerfile=lint.danger
       - store_artifacts:
-          path: ./*/build/reports
-          destination: reports
+          path: app/build/reports/lint-results-debug.html
+          destination: app-lint-results-debug.html
+      - store_artifacts:
+          path: core/build/reports/lint-results-debug.html
+          destination: core-lint-results-debug.html
+      - store_artifacts:
+          path: home/build/reports/lint-results-debug.html
+          destination: home-lint-results-debug.html
   test-debug:
     executor: android_executor
     steps:
