@@ -192,7 +192,7 @@ workflows:
   nightly:
     triggers:
       - schedule:
-          cron: "5,10,15,17,20,25 * * * *"
+          cron: "10,20,30,40,50 * * * *"
           filters:
             branches:
               ignore:
