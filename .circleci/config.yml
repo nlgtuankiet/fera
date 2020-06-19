@@ -90,24 +90,49 @@ jobs:
   verify-pull-request:
     executor: android_executor
     steps:
-      - checkout
+      - init
       - run:
-          name: setup
-          command: bash ./scripts/setup.sh
-      - run:
-          name: spotless lint test
-          command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
-          no_output_timeout: 1h
-      - run:
-          name: danger
-          command: bundle install && bundle exec danger --new-comment
-      - run:
-          name: dynamic build include all
-          command: ./gradlew :app:bundleDebug -Pdynamic
+          name: build release apk
+          command: sh ./scripts/build_release_apk.sh
           no_output_timeout: 30m
       - run:
-          name: dynamic build exclude all
-          command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
+          name: download master apk
+          command: bash ./scripts/download_master_apk.sh
+      - store_artifacts:
+          path: build/universal.apk
+          destination: universal.apk
+      - store_artifacts:
+          path: build/master.apk
+          destination: master.apk
+      - run:
+          name: danger
+          command: bundle install && bundle exec danger --new-comment --dangerfile=compare-apk.danger
+      - run:
+          name: lint test spotless
+          command: ./gradlew testDebugUnitTest lintDebug spotlessCheck --offline
+          no_output_timeout: 1h
+      - run:
+          name: merge lint report
+          command: bash ./scripts/merge-lint-report.sh
+      - run:
+          name: danger
+          command: bundle install && bundle exec danger --new-comment --dangerfile=lint.danger
+      - store_artifacts:
+          path: app/build/reports/lint-results-debug.html
+          destination: app-lint-results-debug.html
+      - store_artifacts:
+          path: core/build/reports/lint-results-debug.html
+          destination: core-lint-results-debug.html
+      - store_artifacts:
+          path: home/build/reports/lint-results-debug.html
+          destination: home-lint-results-debug.html
+      - run:
+          name: dynamic build include all modules
+          command: ./gradlew :app:bundleDebug -Pdynamic --offline
+          no_output_timeout: 30m
+      - run:
+          name: dynamic build exclude all modules
+          command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*" --offline
           no_output_timeout: 30m
   upload-apk:
     executor: android_executor
@@ -131,31 +156,37 @@ workflows:
   version: 2
   pull-request-flow:
     jobs:
-#      - compare-apk:
-#          filters:
-#            branches:
-#              ignore:
-#                - master
-#      - dynamic-build:
-#          filters:
-#            branches:
-#              ignore:
-#                - master
-      - lint-debug:
+      #      - compare-apk:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      #      - dynamic-build:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      #      - lint-debug:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      #      - test-debug:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      #      - spotless-verify:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      - verify-pull-request:
           filters:
             branches:
               ignore:
                 - master
-#      - test-debug:
-#          filters:
-#            branches:
-#              ignore:
-#                - master
-#      - spotless-verify:
-#          filters:
-#            branches:
-#              ignore:
-#                - master
+
   master-flow:
     jobs:
       - upload-apk:
