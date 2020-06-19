@@ -35,7 +35,7 @@ jobs:
           destination: master.apk
       - run:
           name: danger
-          command: bundle install && bundle exec danger --new-comment
+          command: bundle install && bundle exec danger --new-comment --dangerfile=compare-apk.danger
   lint-debug:
     executor: android_executor
     steps:
@@ -132,6 +132,11 @@ workflows:
               ignore:
                 - master
       - compare-apk:
+          filters:
+            branches:
+              ignore:
+                - master
+      - dynamic-build:
           filters:
             branches:
               ignore:
