@@ -150,31 +150,31 @@ workflows:
   version: 2
   pull-request-flow:
     jobs:
-      #      - compare-apk:
-      #          filters:
-      #            branches:
-      #              ignore:
-      #                - master
-      #      - dynamic-build:
-      #          filters:
-      #            branches:
-      #              ignore:
-      #                - master
-      #      - lint-debug:
-      #          filters:
-      #            branches:
-      #              ignore:
-      #                - master
-      #      - test-debug:
-      #          filters:
-      #            branches:
-      #              ignore:
-      #                - master
-      #      - spotless-verify:
-      #          filters:
-      #            branches:
-      #              ignore:
-      #                - master
+      - compare-apk:
+          filters:
+            branches:
+              ignore:
+                - master
+      - dynamic-build:
+          filters:
+            branches:
+              ignore:
+                - master
+      - lint-debug:
+          filters:
+            branches:
+              ignore:
+                - master
+      - test-debug:
+          filters:
+            branches:
+              ignore:
+                - master
+      - spotless-verify:
+          filters:
+            branches:
+              ignore:
+                - master
       - verify-pull-request:
           filters:
             branches:
