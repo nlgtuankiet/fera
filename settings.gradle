@@ -1,4 +1,30 @@
+plugins {
+  id "com.gradle.enterprise" version "3.3.4"
+}
+
 apply from: "gradle/config.gradle"
+
+gradleEnterprise {
+  buildScan {
+    termsOfServiceUrl = "https://gradle.com/terms-of-service"
+    termsOfServiceAgree = "yes"
+    if (isInCI) {
+      publishAlways()
+    }
+  }
+}
+
+buildCache {
+  local {
+    enabled = true
+  }
+  remote(HttpBuildCache) {
+    url = 'http://209.97.161.3:80/cache/'
+    allowUntrustedServer = true
+    push = true
+  }
+}
+
 if (isInCI) {
   println "show showStacktrace is enabled"
   startParameter.showStacktrace = ShowStacktrace.ALWAYS
