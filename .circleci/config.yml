@@ -188,3 +188,14 @@ workflows:
             branches:
               only:
                 - master
+  test-flow:
+    triggers:
+      - schedule:
+          cron: "*/4 * * * *"
+          filters:
+            branches:
+              ignore:
+                - master
+    jobs:
+      - verify-pull-request
+
