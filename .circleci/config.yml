@@ -117,17 +117,17 @@ workflows:
   pull-request-flow:
     jobs:
       - lint-debug:
-          - filters:
+          filters:
             branches:
-                ignore:
-                  - master
+              ignore:
+                - master
       - test-debug:
-          - filters:
+          filters:
             branches:
               ignore:
                 - master
       - spotless-verify:
-          - filters:
+          filters:
             branches:
               ignore:
                 - master
