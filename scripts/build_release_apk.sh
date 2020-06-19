@@ -30,7 +30,6 @@ extractApk() {
 
   # unzip apk to: ./universal.apk
   unzip -o "./app.apks" -d "./"
-  ls -lha
   mv ./universal.apk ./build/universal.apk
   ls -l ./build/universal.apk
 }
