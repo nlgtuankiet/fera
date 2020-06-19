@@ -97,35 +97,21 @@ def addAllExternalDependencies = { handler ->
   handler.api("androidx.core:core-ktx:1.3.0")
   handler.api("androidx.multidex:multidex:2.0.1")
   handler.api deps.appCompat
-  handler.api deps.appCompat
-  handler.api deps.assistedInject
   handler.api deps.assistedInject
   handler.api deps.constraintLayout
-  handler.api deps.constraintLayout
-  handler.api deps.dagger
   handler.api deps.dagger
   handler.api deps.daggerAndroid
   handler.api deps.epoxy
-  handler.api deps.epoxy
-  handler.api deps.exec
   handler.api deps.exec
   handler.api deps.execKiller
-  handler.api deps.execKiller
-  handler.api deps.fragment
   handler.api deps.fragment
   handler.api deps.inject
-  handler.api deps.inject
-  handler.api deps.kotlinCoroutine
-  handler.api deps.kotlinCoroutine
   handler.api deps.kotlinCoroutine
   handler.api deps.kotlinStdLib
   handler.api deps.moshi
-  handler.api deps.moshi
-  handler.api deps.mvrx
   handler.api deps.mvrx
   handler.api deps.navigation
   handler.api deps.navigationDynamic
-  handler.api deps.okHttp
   handler.api deps.okHttp
 
   handler.testImplementation("junit:junit:4.12")
