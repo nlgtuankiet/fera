@@ -1,4 +1,8 @@
 apply from: "gradle/config.gradle"
+if (isInCI) {
+  println "show showStacktrace is enabled"
+  startParameter.showStacktrace = ShowStacktrace.ALWAYS
+}
 println startParameter
 
 maybeInclude("app")
