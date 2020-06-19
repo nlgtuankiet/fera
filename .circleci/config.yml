@@ -4,8 +4,6 @@ executors:
   android_executor:
     docker:
       - image: circleci/android:api-29
-    environment:
-      kotlin.compiler.execution.strategy: in-process
     working_directory: ~/fera
 
 commands:
