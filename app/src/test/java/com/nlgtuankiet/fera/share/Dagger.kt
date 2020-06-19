@@ -37,7 +37,6 @@ fun moshi(): Moshi {
 @Module
 object FakeDataProvisionModule {
 
-  @JvmStatic
   @Provides
   @Singleton
   fun moshi(): Moshi {
@@ -46,7 +45,6 @@ object FakeDataProvisionModule {
   }
 
   @Provides
-  @JvmStatic
   @Singleton
   @FFmpegPath
   fun ffmpegPath(): String {
@@ -54,7 +52,6 @@ object FakeDataProvisionModule {
   }
 
   @Provides
-  @JvmStatic
   @Singleton
   @FFprobePath
   fun ffprobePath(): String {

@@ -43,7 +43,6 @@ interface DataBindingModule {
 @Module
 object DataProvisionModule {
 
-  @JvmStatic
   @Provides
   @Singleton
   fun moshi(): Moshi {
@@ -51,7 +50,6 @@ object DataProvisionModule {
       .build()
   }
 
-  @JvmStatic
   private fun File.find(name: String): File? {
     if (isDirectory) {
       listFiles()?.forEach {
@@ -69,7 +67,6 @@ object DataProvisionModule {
   }
 
   @Provides
-  @JvmStatic
   @Singleton
   @FFmpegPath
   fun ffmpegPath(context: Context): String {
@@ -79,7 +76,6 @@ object DataProvisionModule {
   }
 
   @Provides
-  @JvmStatic
   @Singleton
   @FFprobePath
   fun ffprobePath(context: Context): String {
