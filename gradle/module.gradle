@@ -1,45 +1,23 @@
+import javafx.util.Pair
+
 apply from: "../gradle/config.gradle"
 
 if (dynamic) {
+  println "apply dynamic"
   apply plugin: "com.android.dynamic-feature"
 } else {
+  println "apply library"
   apply plugin: "com.android.library"
 }
 
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
-apply plugin: 'com.jakewharton.butterknife'
 
-kapt {
-  correctErrorTypes true
-}
+kapt { handler -> applyKaptConfig(handler) }
+
+android { handler -> applyAndroidConfig(handler) }
 
 android {
-  lintOptions {
-    checkDependencies true
-    disable 'ObsoleteLintCustomCheck'
-  }
-  compileSdkVersion compileSdk
-  buildToolsVersion buildTools
-  defaultConfig {
-    minSdkVersion minSdk
-    targetSdkVersion targetSdk
-    versionCode vcode
-    versionName vname
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-  }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-    freeCompilerArgs = ["-XXLanguage:+InlineClasses"]
-  }
-  buildFeatures {
-    viewBinding true
-  }
-
   if (dynamic) {
     buildTypes {
       release {}
@@ -55,18 +33,24 @@ android {
   dependencies {
     kapt deps.daggerProcessor
     kapt deps.moshiProcessor
+    kapt deps.assistedInjectProccesor
+    kapt deps.epoxyProcessor
+
     if (dynamic) {
       implementation project(":app")
     } else {
-      kapt deps.assistedInjectProccesor
-      kapt deps.epoxyProcessor
-      def maybeImplementProject = { projectName ->
-        if (project.name != projectName) {
-          implementation project(":$projectName")
+      def blackList = new HashSet<Pair<String, String>>()
+      blackList.add(new Pair("core", "image"))
+      def maybeImplementProject = { dependency ->
+        if (project.name != dependency) { // not depend on self
+          if (!blackList.contains(new Pair(project.name, dependency))) {
+            api project(":${dependency}")
+          }
         }
       }
       maybeImplementProject("core")
       maybeImplementProject("domain")
+      maybeImplementProject("image")
     }
   }
 }

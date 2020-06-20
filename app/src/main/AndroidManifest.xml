@@ -4,6 +4,7 @@
     package="com.nlgtuankiet.fera">
 
     <application
+        tools:replace="android:allowBackup"
         android:name=".FeraApplication"
         android:allowBackup="false"
         android:extractNativeLibs="true"

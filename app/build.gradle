@@ -5,38 +5,10 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 
 apply from: "../gradle/config.gradle"
 
-kapt {
-  correctErrorTypes true
-}
+android { handler -> applyAndroidConfig(handler) }
+kapt { handler -> applyKaptConfig(handler) }
 
 android {
-  lintOptions {
-    disable 'ObsoleteLintCustomCheck'
-    abortOnError false
-  }
-  compileOptions {
-    //    coreLibraryDesugaringEnabled true
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-  }
-  buildFeatures {
-    viewBinding true
-  }
-  compileSdkVersion 29
-  buildToolsVersion "29.0.3"
-  testOptions {
-    unitTests.all {
-      testLogging {
-        events "passed", "skipped", "failed", "standardOut", "standardError"
-        outputs.upToDateWhen { false }
-        showStandardStreams = true
-        exceptionFormat = 'full'
-      }
-    }
-  }
   defaultConfig {
     multiDexEnabled true
     applicationId "com.nlgtuankiet.fera"
@@ -60,7 +32,8 @@ android {
         keyAlias env.getOrDefault("ANDROID_KEYSTORE_ALIAS", "")
         keyPassword env.getOrDefault("ANDROID_KEYSTORE_PASSWORD", "")
       }
-    } catch(Exception ignored) { }
+    } catch (Exception ignored) {
+    }
     ci {
       storeFile new File(rootProject.projectDir, ".circleci/keystore.jks")
       storePassword "123456"
@@ -86,14 +59,15 @@ android {
   sourceSets {
     androidTest {
       java.srcDirs += [
-        'src/test/java/com/nlgtuankiet/fera/share'
+          'src/test/java/com/nlgtuankiet/fera/share'
       ]
     }
   }
   if (dynamic) {
     def dynamicModules = [
-      "home",
-      "data",
+        "home",
+        "image",
+        "data",
     ]
 
     dynamicModules.forEach { module ->
@@ -102,6 +76,9 @@ android {
       }
     }
   }
+}
+dependencies { handler ->
+  addAllExternalDependencies(handler)
 }
 
 dependencies {
@@ -115,10 +92,9 @@ dependencies {
   api(project(":core"))
   if (!dynamic) {
     api(project(":home"))
+    api(project(":image"))
     api(project(":data"))
   }
 }
-dependencies { handler ->
-  addAllExternalDependencies(handler)
-}
+
 

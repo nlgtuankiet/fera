@@ -37,6 +37,7 @@ maybeInclude("domain")
 maybeInclude("core")
 maybeInclude("home")
 maybeInclude("data")
+maybeInclude("image")
 maybeInclude("codegen")
 include(":function")
 

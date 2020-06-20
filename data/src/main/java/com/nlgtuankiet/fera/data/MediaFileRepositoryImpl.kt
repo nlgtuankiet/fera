@@ -56,8 +56,8 @@ class MediaFileRepositoryImpl @Inject constructor(
         yieldAll(image)
         yieldAll(video)
         yieldAll(audio)
-      }.sortedByDescending { it.date }.take(4).toList()
-    }.distinctUntilChanged().onEach { println(it) }
+      }.sortedByDescending { it.date }.take(limit).toList()
+    }.distinctUntilChanged().onEach { println("onEach: $it") }
   }
 
   private fun getRecentMediaFilesInternal(
@@ -109,7 +109,6 @@ class MediaFileRepositoryImpl @Inject constructor(
     val cancellationSignal = CancellationSignal()
     val observer = object : ContentObserver(contentHandler) {
       override fun onChange(selfChange: Boolean) {
-        println("invoke onChange")
         super.onChange(selfChange)
         if (channel.isClosedForSend) {
           return
@@ -134,14 +133,16 @@ class MediaFileRepositoryImpl @Inject constructor(
           sortStatement,
           cancellationSignal
         )
-        requireNotNull(cursor)
         val result = mutableListOf<T>()
-        cursor.forEach {
-          if (channel.isClosedForSend) {
-            return
+        requireNotNull(cursor).use {
+          cursor.forEach {
+            if (channel.isClosedForSend) {
+              return
+            }
+            result.add(cursorMapper.invoke(it))
           }
-          result.add(cursorMapper.invoke(it))
         }
+
         channel.offer(result)
       }
     }

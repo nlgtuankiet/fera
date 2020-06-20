@@ -2,8 +2,11 @@ import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
 def hasProject = false
+ext {
+  libraryModules = ["domain", "core"]
+  alwaysIncludeModules = ["domain", "core", "image", "data"]
+}
 
-ext.defaultModules = ["domain", "core"]
 try {
   project
   hasProject = true
@@ -13,10 +16,11 @@ try {
 
 if (hasProject && project.hasProperty("dynamic")) {
   ext.dynamic = project.property("dynamic") == true || project.property("dynamic") == ""
-  ext.dynamic = ext.dynamic && !defaultModules.contains(project.name)
+  ext.dynamic = ext.dynamic && !libraryModules.contains(project.name)
 } else {
   ext.dynamic = false
 }
+
 println "dynamic is $dynamic"
 
 ext {
@@ -32,6 +36,9 @@ ext {
   }
 
   shouldInclude = { moduleName ->
+    if (alwaysIncludeModules.contains(moduleName)) {
+      return true
+    }
     if (ext.has('include')) {
       return Pattern.compile(include, Pattern.CASE_INSENSITIVE).matcher(moduleName).find()
     }
@@ -42,7 +49,7 @@ ext {
   }
 
   maybeInclude = { moduleName ->
-    if (shouldInclude(moduleName) || defaultModules.contains(moduleName)) {
+    if (shouldInclude(moduleName)) {
       println "include :$moduleName"
       include(":$moduleName")
     }
@@ -109,6 +116,60 @@ def addAllRepositories = { handler ->
 }
 ext.addAllRepositories = addAllRepositories
 
+def applyKaptConfig = { handler ->
+  handler.correctErrorTypes = true
+  handler.useBuildCache = true
+}
+
+ext.applyKaptConfig = applyKaptConfig
+
+def applyAndroidConfig = { handler ->
+  if (project.name != "image") {
+    handler.dataBinding {
+      enabled = true
+    }
+  }
+  handler.compileOptions {
+    //    coreLibraryDesugaringEnabled true
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  handler.kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
+  handler.compileSdkVersion 29
+  handler.buildToolsVersion "29.0.3"
+  handler.defaultConfig {
+    minSdkVersion minSdk
+    targetSdkVersion targetSdk
+    versionCode vcode
+    versionName vname
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+  handler.lintOptions {
+    checkDependencies true
+    disable 'ObsoleteLintCustomCheck'
+  }
+  handler.buildFeatures {
+    viewBinding true
+  }
+  handler.testOptions {
+    unitTests.all {
+      testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen { false }
+        showStandardStreams = true
+        exceptionFormat = 'full'
+      }
+    }
+  }
+  handler.kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+    freeCompilerArgs = ["-XXLanguage:+InlineClasses"]
+  }
+}
+ext.applyAndroidConfig = applyAndroidConfig
+
 def addAllExternalDependencies = { handler ->
   handler.api("androidx.core:core-ktx:1.3.0")
   handler.api("androidx.multidex:multidex:2.0.1")
@@ -129,6 +190,8 @@ def addAllExternalDependencies = { handler ->
   handler.api deps.navigation
   handler.api deps.navigationDynamic
   handler.api deps.okHttp
+  handler.api 'com.airbnb.android:epoxy-databinding:2.6.0'
+  handler.api 'com.github.bumptech.glide:glide:4.11.0'
 
   handler.testImplementation("junit:junit:4.12")
   handler.androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")

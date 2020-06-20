@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HomeState(
-  private val recentMediaFile: Async<List<MediaFile>> = Uninitialized,
-  private val a: Int = 0,
+  val recentMediaFile: Async<List<MediaFile>> = Uninitialized,
+  val a: Int = 0,
 ) : MvRxState
 
 class HomeViewModel @Inject constructor(
@@ -32,9 +32,9 @@ class HomeViewModel @Inject constructor(
 
   fun refresh() {
     viewModelScope.launch(Dispatchers.IO) {
-      getRecentMediaFile.invoke()
-        .execute {
-          copy(recentMediaFile = it)
+      getRecentMediaFile.invoke(limit = Int.MAX_VALUE)
+        .execute { async ->
+          copy(recentMediaFile = async)
         }
     }
   }

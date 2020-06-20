@@ -13,7 +13,11 @@ import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import okhttp3.Call
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Component(
@@ -48,6 +52,23 @@ object DataProvisionModule {
   fun moshi(): Moshi {
     return Moshi.Builder()
       .build()
+  }
+
+  @Provides
+  @Singleton
+  fun okHttpClient(): OkHttpClient {
+    assertNotMainThread()
+    return OkHttpClient.Builder()
+      .build()
+  }
+
+  @Provides
+  fun callFactory(clientProvider: Provider<OkHttpClient>): Call.Factory {
+    return object : Call.Factory {
+      override fun newCall(request: Request): Call {
+        return clientProvider.get().newCall(request)
+      }
+    }
   }
 
   private fun File.find(name: String): File? {
@@ -86,6 +107,7 @@ object DataProvisionModule {
 }
 
 @Keep
+@Suppress("unused")
 class DataComponentProvider :
   DataComponent.DataComponentProvider {
   override fun get(context: Context): DataComponent {
