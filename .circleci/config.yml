@@ -91,7 +91,7 @@ jobs:
       - run:
           name: Build release apk
           command: sh ./scripts/build_release_apk.sh
-          no_output_timeout: 30m
+          no_output_timeout: 25m
       - run:
           name: Download master apk
           command: bash ./scripts/download_master_apk.sh
@@ -107,7 +107,7 @@ jobs:
       - run:
           name: Lint test spotless
           command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
-          no_output_timeout: 1h
+          no_output_timeout: 25m
       - run:
           name: Danger lint
           command: bundle exec danger --new-comment --dangerfile=lint.danger
@@ -123,11 +123,11 @@ jobs:
       - run:
           name: Dynamic build include all modules
           command: ./gradlew :app:bundleDebug -Pdynamic --offline
-          no_output_timeout: 30m
+          no_output_timeout: 25m
       - run:
           name: Dynamic build exclude all modules
           command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*" --offline
-          no_output_timeout: 30m
+          no_output_timeout: 25m
   upload-apk:
     executor: android_executor
     steps:
@@ -189,14 +189,14 @@ workflows:
               only:
                 - master
 
-  nightly:
-    triggers:
-      - schedule:
-          cron: "0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57 * * * *"
-          filters:
-            branches:
-              ignore:
-                - master
-    jobs:
-      - verify-pull-request
+#  benchmark-verify-pull-request-v2:
+#    triggers:
+#      - schedule:
+#          cron: "0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57 * * * *"
+#          filters:
+#            branches:
+#              ignore:
+#                - master
+#    jobs:
+#      - verify-pull-request
 
