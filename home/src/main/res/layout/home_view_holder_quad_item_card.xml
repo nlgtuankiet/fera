@@ -21,24 +21,32 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp">
 
             <TextView
+                style="@style/Subtitle1"
+                android:fontFamily="@font/open_sans"
+                android:textColor="@color/black_87"
                 android:id="@+id/title"
-                style="@style/TextAppearance.MaterialComponents.Subtitle2"
+                android:textSize="20sp"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:layout_marginTop="14dp"
                 android:ellipsize="end"
-                android:fontFamily="@font/open_sans"
                 android:maxLines="1"
-                android:textSize="16dp"
                 android:text="@{title}"
                 app:layout_constraintEnd_toStartOf="@id/more_button"
                 app:layout_constraintStart_toStartOf="parent"
@@ -46,18 +54,32 @@
                 tools:text="MediaConverterPro media" />
 
             <ImageButton
+                android:layout_marginTop="4dp"
                 android:id="@+id/more_button"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_baseline_more_vert_24"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/more_button_margin"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <!-- TODO noop view so that more button can have negative margin-->
+            <View
+                android:id="@+id/more_button_margin"
+                android:layout_width="6dp"
+                android:layout_height="6dp"
+                android:visibility="invisible"
+                app:layout_constraintStart_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.airbnb.epoxy.Carousel
                 android:id="@+id/items"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="9dp"
+                android:layout_marginBottom="12dp"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
