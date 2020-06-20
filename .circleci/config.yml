@@ -189,14 +189,11 @@ workflows:
               only:
                 - master
 
-#  benchmark-verify-pull-request-v2:
-#    triggers:
-#      - schedule:
-#          cron: "0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57 * * * *"
-#          filters:
-#            branches:
-#              ignore:
-#                - master
-#    jobs:
-#      - verify-pull-request
+  benchmark-verify-pull-request-v3:
+    jobs:
+      - upload-apk:
+          filters:
+            branches:
+              only:
+                - nab
 
