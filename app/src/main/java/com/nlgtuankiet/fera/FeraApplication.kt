@@ -20,6 +20,7 @@ class FeraApplication : Application(), HasCoreComponent, AndroidInjector<MainAct
     appComponent = DaggerAppComponent.factory().create(context = this, dataComponent = dataComponent)
     appComponent.inject(this)
     super.onCreate()
+    initialize()
   }
 
   override fun attachBaseContext(base: Context) {
@@ -32,5 +33,9 @@ class FeraApplication : Application(), HasCoreComponent, AndroidInjector<MainAct
 
   override fun inject(instance: MainActivity) {
     appComponent.inject(instance)
+  }
+
+  private fun initialize() {
+    setupStrictMode()
   }
 }
