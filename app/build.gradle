@@ -10,6 +10,10 @@ kapt {
 }
 
 android {
+  lintOptions {
+    disable 'ObsoleteLintCustomCheck'
+    abortOnError false
+  }
   compileOptions {
     //    coreLibraryDesugaringEnabled true
     sourceCompatibility JavaVersion.VERSION_1_8
@@ -34,9 +38,6 @@ android {
     }
   }
   defaultConfig {
-    lintOptions {
-      abortOnError false
-    }
     multiDexEnabled true
     applicationId "com.nlgtuankiet.fera"
     minSdkVersion minSdk
@@ -105,39 +106,19 @@ android {
 
 dependencies {
   //  coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.5'
-  api deps.moshi
   kapt deps.moshiProcessor
-  api deps.dagger
   kapt deps.daggerProcessor
-  api deps.exec
-  api deps.execKiller
-  api deps.kotlinStdLib
-  api deps.kotlinCoroutine
-  api deps.navigation
-  api deps.navigationDynamic
-  api deps.epoxy
-  api deps.mvrx
-  api deps.okHttp
-  api deps.assistedInject
-  api deps.kotlinCoroutine
   kapt deps.assistedInjectProccesor
+  kaptTest deps.daggerProcessor
 
-  api deps.daggerAndroid
   api(project(":domain"))
   api(project(":core"))
   if (!dynamic) {
     api(project(":home"))
     api(project(":data"))
   }
-  api("androidx.core:core-ktx:1.3.0")
-  api("androidx.multidex:multidex:2.0.1")
-  api deps.appCompat
-  api deps.fragment
-  api deps.constraintLayout
-  api deps.inject
-  testImplementation("junit:junit:4.12")
-  kaptTest deps.daggerProcessor
-  androidTestImplementation("androidx.test.ext:junit:1.1.1")
-  androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+}
+dependencies { handler ->
+  addAllExternalDependencies(handler)
 }
 

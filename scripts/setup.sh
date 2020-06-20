@@ -2,6 +2,10 @@
 set -e
 source ./scripts/copy_ffmpeg.sh
 
+initFolders() {
+  mkdir ./build
+}
+
 systemInfo() {
   echo "check system info"
 
@@ -53,10 +57,11 @@ setupFfmpeg() {
 }
 
 setupGcloud() {
-  echo "$FERA_CI_SA_B64" | base64 -d >> ci_sa.json
+  echo "$FERA_CI_SA_B64" | base64 -d >>ci_sa.json
   gcloud auth activate-service-account --key-file=ci_sa.json
 }
 
+initFolders
 systemInfo
 setupMvRx
 setupCiGradleProperty

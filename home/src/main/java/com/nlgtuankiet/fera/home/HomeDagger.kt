@@ -35,7 +35,6 @@ interface HomeComponent : FragmentComponent<HomeFragment> {
 object HomeProvision {
   @Provides
   @Retained
-  @JvmStatic
   fun viewModel(fragment: HomeFragment): HomeViewModel {
     return fragment.viewModel
   }

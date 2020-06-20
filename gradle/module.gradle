@@ -17,6 +17,7 @@ kapt {
 android {
   lintOptions {
     checkDependencies true
+    disable 'ObsoleteLintCustomCheck'
   }
   compileSdkVersion compileSdk
   buildToolsVersion buildTools
@@ -45,30 +46,27 @@ android {
       debug {}
     }
   }
+  dependencies { handler ->
+    if (!dynamic) {
+      addAllExternalDependencies(handler)
+    }
+  }
+
   dependencies {
     kapt deps.daggerProcessor
     kapt deps.moshiProcessor
     if (dynamic) {
       implementation project(":app")
     } else {
-      implementation deps.mvrx
-      implementation deps.appCompat
-      implementation deps.fragment
-      implementation deps.inject
-      implementation deps.constraintLayout
-      implementation deps.kotlinCoroutine
-      implementation deps.moshi
-      implementation deps.dagger
-      implementation deps.okHttp
-      implementation deps.exec
-      implementation deps.epoxy
-      implementation deps.assistedInject
       kapt deps.assistedInjectProccesor
       kapt deps.epoxyProcessor
-
-      implementation deps.execKiller
-      implementation project(":core")
-      implementation project(":domain")
+      def maybeImplementProject = { projectName ->
+        if (project.name != projectName) {
+          implementation project(":$projectName")
+        }
+      }
+      maybeImplementProject("core")
+      maybeImplementProject("domain")
     }
   }
 }

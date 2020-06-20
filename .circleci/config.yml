@@ -6,18 +6,20 @@ executors:
       - image: circleci/android:api-29
     working_directory: ~/fera
 
-jobs:
-  verify-pull-request:
-    executor: android_executor
+commands:
+  init:
+    description: "Initialize project"
     steps:
       - checkout
       - run:
-          name: setup
+          name: Initialize
           command: bash ./scripts/setup.sh
-      - run:
-          name: spotless lint test
-          command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
-          no_output_timeout: 1h
+
+jobs:
+  compare-apk:
+    executor: android_executor
+    steps:
+      - init
       - run:
           name: build release apk
           command: sh ./scripts/build_release_apk.sh
@@ -33,28 +35,112 @@ jobs:
           destination: master.apk
       - run:
           name: danger
-          command: bundle install && bundle exec danger --new-comment
+          command: bundle install && bundle exec danger --new-comment --dangerfile=compare-apk.danger
+  lint-debug:
+    executor: android_executor
+    steps:
+      - init
       - run:
-          name: dynamic build include all
+          name: lint debug
+          command: ./gradlew lintDebug
+          no_output_timeout: 1h
+      - run:
+          name: danger
+          command: bundle install && bundle exec danger --new-comment --dangerfile=lint.danger
+      - store_artifacts:
+          path: app/build/reports/lint-results-debug.html
+          destination: app-lint-results-debug.html
+      - store_artifacts:
+          path: core/build/reports/lint-results-debug.html
+          destination: core-lint-results-debug.html
+      - store_artifacts:
+          path: home/build/reports/lint-results-debug.html
+          destination: home-lint-results-debug.html
+  test-debug:
+    executor: android_executor
+    steps:
+      - init
+      - run:
+          name: test debug
+          command: ./gradlew testDebugUnitTest
+          no_output_timeout: 1h
+  spotless-verify:
+    executor: android_executor
+    steps:
+      - init
+      - run:
+          name: spotless verify
+          command: ./gradlew spotlessCheck
+          no_output_timeout: 1h
+  dynamic-build:
+    executor: android_executor
+    steps:
+      - init
+      - run:
+          name: dynamic build include all modules
           command: ./gradlew :app:bundleDebug -Pdynamic
           no_output_timeout: 30m
       - run:
-          name: dynamic build exclude all
+          name: dynamic build exclude all modules
           command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
           no_output_timeout: 30m
+  verify-pull-request:
+    executor: android_executor
+    steps:
+      - init
+      - run:
+          name: Build release apk
+          command: sh ./scripts/build_release_apk.sh
+          no_output_timeout: 25m
+      - run:
+          name: Download master apk
+          command: bash ./scripts/download_master_apk.sh
+      - store_artifacts:
+          path: build/universal.apk
+          destination: universal.apk
+      - store_artifacts:
+          path: build/master.apk
+          destination: master.apk
+      - run:
+          name: Danger apk compare
+          command: bundle install && bundle exec danger --new-comment --dangerfile=compare-apk.danger
+      - run:
+          name: Lint test spotless
+          command: ./gradlew testDebugUnitTest lintDebug spotlessCheck
+          no_output_timeout: 25m
+      - run:
+          name: Danger lint
+          command: bundle exec danger --new-comment --dangerfile=lint.danger
+      - store_artifacts:
+          path: app/build/reports/lint-results-debug.html
+          destination: app-lint-results-debug.html
+      - store_artifacts:
+          path: core/build/reports/lint-results-debug.html
+          destination: core-lint-results-debug.html
+      - store_artifacts:
+          path: home/build/reports/lint-results-debug.html
+          destination: home-lint-results-debug.html
+      - run:
+          name: Dynamic build include all modules
+          command: ./gradlew :app:bundleDebug -Pdynamic --offline
+          no_output_timeout: 25m
+      - run:
+          name: Dynamic build exclude all modules
+          command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*" --offline
+          no_output_timeout: 25m
   upload-apk:
     executor: android_executor
     steps:
       - checkout
       - run:
-          name: setup
+          name: Initialize
           command: bash ./scripts/setup.sh
       - run:
-          name: build release apk
+          name: Build release apk
           command: sh ./scripts/build_release_apk.sh
           no_output_timeout: 30m
       - run:
-          name: upload apk
+          name: Upload apk
           command: bash ./scripts/upload_master_apk.sh
       - store_artifacts:
           path: ./build/universal.apk
@@ -64,11 +150,37 @@ workflows:
   version: 2
   pull-request-flow:
     jobs:
+      #      - compare-apk:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      #      - dynamic-build:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      #      - lint-debug:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      #      - test-debug:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
+      #      - spotless-verify:
+      #          filters:
+      #            branches:
+      #              ignore:
+      #                - master
       - verify-pull-request:
           filters:
             branches:
               ignore:
                 - master
+
   master-flow:
     jobs:
       - upload-apk:
@@ -76,3 +188,15 @@ workflows:
             branches:
               only:
                 - master
+
+#  benchmark-verify-pull-request-v2:
+#    triggers:
+#      - schedule:
+#          cron: "0,3,6,9,12,15,18,21,24,27,30,33,36,39,42,45,48,51,54,57 * * * *"
+#          filters:
+#            branches:
+#              ignore:
+#                - master
+#    jobs:
+#      - verify-pull-request
+
