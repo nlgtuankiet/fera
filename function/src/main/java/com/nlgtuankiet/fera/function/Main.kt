@@ -57,4 +57,5 @@ class UploadApk : HttpFunction {
 }
 
 fun main(args: Array<String>) {
+  getCpuAbis(args.first(), args.toList().getOrNull(1))
 }
