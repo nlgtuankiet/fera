@@ -108,8 +108,6 @@ workflows:
     jobs:
       - verify-pull-request
 ```
-
-Result:
 ```
 timeTp95: 421.5 seconds (7.03 minutes)
 timeMin: 236 seconds (3.93 minutes)
