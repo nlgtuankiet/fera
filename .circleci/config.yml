@@ -23,7 +23,7 @@ jobs:
       - run:
           name: Build release apk
           command: sh ./scripts/build_release_apk.sh
-          no_output_timeout: 25m
+          no_output_timeout: 10m
       - run:
           name: Download master apk
           command: bash ./scripts/download_master_apk.sh
@@ -43,7 +43,7 @@ jobs:
       - run:
           name: Lint
           command: ./gradlew lintDebug
-          no_output_timeout: 25m
+          no_output_timeout: 10m
       - run:
           name: Danger lint
           command: bundle install && bundle exec danger --new-comment --dangerfile=lint.danger
@@ -63,7 +63,7 @@ jobs:
       - run:
           name: Test spotless
           command: ./gradlew testDebugUnitTest spotlessCheck
-          no_output_timeout: 25m
+          no_output_timeout: 10m
   dynamic-build:
     executor: android_executor
     steps:
@@ -71,11 +71,11 @@ jobs:
       - run:
           name: Dynamic build include all modules
           command: ./gradlew :app:bundleDebug -Pdynamic
-          no_output_timeout: 25m
+          no_output_timeout: 10m
       - run:
           name: Dynamic build exclude all modules
           command: ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
-          no_output_timeout: 25m
+          no_output_timeout: 10m
   verify-pull-request:
     executor: android_executor
     steps:
@@ -140,7 +140,50 @@ jobs:
 
 workflows:
   version: 2
-  pull-request-flow:
+  #  pull-request-flow:
+  #    jobs:
+  #      - compare-apk:
+  #          filters:
+  #            branches:
+  #              ignore:
+  #                - master
+  #      - lint:
+  #          filters:
+  #            branches:
+  #              ignore:
+  #                - master
+  #      - test-spotless:
+  #          filters:
+  #            branches:
+  #              ignore:
+  #                - master
+  #      - dynamic-build:
+  #          filters:
+  #            branches:
+  #              ignore:
+  #                - master
+  #      - verify-pull-request:
+  #          filters:
+  #            branches:
+  #              ignore:
+  #                - master
+
+  #  master-flow:
+  #    jobs:
+  #      - upload-apk:
+  #          filters:
+  #            branches:
+  #              only:
+  #                - master
+
+  benchmark-verify-pull-request-v5:
+    triggers:
+      - schedule:
+          cron: "0,10,20,30,40,50 * * * *"
+          filters:
+            branches:
+              only:
+                - benchmark
     jobs:
       - compare-apk:
           filters:
@@ -162,28 +205,4 @@ workflows:
             branches:
               ignore:
                 - master
-#      - verify-pull-request:
-#          filters:
-#            branches:
-#              ignore:
-#                - master
-
-  master-flow:
-    jobs:
-      - upload-apk:
-          filters:
-            branches:
-              only:
-                - master
-
-#  benchmark-verify-pull-request-v4:
-#    triggers:
-#      - schedule:
-#          cron: "0,10,20,30,40,50 * * * *"
-#          filters:
-#            branches:
-#              only:
-#                - benchmark
-#    jobs:
-#      - verify-pull-request
 
