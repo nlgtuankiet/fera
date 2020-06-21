@@ -111,26 +111,18 @@ workflows:
 
 Result:
 ```
-gradle :function:run --args="insightOf benchmark-verify-pull-request-v3 benchmark"
-
---- time
 timeTp95: 421.5 seconds (7.03 minutes)
 timeMin: 236 seconds (3.93 minutes)
 timeMax: 738 seconds (12.30 minutes)
-timeAverage: 427.32 seconds (7.12 minutes)
----
+timeAverage: 428.8582677165354 seconds (7.15 minutes)
 
---- credit
 creditTp95: 70.5
 creditMin: 39
 creditMax: 123
-creditAverage: 70.216
----
+creditAverage: 70.48818897637796
 
---- stats
-success rate: 97.66%
-total: 128
-total success : 125
+success rate: 97.69%
+total: 130
+total success : 127
 total fail : 3
----
 ```
