@@ -46,7 +46,7 @@ jobs:
           no_output_timeout: 25m
       - run:
           name: Danger lint
-          command: bundle exec danger --new-comment --dangerfile=lint.danger
+          command: bundle install && bundle exec danger --new-comment --dangerfile=lint.danger
       - store_artifacts:
           path: app/build/reports/lint-results-debug.html
           destination: app-lint-results-debug.html
