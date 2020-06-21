@@ -3,8 +3,48 @@ import java.util.regex.Pattern
 
 def hasProject = false
 ext {
-  libraryModules = ["domain", "core"]
-  alwaysIncludeModules = ["domain", "core", "image", "data"]
+  /**
+   * maybeInclude("app")
+   * maybeInclude("domain")
+   * maybeInclude("core")
+   * maybeInclude("home")
+   * maybeInclude("browse")
+   * maybeInclude("data")
+   * maybeInclude("image")
+   * maybeInclude("codegen")
+   * include(":function")
+   */
+
+  allAndroidModules = [
+      "domain",
+      "core",
+      "home",
+      "browse",
+      "data",
+      "image",
+  ]
+
+  allUtilityModule = [
+      "codegen",
+      "function",
+  ]
+
+  libraryModules = [
+      "domain",
+      "core",
+  ]
+
+  alwaysIncludeModules = [
+      "domain",
+      "home",
+      "core",
+      "image",
+      "data",
+  ]
+
+  dynamicModules = allAndroidModules.stream()
+    .filter { module -> !libraryModules.contains(module) }
+    .collect()
 }
 
 try {

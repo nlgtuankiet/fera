@@ -39,6 +39,7 @@ android {
     if (dynamic) {
       implementation project(":app")
     } else {
+      // TODO improve this mess
       def blackList = new HashSet<Pair<String, String>>()
       blackList.add(new Pair("core", "image"))
       def maybeImplementProject = { dependency ->

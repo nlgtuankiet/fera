@@ -30,15 +30,11 @@ if (isInCI) {
 }
 println startParameter
 
-println "kotlin.compiler.execution.strategy is: " + System.getProperty("kotlin.compiler.execution.strategy")
+println "kotlin.compiler.execution.strategy is: ${System.getProperty("kotlin.compiler.execution.strategy")}"
 
-maybeInclude("app")
-maybeInclude("domain")
-maybeInclude("core")
-maybeInclude("home")
-maybeInclude("data")
-maybeInclude("image")
-maybeInclude("codegen")
-include(":function")
+
+include(":app")
+allAndroidModules.forEach { module -> maybeInclude(module) }
+allUtilityModule.forEach { module -> include(":${module}") }
 
 rootProject.name = "Fera"

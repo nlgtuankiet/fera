@@ -1,0 +1,1 @@
+apply from: "../gradle/module.gradle"

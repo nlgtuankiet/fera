@@ -13,18 +13,23 @@ class AppFragmentFactory @Inject constructor(
   private val context: Context
 ) : FragmentFactory() {
   private val nameMapping = mapOf(
-    "com.nlgtuankiet.fera.home.HomeFragment" to "com.nlgtuankiet.fera.home.HomeFragmentComponentFactoryProvider"
+    "com.nlgtuankiet.fera.home.HomeFragment"
+        to "com.nlgtuankiet.fera.home.HomeFragmentComponentFactoryProvider",
+    "com.nlgtuankiet.fera.browse.BrowseFragment"
+        to "com.nlgtuankiet.fera.browse.BrowseFragmentComponentFactoryProvider",
   )
   private val providerCache = mutableMapOf<String, FragmentComponentFactoryProvider>()
 
   override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
+    println("create $className")
     val factoryProviderName = nameMapping[className]
       ?: return super.instantiate(classLoader, className)
     val cache = providerCache[className]
     return if (cache != null) {
       cache.get().create(context.coreComponent).fragment()
     } else {
-      val instance = Class.forName(factoryProviderName).newInstance() as FragmentComponentFactoryProvider
+      val instance =
+        Class.forName(factoryProviderName).newInstance() as FragmentComponentFactoryProvider
       providerCache[className] = instance
       instance.get().create(context.coreComponent).fragment()
     }

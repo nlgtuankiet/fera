@@ -64,12 +64,6 @@ android {
     }
   }
   if (dynamic) {
-    def dynamicModules = [
-        "home",
-        "image",
-        "data",
-    ]
-
     dynamicModules.forEach { module ->
       if (shouldInclude(module)) {
         dynamicFeatures += ":$module".toString()
@@ -88,12 +82,10 @@ dependencies {
   kapt deps.assistedInjectProccesor
   kaptTest deps.daggerProcessor
 
-  api(project(":domain"))
-  api(project(":core"))
+  libraryModules.forEach { libraryModule -> api(project(":$libraryModule")) }
+
   if (!dynamic) {
-    api(project(":home"))
-    api(project(":image"))
-    api(project(":data"))
+    allAndroidModules.forEach { androidModule -> api(project(":$androidModule")) }
   }
 }
 

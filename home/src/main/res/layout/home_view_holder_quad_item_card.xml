@@ -7,6 +7,8 @@
 
         <import type="java.util.List" />
 
+        <import type="android.view.View" />
+
         <import type="com.airbnb.epoxy.EpoxyModel" />
 
         <variable
@@ -16,15 +18,19 @@
         <variable
             name="models"
             type="List&lt;EpoxyModel&lt;Object>>" />
+
+        <variable
+            name="onViewMoreClick"
+            type="View.OnClickListener" />
     </data>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginBottom="4dp"
         android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="4dp">
 
@@ -36,28 +42,28 @@
             android:paddingEnd="12dp">
 
             <TextView
-                style="@style/Subtitle1"
-                android:fontFamily="@font/open_sans"
-                android:textColor="@color/black_87"
                 android:id="@+id/title"
-                android:textSize="20sp"
+                style="@style/Subtitle1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="6dp"
                 android:layout_marginTop="14dp"
                 android:ellipsize="end"
+                android:fontFamily="@font/open_sans"
                 android:maxLines="1"
                 android:text="@{title}"
+                android:textColor="@color/black_87"
+                android:textSize="20sp"
                 app:layout_constraintEnd_toStartOf="@id/more_button"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="MediaConverterPro media" />
 
             <ImageButton
-                android:layout_marginTop="4dp"
                 android:id="@+id/more_button"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
+                android:layout_marginTop="4dp"
                 android:background="?android:selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_baseline_more_vert_24"
                 app:layout_constraintEnd_toEndOf="@id/more_button_margin"
@@ -79,7 +85,7 @@
                 android:layout_marginTop="9dp"
                 android:layout_marginBottom="12dp"
                 android:overScrollMode="never"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/action"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/title"
@@ -87,6 +93,17 @@
                 app:numViewsToShowOnScreen="@{4f}"
                 app:paddingDp="@{4}"
                 tools:listitem="@layout/home_view_holder_square_media" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/action"
+                style="@style/Button.OutlinedButton.Icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{onViewMoreClick}"
+                android:text="View more"
+                app:icon="@drawable/ic_baseline_perm_media_18"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/items" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 </layout>
