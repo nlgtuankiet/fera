@@ -28,17 +28,8 @@ enum class Abi {
   X86X64,
 }
 
-private val okHttpClient = OkHttpClient.Builder()
-  .callTimeout(1, TimeUnit.DAYS)
-  .connectTimeout(1, TimeUnit.DAYS)
-  .addNetworkInterceptor(object : Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
-      val request = chain.request()
-      return chain.proceed(request)
-    }
-  })
-  .build()
-private val gson = Gson()
+
+
 
 data class SearchResultEntry(
   val url: String,

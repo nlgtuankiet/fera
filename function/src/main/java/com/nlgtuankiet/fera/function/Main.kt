@@ -56,6 +56,9 @@ class UploadApk : HttpFunction {
   }
 }
 
-fun main(args: Array<String>) {
-  getCpuAbis(args.first(), args.toList().getOrNull(1))
+suspend fun main(args: Array<String>) {
+  val command = args[0]
+  when(command) {
+    "insightOf" -> insightOf(args[1], args[2])
+  }
 }
