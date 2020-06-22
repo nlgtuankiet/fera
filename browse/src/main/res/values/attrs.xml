@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="LeftEllipsizePairTextView">
+        <attr name="leftText" format="string" />
+        <attr name="leftStyle" format="reference" />
+        <attr name="leftTextSize" format="dimension" />
+        <attr name="leftTextColor" format="reference" />
+
+        <attr name="rightText" format="string" />
+        <attr name="rightStyle" format="reference" />
+        <attr name="rightTextSize" format="dimension" />
+        <attr name="rightTextColor" format="reference" />
+    </declare-styleable>
+</resources>

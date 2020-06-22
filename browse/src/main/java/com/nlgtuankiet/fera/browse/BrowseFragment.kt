@@ -14,6 +14,7 @@ import javax.inject.Singleton
 
 @Keep
 @Singleton
+// TODO implement snap items
 class BrowseFragment @Inject constructor(
   private val getMediaInfo: GetMediaInfo,
   private val controller: BrowseController,

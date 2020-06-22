@@ -29,7 +29,7 @@ class GlideInitializer : Function1<Context, Unit>, ImageLoader {
     GlideApp.with(imageView)
       .load(resource)
       .apply {
-        requestOption.placeHolder?.let { placeholder(it) }
+        requestOption.placeholder?.let { placeholder(it) }
         requestOption.errorHolder?.let { error(it) }
         if (requestOption.internalTransformers.isNullOrEmpty()) {
           when (requestOption.scaleType) {

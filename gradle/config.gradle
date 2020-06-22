@@ -3,18 +3,6 @@ import java.util.regex.Pattern
 
 def hasProject = false
 ext {
-  /**
-   * maybeInclude("app")
-   * maybeInclude("domain")
-   * maybeInclude("core")
-   * maybeInclude("home")
-   * maybeInclude("browse")
-   * maybeInclude("data")
-   * maybeInclude("image")
-   * maybeInclude("codegen")
-   * include(":function")
-   */
-
   allAndroidModules = [
     "domain",
     "core",
@@ -50,7 +38,7 @@ ext {
 try {
   project
   hasProject = true
-} catch(ignored) {
+} catch (ignored) {
   hasProject = false
 }
 
@@ -98,7 +86,7 @@ ext {
     }
   }
 
-  minSdk = 16
+  minSdk = 21
   ext.targetSdk = 28
   ext.vcode = 1
   ext.vname = "1.0"
@@ -211,29 +199,32 @@ def applyAndroidConfig = { handler ->
 ext.applyAndroidConfig = applyAndroidConfig
 
 def addAllExternalDependencies = { handler ->
-  handler.api("androidx.core:core-ktx:1.3.0")
-  handler.api("androidx.multidex:multidex:2.0.1")
-  handler.api deps.appCompat
-  handler.api deps.assistedInject
-  handler.api deps.constraintLayout
-  handler.api deps.dagger
-  handler.api deps.daggerAndroid
-  handler.api deps.epoxy
-  handler.api deps.exec
-  handler.api deps.execKiller
-  handler.api deps.fragment
-  handler.api deps.inject
-  handler.api deps.kotlinCoroutine
-  handler.api deps.kotlinStdLib
-  handler.api deps.moshi
-  handler.api deps.mvrx
-  handler.api deps.navigation
-  handler.api deps.navigationDynamic
-  handler.api deps.okHttp
-  handler.api 'androidx.lifecycle:lifecycle-process:2.3.0-alpha04'
-  handler.api 'com.airbnb.android:epoxy-databinding:2.6.0'
-  handler.api 'com.github.bumptech.glide:glide:4.11.0'
-
+  def dependencies = [
+    "androidx.core:core-ktx:1.3.0",
+    "androidx.multidex:multidex:2.0.1",
+    deps.appCompat,
+    deps.assistedInject,
+    deps.constraintLayout,
+    deps.dagger,
+    deps.daggerAndroid,
+    deps.epoxy,
+    deps.exec,
+    deps.execKiller,
+    deps.fragment,
+    deps.inject,
+    deps.kotlinCoroutine,
+    deps.kotlinStdLib,
+    deps.moshi,
+    deps.mvrx,
+    deps.navigation,
+    deps.navigationDynamic,
+    deps.okHttp,
+    'app.cash.contour:contour:0.1.7',
+    'androidx.lifecycle:lifecycle-process:2.3.0-alpha04',
+    'com.airbnb.android:epoxy-databinding:2.6.0',
+    'com.github.bumptech.glide:glide:4.11.0',
+  ]
+  dependencies.forEach { d -> handler.api d }
   handler.testImplementation("junit:junit:4.12")
   handler.androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
   handler.androidTestImplementation("androidx.test.ext:junit:1.1.1")

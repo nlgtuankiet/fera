@@ -17,7 +17,7 @@ enum class ScaleType {
 
 data class RequestOption(
   @DrawableRes
-  var placeHolder: Int? = R.drawable.ic_placeholder,
+  var placeholder: Int? = R.drawable.ic_placeholder,
   @DrawableRes
   var errorHolder: Int? = R.drawable.ic_load_image_failed,
   var scaleType: ScaleType = ScaleType.CenterCrop,

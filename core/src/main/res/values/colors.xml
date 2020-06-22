@@ -4,5 +4,5 @@
     <color name="grey_700">#616161</color>
     <color name="blue_500">#2196f3</color>
     <color name="blue_700">#1976d2</color>
-
+    <color name="colorOnSurface">#000</color>
 </resources>
