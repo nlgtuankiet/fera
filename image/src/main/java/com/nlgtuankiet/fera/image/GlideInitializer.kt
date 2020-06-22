@@ -61,4 +61,3 @@ class GlideInitializer : Function1<Context, Unit>, ImageLoader {
       .into(imageView)
   }
 }
-

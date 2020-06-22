@@ -5,4 +5,8 @@ object Log {
   operator fun invoke(message: String) {
     println(message)
   }
+
+  fun w(message: String) {
+    println("WARN: $message")
+  }
 }

@@ -30,7 +30,7 @@ class HomeFragment @Inject constructor(
   }
 
   override fun invalidate() {
-    println("invalidate with ${viewModel}")
+    println("invalidate with $viewModel")
     controller.requestModelBuild()
   }
 }

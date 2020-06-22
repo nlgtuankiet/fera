@@ -8,10 +8,6 @@ import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.domain.entity.MediaFile
-import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
-import com.nlgtuankiet.fera.domain.interactor.GetRecentMediaFile
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HomeState(
@@ -19,8 +15,7 @@ data class HomeState(
   val a: Int = 0,
 ) : MvRxState
 
-class BrowseViewModel @Inject constructor(
-) : BaseMavericksViewModel<HomeState>(
+class BrowseViewModel @Inject constructor() : BaseMavericksViewModel<HomeState>(
   initialState = HomeState(),
   debugMode = BuildConfig.DEBUG
 ) {

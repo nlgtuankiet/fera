@@ -54,7 +54,6 @@ fun ImageView.imageLoad(
   imageLoader.load(this, resource, option)
 }
 
-
 sealed class Transformer
 
 class RoundedCornersTransformer(

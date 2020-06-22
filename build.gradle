@@ -62,7 +62,8 @@ def installApkDebug = tasks.register("installApkDebug") {
   group "install"
   description "Build base apk + feature module apk, and run adb install-multiple"
   doLast {
-    def p = "./scripts/install_apk.sh devV16 debug ${listProjectHasApk.toSet().join(" ")}".execute()
+    def gap = project.hasProperty("gap")
+    def p = "./scripts/install_apk.sh devV16 debug $gap ${listProjectHasApk.toSet().join(" ")}".execute()
     println p.text
   }
 }

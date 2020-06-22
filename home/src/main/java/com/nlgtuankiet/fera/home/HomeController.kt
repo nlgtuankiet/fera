@@ -33,20 +33,19 @@ class HomeController @Inject constructor(
       val models = mediaList
         .take(numberOfItem)
         .mapIndexed { index, it ->
-        SquareMediaBindingModel_().apply {
-          val isViewMoreItem = canViewMore && index == viewMoreIndex
-          println("isViewMoreItem: $isViewMoreItem")
-          println("canViewMore: $canViewMore")
-          id(it.hashCode())
-          moreText(if (isViewMoreItem) { viewMoreText } else { null })
-          moreVisibility(if (isViewMoreItem) { View.VISIBLE } else { View.GONE })
-          contentResource(it.path.value)
-          contentWhiteOverlay(isViewMoreItem)
+          SquareMediaBindingModel_().apply {
+            val isViewMoreItem = canViewMore && index == viewMoreIndex
+            println("isViewMoreItem: $isViewMoreItem")
+            println("canViewMore: $canViewMore")
+            id(it.hashCode())
+            moreText(if (isViewMoreItem) { viewMoreText } else { null })
+            moreVisibility(if (isViewMoreItem) { View.VISIBLE } else { View.GONE })
+            contentResource(it.path.toString())
+            contentWhiteOverlay(isViewMoreItem)
+          }
         }
-      }
       models(models as List<EpoxyModel<Any>>)
       onViewMoreClick { _ ->
-
       }
     }
   }

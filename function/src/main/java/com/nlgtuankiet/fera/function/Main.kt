@@ -58,7 +58,7 @@ class UploadApk : HttpFunction {
 
 suspend fun main(args: Array<String>) {
   val command = args[0]
-  when(command) {
+  when (command) {
     "insightOf" -> insightOf(args[1], args[2])
   }
 }

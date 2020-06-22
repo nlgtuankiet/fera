@@ -16,35 +16,35 @@ ext {
    */
 
   allAndroidModules = [
-      "domain",
-      "core",
-      "home",
-      "browse",
-      "data",
-      "image",
+    "domain",
+    "core",
+    "home",
+    "browse",
+    "data",
+    "image",
   ]
 
   allUtilityModule = [
-      "codegen",
-      "function",
+    "codegen",
+    "function",
   ]
 
   libraryModules = [
-      "domain",
-      "core",
+    "domain",
+    "core",
   ]
 
   alwaysIncludeModules = [
-      "domain",
-      "home",
-      "core",
-      "image",
-      "data",
+    "domain",
+    "home",
+    "core",
+    "image",
+    "data",
   ]
 
   dynamicModules = allAndroidModules.stream()
-    .filter { module -> !libraryModules.contains(module) }
-    .collect()
+      .filter { module -> !libraryModules.contains(module) }
+      .collect()
 }
 
 try {
@@ -230,6 +230,7 @@ def addAllExternalDependencies = { handler ->
   handler.api deps.navigation
   handler.api deps.navigationDynamic
   handler.api deps.okHttp
+  handler.api 'androidx.lifecycle:lifecycle-process:2.3.0-alpha04'
   handler.api 'com.airbnb.android:epoxy-databinding:2.6.0'
   handler.api 'com.github.bumptech.glide:glide:4.11.0'
 

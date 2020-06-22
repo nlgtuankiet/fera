@@ -14,9 +14,9 @@ class AppFragmentFactory @Inject constructor(
 ) : FragmentFactory() {
   private val nameMapping = mapOf(
     "com.nlgtuankiet.fera.home.HomeFragment"
-        to "com.nlgtuankiet.fera.home.HomeFragmentComponentFactoryProvider",
+      to "com.nlgtuankiet.fera.home.HomeFragmentComponentFactoryProvider",
     "com.nlgtuankiet.fera.browse.BrowseFragment"
-        to "com.nlgtuankiet.fera.browse.BrowseFragmentComponentFactoryProvider",
+      to "com.nlgtuankiet.fera.browse.BrowseFragmentComponentFactoryProvider",
   )
   private val providerCache = mutableMapOf<String, FragmentComponentFactoryProvider>()
 
