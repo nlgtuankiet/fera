@@ -16,6 +16,7 @@ class HomeController @Inject constructor(
     get() = viewModelProvider.get()
 
   override fun buildModels() {
+    return
     val state = withState(viewModelProvider.get()) { it }
     println("items: ${state.recentMediaFile}")
     if (state.recentMediaFile.invoke().isNullOrEmpty()) {

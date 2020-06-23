@@ -1,1 +1,2 @@
+apply plugin: 'com.jakewharton.butterknife'
 apply from: "../gradle/module.gradle"

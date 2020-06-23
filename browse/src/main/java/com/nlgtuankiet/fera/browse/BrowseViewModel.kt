@@ -15,15 +15,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-data class HomeState(
+data class BrowseState(
   val mediaGroups: Async<List<MediaGroup>> = Uninitialized,
   val a: Int = 0,
 ) : MvRxState
 
 class BrowseViewModel @Inject constructor(
   private val getRecentMediaFile: GetRecentMediaFile
-) : BaseMavericksViewModel<HomeState>(
-  initialState = HomeState(),
+) : BaseMavericksViewModel<BrowseState>(
+  initialState = BrowseState(),
   debugMode = BuildConfig.DEBUG
 ) {
   init {
@@ -62,8 +62,8 @@ class BrowseViewModel @Inject constructor(
     return result.sortedByDescending { it.medias.first().date }
   }
 
-  companion object : MvRxViewModelFactory<BrowseViewModel, HomeState> {
-    override fun create(viewModelContext: ViewModelContext, state: HomeState): BrowseViewModel? {
+  companion object : MvRxViewModelFactory<BrowseViewModel, BrowseState> {
+    override fun create(viewModelContext: ViewModelContext, state: BrowseState): BrowseViewModel? {
       return viewModelContext.fragment<BrowseFragment>().viewModelFactory.get()
     }
   }

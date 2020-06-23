@@ -12,13 +12,13 @@ import com.nlgtuankiet.fera.core.image.imageLoad
 
 @BindingAdapter(
   value = [
-    "stringSource",
+    "source",
     "placeholder"
   ],
   requireAll = false
 )
-fun setImageSource(imageView: ImageView, stringSource: String, @DrawableRes placeholder: Int?) {
-  imageView.imageLoad(resource = stringSource) {
+fun setSource(imageView: ImageView, source: Any, @DrawableRes placeholder: Int?) {
+  imageView.imageLoad(source = source) {
     if (placeholder != null && placeholder != 0) {
       this.placeholder = placeholder
     }

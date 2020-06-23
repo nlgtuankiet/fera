@@ -7,7 +7,7 @@ import com.nlgtuankiet.fera.core.image.ColorFilterTransformer
 import com.nlgtuankiet.fera.core.image.RoundedCornersTransformer
 import com.nlgtuankiet.fera.core.image.ScaleType
 import com.nlgtuankiet.fera.core.image.imageLoad
-import com.nlgtuankiet.fera.core.pxOf
+import com.nlgtuankiet.fera.core.ktx.pxOf
 
 @BindingAdapter("resource", "whiteOverlay")
 fun mediaImage(imageView: ImageView, resource: String, whiteOverlay: Boolean) {

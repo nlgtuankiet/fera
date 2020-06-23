@@ -39,9 +39,6 @@ fun addWhitelistStrictMode() {
     "android.graphics.fonts.HwTypefaceEx.",
 
     // https://bumptech.github.io/glide/doc/placeholders.html#are-placeholders-loaded-asynchronously
-    // Are placeholders loaded asynchronously?
-    // No. Placeholders are loaded from Android resources on the main thread. We typically expect
-    // placeholders to be small and easily cacheable by the system resource cache.
     "com.bumptech.glide.load.resource.drawable.DrawableDecoderCompat.getDrawable",
   )
 

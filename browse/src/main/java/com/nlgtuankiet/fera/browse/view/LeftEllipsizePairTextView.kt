@@ -15,13 +15,13 @@ class LeftEllipsizePairTextView @JvmOverloads constructor(
   attributeSet: AttributeSet? = null
 ) : ContourLayout(context, attributeSet) {
 
-  private var leftTextView: AppCompatTextView = AppCompatTextView(context)
+  private lateinit var leftTextView: AppCompatTextView
   private var leftText = ""
   private var leftStyle = -1
   private var leftTextSize = -1f
   private var leftTextColor = -1
 
-  private var rightTextView: AppCompatTextView = AppCompatTextView(context)
+  private lateinit var rightTextView: AppCompatTextView
   private var rightText = ""
   private var rightStyle = -1
   private var rightTextSize = -1f
@@ -47,7 +47,7 @@ class LeftEllipsizePairTextView @JvmOverloads constructor(
     } finally {
       ta.recycle()
     }
-
+    rightTextView = AppCompatTextView(context)
     rightTextView.apply {
       setSingleLine()
       if (rightStyle != 0) {
@@ -69,7 +69,8 @@ class LeftEllipsizePairTextView @JvmOverloads constructor(
       )
     }
 
-    leftTextView = AppCompatTextView(context).apply {
+    leftTextView = AppCompatTextView(context)
+    leftTextView.apply {
       setSingleLine()
       ellipsize = TextUtils.TruncateAt.END
       if (leftStyle != 0) {

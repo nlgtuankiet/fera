@@ -9,6 +9,7 @@ interface CoreComponent {
   val ffmpegGateway: FFmpegGateway
   val mediaFileRepository: MediaFileRepository
   val callFactory: Call.Factory
+  val context: Context
 }
 
 interface HasCoreComponent {

@@ -24,10 +24,10 @@ class GlideInitializer : Function1<Context, Unit>, ImageLoader {
     setImageLoader(this)
   }
 
-  override fun load(imageView: ImageView, resource: String, requestOption: RequestOption) {
-    Log("load $resource with $requestOption")
+  override fun load(imageView: ImageView, source: Any, requestOption: RequestOption) {
+    Log("load $source with $requestOption")
     GlideApp.with(imageView)
-      .load(resource)
+      .load(source)
       .apply {
         requestOption.placeholder?.let { placeholder(it) }
         requestOption.errorHolder?.let { error(it) }

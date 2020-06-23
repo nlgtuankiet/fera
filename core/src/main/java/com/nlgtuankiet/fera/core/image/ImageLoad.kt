@@ -33,7 +33,7 @@ data class RequestOption(
 }
 
 interface ImageLoader {
-  fun load(imageView: ImageView, resource: String, requestOption: RequestOption)
+  fun load(imageView: ImageView, source: Any, requestOption: RequestOption)
 }
 
 private lateinit var imageLoader: ImageLoader
@@ -43,7 +43,7 @@ fun setImageLoader(loader: ImageLoader) {
 }
 
 fun ImageView.imageLoad(
-  resource: String,
+  source: Any,
   requestOptionApplier: (RequestOption.() -> Unit)? = null
 ) {
   val option = if (requestOptionApplier == null) {
@@ -51,7 +51,7 @@ fun ImageView.imageLoad(
   } else {
     RequestOption().apply(requestOptionApplier)
   }
-  imageLoader.load(this, resource, option)
+  imageLoader.load(this, source, option)
 }
 
 sealed class Transformer
