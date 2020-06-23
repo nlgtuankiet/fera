@@ -44,6 +44,7 @@ class GlideInitializer : Function1<Context, Unit>, ImageLoader {
             ScaleType.CenterInside -> CenterInside()
             ScaleType.FitCenter -> FitCenter()
             ScaleType.CircleCrop -> CircleCrop()
+            else -> null
           }
           val transformers = requestOption.internalTransformers.orEmpty().map {
             when (it) {
@@ -55,7 +56,12 @@ class GlideInitializer : Function1<Context, Unit>, ImageLoader {
               }
             }
           }.toTypedArray()
-          transform(scaleTransformer, *transformers)
+          if (scaleTransformer != null) {
+            transform(scaleTransformer, *transformers)
+          } else {
+            transform(*transformers)
+          }
+
         }
       }
       .into(imageView)

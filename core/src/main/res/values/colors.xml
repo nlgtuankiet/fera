@@ -4,7 +4,8 @@
     <color name="grey_700">#616161</color>
     <color name="blue_500">#2196f3</color>
     <color name="blue_700">#1976d2</color>
-    <color name="colorOnSurface">#000</color>
+    <color name="color_on_surface">#000</color>
+    <color name="color_on_surface_a12">#1F000000</color>
 
     <color name="red_50">#FFEBEE</color>
     <color name="red_100">#FFCDD2</color>
@@ -50,4 +51,15 @@
     <color name="purple_A200">#E040FB</color>
     <color name="purple_A400">#D500F9</color>
     <color name="purple_A700">#AA00FF</color>
+
+    <color name="gray_50">#FAFAFA</color>
+    <color name="gray_100">#F5F5F5</color>
+    <color name="gray_200">#EEEEEE</color>
+    <color name="gray_300">#E0E0E0</color>
+    <color name="gray_400">#BDBDBD</color>
+    <color name="gray_500">#9E9E9E</color>
+    <color name="gray_600">#757575</color>
+    <color name="gray_700">#616161</color>
+    <color name="gray_800">#424242</color>
+    <color name="gray_900">#212121</color>
 </resources>

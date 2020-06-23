@@ -1,3 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+  <color name="browse_color_on_surface_a12">#1F000000</color>
+  <color name="browse_grey_100">#F5F5F5</color>
 </resources>

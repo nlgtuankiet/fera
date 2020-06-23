@@ -20,7 +20,7 @@ data class RequestOption(
   var placeholder: Int? = R.drawable.ic_placeholder,
   @DrawableRes
   var errorHolder: Int? = R.drawable.ic_load_image_failed,
-  var scaleType: ScaleType = ScaleType.CenterCrop,
+  var scaleType: ScaleType? = ScaleType.CenterCrop,
   var internalTransformers: List<Transformer>? = null,
 ) {
 
@@ -30,6 +30,10 @@ data class RequestOption(
     }
     internalTransformers = internalTransformers?.plus(transformer)
   }
+}
+
+inline fun requestOption(crossinline block: RequestOption.() -> Unit): RequestOption {
+  return RequestOption().apply(block)
 }
 
 interface ImageLoader {
@@ -52,6 +56,13 @@ fun ImageView.imageLoad(
     RequestOption().apply(requestOptionApplier)
   }
   imageLoader.load(this, source, option)
+}
+
+fun ImageView.imageLoad(
+  source: Any,
+  option: RequestOption? = null
+) {
+  imageLoader.load(this, source, option ?: DefaultRequestOption)
 }
 
 sealed class Transformer

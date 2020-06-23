@@ -28,7 +28,7 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
       app:source="@{drawableRes}"
-      tools:src="@drawable/browse_ic_images" />
+      tools:src="@drawable/browse_images_with_circle" />
 
     <TextView
       style="@style/Body2"

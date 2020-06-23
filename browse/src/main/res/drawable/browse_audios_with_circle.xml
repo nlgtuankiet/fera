@@ -3,7 +3,7 @@
 
   <item
     android:bottom="@dimen/browse_category_icon_padding"
-    android:drawable="@drawable/ic_outline_image_red_24"
+    android:drawable="@drawable/browse_outline_audiotrack_purple_24"
     android:end="@dimen/browse_category_icon_padding"
     android:start="@dimen/browse_category_icon_padding"
     android:top="@dimen/browse_category_icon_padding" />

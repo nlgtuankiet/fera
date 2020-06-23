@@ -6,6 +6,8 @@
 
   <data>
 
+    <import type="com.nlgtuankiet.fera.core.image.RequestOption" />
+
     <variable
       name="leftText"
       type="String" />
@@ -15,12 +17,40 @@
       type="String" />
 
     <variable
-      name="leftImageSource"
+      name="type"
       type="String" />
 
     <variable
+      name="leftImageSource"
+      type="java.lang.Object" />
+
+    <variable
+      name="leftImageOption"
+      type="RequestOption" />
+
+    <variable
+      name="leftImageBackgroundColor"
+      type="Integer" />
+
+    <variable
+      name="leftPlayIsVisible"
+      type="Boolean" />
+
+    <variable
       name="rightImageSource"
-      type="String" />
+      type="java.lang.Object" />
+
+    <variable
+      name="rightImageOption"
+      type="RequestOption" />
+
+    <variable
+      name="rightImageBackgroundColor"
+      type="Integer" />
+
+    <variable
+      name="rightPlayIsVisible"
+      type="Boolean" />
   </data>
 
   <com.google.android.material.card.MaterialCardView
@@ -40,16 +70,31 @@
         android:id="@+id/left_image"
         android:layout_width="64dp"
         android:layout_height="80dp"
+        android:background="@android:color/darker_gray"
+        android:scaleType="center"
+        app:backgroundColor="@{leftImageBackgroundColor}"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:option="@{leftImageOption}"
         app:source="@{leftImageSource}"
         tools:scaleType="centerCrop"
         tools:src="@tools:sample/avatars" />
 
+      <ImageView
+        android:id="@+id/left_play"
+        android:layout_width="@dimen/browse_media_group_play"
+        android:layout_height="@dimen/browse_media_group_play"
+        android:layout_marginTop="@dimen/browse_media_group_play_margin"
+        android:layout_marginEnd="@dimen/browse_media_group_play_margin"
+        android:src="@drawable/ic_baseline_play_circle_filled_24"
+        app:isVisible="@{leftPlayIsVisible}"
+        app:layout_constraintEnd_toEndOf="@id/left_image"
+        app:layout_constraintTop_toTopOf="@id/left_image" />
+
       <View
         android:id="@+id/divider"
-        android:layout_width="4dp"
-        android:layout_height="4dp"
+        android:layout_width="2dp"
+        android:layout_height="2dp"
         app:layout_constraintStart_toEndOf="@id/left_image"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -57,15 +102,30 @@
         android:id="@+id/right_image"
         android:layout_width="64dp"
         android:layout_height="80dp"
+        android:scaleType="center"
+        app:backgroundColor="@{rightImageBackgroundColor}"
         app:layout_constraintLeft_toRightOf="@id/divider"
         app:layout_constraintTop_toTopOf="parent"
+        app:option="@{rightImageOption}"
         app:source="@{rightImageSource}"
         tools:scaleType="centerCrop"
         tools:src="@tools:sample/avatars" />
 
+      <ImageView
+        android:id="@+id/right_play"
+        android:layout_width="@dimen/browse_media_group_play"
+        android:layout_height="@dimen/browse_media_group_play"
+        android:layout_marginTop="@dimen/browse_media_group_play_margin"
+        android:layout_marginEnd="@dimen/browse_media_group_play_margin"
+        android:src="@drawable/ic_baseline_play_circle_filled_24"
+        app:isVisible="@{rightPlayIsVisible}"
+        app:layout_constraintEnd_toEndOf="@id/right_image"
+        app:layout_constraintTop_toTopOf="@id/right_image" />
+
       <include
         layout="@layout/browse_include_media_group_title"
         bind:leftText="@{leftText}"
+        bind:type="@{type}"
         bind:rightText="@{rightText}" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

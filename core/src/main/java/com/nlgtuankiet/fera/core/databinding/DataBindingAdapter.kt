@@ -1,8 +1,11 @@
 package com.nlgtuankiet.fera.core.databinding
 
+import android.view.View
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
+import androidx.core.view.isGone
+import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
+import com.nlgtuankiet.fera.core.image.RequestOption
 import com.nlgtuankiet.fera.core.image.imageLoad
 
 // @
@@ -10,17 +13,18 @@ import com.nlgtuankiet.fera.core.image.imageLoad
 //  epoxyRecyclerView.setModels(models)
 // }
 
-@BindingAdapter(
-  value = [
-    "source",
-    "placeholder"
-  ],
-  requireAll = false
-)
-fun setSource(imageView: ImageView, source: Any, @DrawableRes placeholder: Int?) {
-  imageView.imageLoad(source = source) {
-    if (placeholder != null && placeholder != 0) {
-      this.placeholder = placeholder
-    }
-  }
+@BindingAdapter(value = ["source", "option"], requireAll = false)
+fun setSource(imageView: ImageView, source: Any, option: RequestOption? = null) {
+  println("load2 $source $option")
+  imageView.imageLoad(source, option = option)
+}
+
+@BindingAdapter(value = ["isGone"])
+fun isGone(view: View, isGone: Boolean) {
+  view.isGone = isGone
+}
+
+@BindingAdapter(value = ["isVisible"])
+fun isVisible(view: View, isVisible: Boolean) {
+  view.isVisible = isVisible
 }

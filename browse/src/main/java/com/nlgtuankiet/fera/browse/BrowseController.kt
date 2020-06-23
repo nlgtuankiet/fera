@@ -8,14 +8,19 @@ import com.nlgtuankiet.fera.core.epoxy.BuildInstruction
 import com.nlgtuankiet.fera.core.epoxy.Spacing
 import com.nlgtuankiet.fera.core.epoxy.captionTextView
 import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
-import com.nlgtuankiet.fera.core.epoxy.overlineTextView
+import com.nlgtuankiet.fera.core.image.RequestOption
+import com.nlgtuankiet.fera.core.image.ScaleType
+import com.nlgtuankiet.fera.core.image.requestOption
 import com.nlgtuankiet.fera.core.ktx.colorOf
 import com.nlgtuankiet.fera.core.ktx.pxOf
+import com.nlgtuankiet.fera.core.ktx.second
 import com.nlgtuankiet.fera.core.recyclerview.snapCarousel
+import com.nlgtuankiet.fera.domain.entity.MediaFile
 import com.nlgtuankiet.fera.domain.entity.MediaType
 import javax.inject.Inject
 import javax.inject.Provider
 
+@Suppress("NOTHING_TO_INLINE")
 class BrowseController @Inject constructor(
   @Retained private val viewModelProvider: Provider<BrowseViewModel>,
   private val context: Context
@@ -54,9 +59,9 @@ class BrowseController @Inject constructor(
         id(mediaType.toString())
         drawableRes(
           when(mediaType) {
-            MediaType.Image -> R.drawable.browse_ic_images
-            MediaType.Audio -> R.drawable.browse_ic_audios
-            MediaType.Video -> R.drawable.browse_ic_videos
+            MediaType.Image -> R.drawable.browse_images_with_circle
+            MediaType.Audio -> R.drawable.browse_audios_with_circle
+            MediaType.Video -> R.drawable.browse_videos_with_circle
           }
         )
         title(
@@ -71,21 +76,70 @@ class BrowseController @Inject constructor(
         id(mediaType.hashCode())
         padding(Spacing(start = context.pxOf(16 + 24 + 16)))
         height(context.pxOf(1))
-        color(context.colorOf(android.R.color.darker_gray))
+        color(context.colorOf(R.color.browse_color_on_surface_a12))
       }
     }
     return BuildInstruction.Continue
   }
 
+  private inline fun MediaFile.imageSource(): Any {
+    return if (type == MediaType.Audio) {
+      R.drawable.browse_outline_audiotrack_purple_24
+    } else {
+      path.toString()
+    }
+  }
+
+  private inline fun MediaFile.imageOption(): RequestOption? {
+    return if (type == MediaType.Audio) {
+      requestOption {
+        scaleType = ScaleType.CenterInside
+      }
+    } else {
+      null
+    }
+  }
+
+  private inline fun MediaFile.imageBackgroundColor(): Int {
+    return if (type == MediaType.Audio) {
+      context.colorOf(R.color.browse_grey_100)
+    } else {
+      0
+    }
+  }
+
+  private inline fun MediaFile.playVisible(): Boolean {
+    return type == MediaType.Video
+  }
+
   private fun buildRecent(state: BrowseState): BuildInstruction {
     val mediaGroup = state.mediaGroups.invoke().orEmpty()
     val models = mediaGroup.map { group ->
+      val firstMedia = group.medias.first()
+      val secondMedia = group.medias.second()
+
       PairMediaGroupBindingModel_().apply {
         id(group.hashCode())
-        leftImageSource(group.medias.first().path.toString())
-        rightImageSource(group.medias.getOrNull(1)?.path?.toString() ?: "")
+
+        leftImageSource(firstMedia.imageSource())
+        leftImageOption(firstMedia.imageOption())
+        leftImageBackgroundColor(firstMedia.imageBackgroundColor())
+        leftPlayIsVisible(firstMedia.playVisible())
+
+        rightImageSource(secondMedia.imageSource())
+        rightImageOption(secondMedia.imageOption())
+        rightImageBackgroundColor(secondMedia.imageBackgroundColor())
+        rightPlayIsVisible(secondMedia.playVisible())
+
         leftText(group.name)
         rightText("(${group.total})")
+        type(
+          when(firstMedia.type) {
+            MediaType.Video -> "Videos"
+            MediaType.Audio -> "Audio"
+            MediaType.Image -> "Images"
+          }
+        )
       }
     }
 
