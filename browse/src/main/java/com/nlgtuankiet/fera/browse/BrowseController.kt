@@ -58,14 +58,14 @@ class BrowseController @Inject constructor(
       category {
         id(mediaType.toString())
         drawableRes(
-          when(mediaType) {
+          when (mediaType) {
             MediaType.Image -> R.drawable.browse_images_with_circle
             MediaType.Audio -> R.drawable.browse_audios_with_circle
             MediaType.Video -> R.drawable.browse_videos_with_circle
           }
         )
         title(
-          when(mediaType) {
+          when (mediaType) {
             MediaType.Image -> "Images"
             MediaType.Audio -> "Audio"
             MediaType.Video -> "Videos"
@@ -116,31 +116,47 @@ class BrowseController @Inject constructor(
     val mediaGroup = state.mediaGroups.invoke().orEmpty()
     val models = mediaGroup.map { group ->
       val firstMedia = group.medias.first()
-      val secondMedia = group.medias.second()
-
-      PairMediaGroupBindingModel_().apply {
-        id(group.hashCode())
-
-        leftImageSource(firstMedia.imageSource())
-        leftImageOption(firstMedia.imageOption())
-        leftImageBackgroundColor(firstMedia.imageBackgroundColor())
-        leftPlayIsVisible(firstMedia.playVisible())
-
-        rightImageSource(secondMedia.imageSource())
-        rightImageOption(secondMedia.imageOption())
-        rightImageBackgroundColor(secondMedia.imageBackgroundColor())
-        rightPlayIsVisible(secondMedia.playVisible())
-
-        leftText(group.name)
-        rightText("(${group.total})")
-        type(
-          when(firstMedia.type) {
-            MediaType.Video -> "Videos"
-            MediaType.Audio -> "Audio"
-            MediaType.Image -> "Images"
-          }
-        )
+      val type = when (firstMedia.type) {
+        MediaType.Video -> "Videos"
+        MediaType.Audio -> "Audio"
+        MediaType.Image -> "Images"
       }
+      val leftText = group.name
+      val rightText = "(${group.total})"
+      if (group.medias.size == 1) {
+        SingleMediaGroupBindingModel_().apply {
+          id(group.hashCode())
+
+          imageSource(firstMedia.imageSource())
+          imageOption(firstMedia.imageOption())
+          imageBackgroundColor(firstMedia.imageBackgroundColor())
+          playIsVisible(firstMedia.playVisible())
+
+          leftText(leftText)
+          rightText(rightText)
+          type(type)
+        }
+      } else {
+        val secondMedia = group.medias.second()
+        PairMediaGroupBindingModel_().apply {
+          id(group.hashCode())
+
+          leftImageSource(firstMedia.imageSource())
+          leftImageOption(firstMedia.imageOption())
+          leftImageBackgroundColor(firstMedia.imageBackgroundColor())
+          leftPlayIsVisible(firstMedia.playVisible())
+
+          rightImageSource(secondMedia.imageSource())
+          rightImageOption(secondMedia.imageOption())
+          rightImageBackgroundColor(secondMedia.imageBackgroundColor())
+          rightPlayIsVisible(secondMedia.playVisible())
+
+          leftText(leftText)
+          rightText(rightText)
+          type(type)
+        }
+      }
+
     }
 
     captionTextView {
