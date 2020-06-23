@@ -1,15 +1,10 @@
-package com.nlgtuankiet.fera
+package com.nlgtuankiet.fera.initializer
 
-import android.content.Context
 import android.os.StrictMode
+import com.nlgtuankiet.fera.BuildConfig
 import com.nlgtuankiet.fera.domain.Log
 import java.lang.reflect.Field
 import java.lang.reflect.Modifier
-
-fun initialize(context: Context) {
-  setupStrictMode()
-  initializeGlide(context)
-}
 
 fun setupStrictMode() {
   if (!BuildConfig.DEBUG) {
@@ -36,9 +31,18 @@ fun setupStrictMode() {
 @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN")
 fun addWhitelistStrictMode() {
   val whitelists = listOf(
+
     // This violation is related to Dex Loading optimization on Snapdragon devices.
     "android.util.BoostFramework.<init>",
-    "android.graphics.",
+
+    // TODO not sure what is the reason for this?
+    "android.graphics.fonts.HwTypefaceEx.",
+
+    // https://bumptech.github.io/glide/doc/placeholders.html#are-placeholders-loaded-asynchronously
+    // Are placeholders loaded asynchronously?
+    // No. Placeholders are loaded from Android resources on the main thread. We typically expect
+    // placeholders to be small and easily cacheable by the system resource cache.
+    "com.bumptech.glide.load.resource.drawable.DrawableDecoderCompat.getDrawable",
   )
 
   fun getStacktraceOf(element: Object): String {
@@ -48,6 +52,7 @@ fun addWhitelistStrictMode() {
   class StrictModeHackArrayList : ArrayList<Object>() {
     override fun add(element: Object): Boolean {
       val stacktrace = getStacktraceOf(element)
+      println("check for stacktrace: $stacktrace")
       for (whitelisted in whitelists) {
         if (stacktrace.contains(whitelisted)) {
           Log.w("Skipping whitelisted StrictMode violation: $whitelisted")
@@ -74,13 +79,4 @@ fun addWhitelistStrictMode() {
       }
     }
   )
-}
-
-fun initializeGlide(context: Context) {
-  Class.forName("com.nlgtuankiet.fera.image.GlideInitializer")
-    .newInstance().let {
-      @Suppress("UNCHECKED_CAST")
-      it as Function1<Context, Unit>
-    }
-    .invoke(context)
 }
