@@ -49,12 +49,10 @@ class BrowseController @Inject constructor(
       id("categories caption")
       text("CATEGORIES")
     }
-
-    listOf(
-      MediaType.Video,
-      MediaType.Audio,
-      MediaType.Image,
-    ).forEach { mediaType ->
+    // todo sort type base on recent type access
+    val types = listOf(MediaType.Video, MediaType.Audio, MediaType.Image)
+    val lastIndex = types.lastIndex
+    types.forEachIndexed { index, mediaType ->
       category {
         id(mediaType.toString())
         drawableRes(
@@ -72,11 +70,13 @@ class BrowseController @Inject constructor(
           }
         )
       }
-      horizontalDividerView {
-        id(mediaType.hashCode())
-        padding(Spacing(start = context.pxOf(16 + 24 + 16)))
-        height(context.pxOf(1))
-        color(context.colorOf(R.color.browse_color_on_surface_a12))
+      if (index != lastIndex) {
+        horizontalDividerView {
+          id(mediaType.hashCode())
+          padding(Spacing(start = context.pxOf(16 + 24 + 16)))
+          height(context.pxOf(1))
+          color(context.colorOf(R.color.browse_color_on_surface_a12))
+        }
       }
     }
     return BuildInstruction.Continue
