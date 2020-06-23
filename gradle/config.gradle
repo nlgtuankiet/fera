@@ -104,7 +104,8 @@ deps.daggerProcessor = "com.google.dagger:dagger-compiler:$daggerVersion"
 deps.exec = "org.zeroturnaround:zt-exec:1.11"
 deps.execKiller = "org.zeroturnaround:zt-process-killer:1.10"
 
-deps.kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:1.4-M2"
+def kotlinVersion = "1.4-M2"
+deps.kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 deps.kotlinCoroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7-1.4-M2"
 deps.appCompat = "androidx.appcompat:appcompat:1.1.0"
 deps.fragment = "androidx.fragment:fragment-ktx:1.3.0-alpha06"
@@ -214,7 +215,6 @@ def addAllExternalDependencies = { handler ->
     deps.inject,
     deps.kotlinCoroutine,
     deps.kotlinStdLib,
-    deps.moshi,
     deps.mvrx,
     deps.navigation,
     deps.navigationDynamic,
@@ -223,8 +223,14 @@ def addAllExternalDependencies = { handler ->
     'androidx.lifecycle:lifecycle-process:2.3.0-alpha04',
     'com.airbnb.android:epoxy-databinding:2.6.0',
     'com.github.bumptech.glide:glide:4.11.0',
+    "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+    // TODO how to include only 1 jdk?
+    "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}",
   ]
   dependencies.forEach { d -> handler.api d }
+  handler.api(deps.moshi) {
+    exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
+  }
   handler.testImplementation("junit:junit:4.12")
   handler.androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
   handler.androidTestImplementation("androidx.test.ext:junit:1.1.1")
