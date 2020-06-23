@@ -7,28 +7,45 @@ data class WorkflowResult(
   val id: String,
   val status: String,
   val duration: Int,
-  val credits_used: Int
+  val credits_used: Int,
+  val created_at: String
 )
 
 data class WorkflowResultResponse(
-  val items: List<WorkflowResult>
+  val items: List<WorkflowResult>,
+  val next_page_token: String? = null
 )
 
 fun getAllWorkflowResult(workflow: String, branch: String): List<WorkflowResult> {
   println("getAllWorkflowResult $workflow $branch")
-  val request = "https://circleci.com/api/v2/insights/github/nlgtuankiet/fera/workflows/$workflow"
-    .toHttpUrl()
-    .newBuilder()
-    .addQueryParameter("circle-token", System.getenv("FERA_CIRCLE_CI_TOKEN"))
-    .addQueryParameter("branch", branch)
-    .build().let {
-      println("url: $it")
-      Request.Builder().url(it).build()
-    }
-  val json = okHttpClient.newCall(request).execute().body!!.string()
-  println(json)
-  val response = gson.fromJson(json, WorkflowResultResponse::class.java)
-  return response.items
+  fun createRequest(nextPageToken: String?): Request {
+    return "https://circleci.com/api/v2/insights/github/nlgtuankiet/fera/workflows/$workflow"
+      .toHttpUrl()
+      .newBuilder()
+      .addQueryParameter("circle-token", System.getenv("FERA_CIRCLE_CI_TOKEN"))
+      .addQueryParameter("branch", branch)
+      .apply {
+        if (nextPageToken != null) {
+          addQueryParameter("page-token", nextPageToken)
+        }
+      }
+      .build().let {
+        println("url: $it")
+        Request.Builder().url(it).build()
+      }
+  }
+
+  val result = mutableListOf<WorkflowResult>()
+  var nextPageToken: String? = null
+  do {
+    val request = createRequest(nextPageToken)
+    val json = okHttpClient.newCall(request).execute().body!!.string()
+    println(json)
+    val response = gson.fromJson(json, WorkflowResultResponse::class.java)
+    result.addAll(response.items)
+    nextPageToken = response.next_page_token
+  } while (!nextPageToken.isNullOrBlank())
+  return result
 }
 
 fun <T> List<T>.tpOf(percent: Float, factorProvider: (T) -> Number): Float {
@@ -44,8 +61,10 @@ fun <T> List<T>.tpOf(percent: Float, factorProvider: (T) -> Number): Float {
   error("")
 }
 
-fun insightOf(workflow: String, branch: String) {
+fun insightOf(workflow: String, branch: String, limit: Int) {
   val rawItems = getAllWorkflowResult(workflow, branch)
+    .sortedByDescending { it.created_at }
+    .take(limit)
   val successItems = rawItems
     .filter { it.status == "success" }
   val timeTp95 = successItems.tpOf(0.95f) { it.duration }
