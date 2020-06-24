@@ -8,7 +8,6 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.nlgtuankiet.fera.core.R
 
-
 @ModelView(saveViewState = true, autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT)
 class SnapCarousel @JvmOverloads constructor(
   context: Context,

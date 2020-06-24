@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.OrientationHelper
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.SmoothScroller
-import androidx.recyclerview.widget.RecyclerView.SmoothScroller.ScrollVectorProvider
 import java.util.Locale
 import kotlin.math.abs
 
@@ -67,8 +66,10 @@ class GravitySnapHelper @JvmOverloads constructor(
     if (recyclerView != null) {
       recyclerView.onFlingListener = null
       if (gravity == Gravity.START || gravity == Gravity.END) {
-        isRtl = (TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault())
-            == ViewCompat.LAYOUT_DIRECTION_RTL)
+        isRtl = (
+          TextUtilsCompat.getLayoutDirectionFromLocale(Locale.getDefault())
+            == ViewCompat.LAYOUT_DIRECTION_RTL
+          )
       }
       recyclerView.addOnScrollListener(scrollListener)
       this.recyclerView = recyclerView
@@ -85,16 +86,18 @@ class GravitySnapHelper @JvmOverloads constructor(
   private fun findSnapView(lm: RecyclerView.LayoutManager, checkEdgeOfList: Boolean): View? {
     var snapView: View? = null
     when (gravity) {
-      Gravity.START -> snapView =
-        findView(lm, getHorizontalHelper(lm), Gravity.START, checkEdgeOfList)
+      Gravity.START ->
+        snapView =
+          findView(lm, getHorizontalHelper(lm), Gravity.START, checkEdgeOfList)
       Gravity.END -> snapView = findView(lm, getHorizontalHelper(lm), Gravity.END, checkEdgeOfList)
       Gravity.TOP -> snapView = findView(lm, getVerticalHelper(lm), Gravity.START, checkEdgeOfList)
       Gravity.BOTTOM -> snapView = findView(lm, getVerticalHelper(lm), Gravity.END, checkEdgeOfList)
-      Gravity.CENTER -> snapView = if (lm.canScrollHorizontally()) {
-        findView(lm, getHorizontalHelper(lm), Gravity.CENTER, checkEdgeOfList)
-      } else {
-        findView(lm, getVerticalHelper(lm), Gravity.CENTER, checkEdgeOfList)
-      }
+      Gravity.CENTER ->
+        snapView = if (lm.canScrollHorizontally()) {
+          findView(lm, getHorizontalHelper(lm), Gravity.CENTER, checkEdgeOfList)
+        } else {
+          findView(lm, getVerticalHelper(lm), Gravity.CENTER, checkEdgeOfList)
+        }
     }
     nextSnapPosition = if (snapView != null) {
       requireNotNull(recyclerView).getChildAdapterPosition(snapView)
@@ -132,9 +135,11 @@ class GravitySnapHelper @JvmOverloads constructor(
   }
 
   override fun calculateScrollDistance(velocityX: Int, velocityY: Int): IntArray {
-    if (recyclerView == null || verticalHelper == null && horizontalHelper == null
-      || (maxFlingDistance == FLING_DISTANCE_DISABLE
-          && maxFlingSizeFraction == FLING_SIZE_FRACTION_DISABLE)
+    if (recyclerView == null || verticalHelper == null && horizontalHelper == null ||
+      (
+        maxFlingDistance == FLING_DISTANCE_DISABLE &&
+          maxFlingSizeFraction == FLING_SIZE_FRACTION_DISABLE
+        )
     ) {
       return super.calculateScrollDistance(velocityX, velocityY)
     }
@@ -155,8 +160,8 @@ class GravitySnapHelper @JvmOverloads constructor(
   }
 
   public override fun createScroller(layoutManager: RecyclerView.LayoutManager): SmoothScroller? {
-    return if (layoutManager !is ScrollVectorProvider
-      || recyclerView == null
+    return if (layoutManager !is SmoothScroller.ScrollVectorProvider ||
+      recyclerView == null
     ) {
       null
     } else object : LinearSmoothScroller(notNullRecyclerView.context) {
@@ -479,10 +484,14 @@ class GravitySnapHelper @JvmOverloads constructor(
     } else {
       helper.end / 2
     }
-    val snapToStart = (gravity == Gravity.START && !isRtl
-        || gravity == Gravity.END && isRtl)
-    val snapToEnd = (gravity == Gravity.START && isRtl
-        || gravity == Gravity.END && !isRtl)
+    val snapToStart = (
+      gravity == Gravity.START && !isRtl ||
+        gravity == Gravity.END && isRtl
+      )
+    val snapToEnd = (
+      gravity == Gravity.START && isRtl ||
+        gravity == Gravity.END && !isRtl
+      )
     for (i in 0 until layoutManager.childCount) {
       val currentView = layoutManager.getChildAt(i)
       var currentViewDistance: Int
@@ -500,8 +509,8 @@ class GravitySnapHelper @JvmOverloads constructor(
         }
       } else {
         abs(
-          helper.getDecoratedStart(currentView)
-              + helper.getDecoratedMeasurement(currentView) / 2 - center
+          helper.getDecoratedStart(currentView) +
+            helper.getDecoratedMeasurement(currentView) / 2 - center
         )
       }
       if (currentViewDistance < distanceToTarget) {
@@ -513,15 +522,17 @@ class GravitySnapHelper @JvmOverloads constructor(
   }
 
   private fun isAtEdgeOfList(lm: LinearLayoutManager): Boolean {
-    return if (!lm.reverseLayout && gravity == Gravity.START
-      || lm.reverseLayout && gravity == Gravity.END
-      || !lm.reverseLayout && gravity == Gravity.TOP
-      || lm.reverseLayout && gravity == Gravity.BOTTOM
+    return if (!lm.reverseLayout && gravity == Gravity.START ||
+      lm.reverseLayout && gravity == Gravity.END ||
+      !lm.reverseLayout && gravity == Gravity.TOP ||
+      lm.reverseLayout && gravity == Gravity.BOTTOM
     ) {
       lm.findLastCompletelyVisibleItemPosition() == lm.itemCount - 1
     } else if (gravity == Gravity.CENTER) {
-      (lm.findFirstCompletelyVisibleItemPosition() == 0
-          || lm.findLastCompletelyVisibleItemPosition() == lm.itemCount - 1)
+      (
+        lm.findFirstCompletelyVisibleItemPosition() == 0 ||
+          lm.findLastCompletelyVisibleItemPosition() == lm.itemCount - 1
+        )
     } else {
       lm.findFirstCompletelyVisibleItemPosition() == 0
     }
@@ -587,11 +598,11 @@ class GravitySnapHelper @JvmOverloads constructor(
 
   init {
     require(
-      gravity == Gravity.START
-          || gravity == Gravity.END
-          || gravity == Gravity.BOTTOM
-          || gravity == Gravity.TOP
-          || gravity == Gravity.CENTER
+      gravity == Gravity.START ||
+        gravity == Gravity.END ||
+        gravity == Gravity.BOTTOM ||
+        gravity == Gravity.TOP ||
+        gravity == Gravity.CENTER
     ) {
       """Invalid gravity value. Use START | END | BOTTOM | TOP | CENTER constants"""
     }

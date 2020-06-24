@@ -25,3 +25,7 @@ fun Context.pxOf(@Dimension(unit = Dimension.DP) value: Int): Int {
 fun Context.colorOf(@ColorRes value: Int): Int {
   return ContextCompat.getColor(this, value)
 }
+
+inline fun <reified T> Context.requireService(): T {
+  return requireNotNull(ContextCompat.getSystemService(this, T::class.java))
+}

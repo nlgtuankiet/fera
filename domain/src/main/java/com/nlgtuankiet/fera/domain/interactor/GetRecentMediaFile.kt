@@ -1,7 +1,7 @@
 package com.nlgtuankiet.fera.domain.interactor
 
-import com.nlgtuankiet.fera.domain.MediaFileRepository
 import com.nlgtuankiet.fera.domain.entity.MediaFile
+import com.nlgtuankiet.fera.domain.repository.MediaFileRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.nlgtuankiet.fera.domain
+package com.nlgtuankiet.fera.domain.repository
 
 import com.nlgtuankiet.fera.domain.entity.MediaFile
 import kotlinx.coroutines.flow.Flow

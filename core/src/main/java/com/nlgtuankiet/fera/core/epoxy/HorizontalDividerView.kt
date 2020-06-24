@@ -15,7 +15,6 @@ import com.airbnb.epoxy.ModelView
 import com.nlgtuankiet.fera.core.R
 import com.nlgtuankiet.fera.core.R2
 
-
 @ModelView(defaultLayout = R2.layout.horizontal_divider_view)
 class HorizontalDividerView @JvmOverloads constructor(
   context: Context,

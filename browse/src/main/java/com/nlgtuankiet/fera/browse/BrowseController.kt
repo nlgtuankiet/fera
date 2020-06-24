@@ -31,6 +31,7 @@ class BrowseController @Inject constructor(
   private val blocks = listOf(
     ::buildRecent,
     ::buildCategories,
+    ::buildStorage,
   )
 
   override fun buildModels() {
@@ -42,6 +43,36 @@ class BrowseController @Inject constructor(
         BuildInstruction.Continue -> continue
       }
     }
+  }
+
+  private fun buildStorage(state: BrowseState): BuildInstruction {
+    val storageList = state.storage.invoke().orEmpty()
+    val lastIndex = storageList.lastIndex
+
+    captionTextView {
+      id("storage")
+      text("STORAGE DEVICES")
+    }
+
+    storageList.forEachIndexed { index, storage ->
+      storage {
+        id(storage.hashCode())
+        title(storage.name)
+        drawableRes(R.drawable.browse_phone_android_with_circle)
+        subTitle("Free ${storage.availableBytes / 1024 / 1024}Mb")
+      }
+
+      if (index != lastIndex) {
+        horizontalDividerView {
+          id(storage.hashCode())
+          padding(Spacing(start = context.pxOf(16 + 24 + 16)))
+          height(context.pxOf(1))
+          color(context.colorOf(R.color.browse_color_on_surface_a12))
+        }
+      }
+    }
+
+    return BuildInstruction.Continue
   }
 
   private fun buildCategories(state: BrowseState): BuildInstruction {
@@ -156,7 +187,6 @@ class BrowseController @Inject constructor(
           type(type)
         }
       }
-
     }
 
     captionTextView {

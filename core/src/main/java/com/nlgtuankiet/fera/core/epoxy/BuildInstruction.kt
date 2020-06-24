@@ -4,4 +4,3 @@ enum class BuildInstruction {
   Stop,
   Continue
 }
-

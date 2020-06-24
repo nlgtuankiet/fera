@@ -5,9 +5,9 @@ import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
 import android.provider.MediaStore
-import com.nlgtuankiet.fera.domain.MediaFileRepository
 import com.nlgtuankiet.fera.domain.entity.MediaFile
 import com.nlgtuankiet.fera.domain.entity.MediaType
+import com.nlgtuankiet.fera.domain.repository.MediaFileRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -23,7 +23,6 @@ import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
 @Singleton
-@OptIn(ExperimentalStdlibApi::class)
 class MediaFileRepositoryImpl @Inject constructor(
   private val context: Context
 ) : MediaFileRepository {
@@ -85,6 +84,7 @@ class MediaFileRepositoryImpl @Inject constructor(
         sortDirection = SortDirection.Descending
       )
     ) { cursor ->
+      @Suppress("DEPRECATION")
       MediaFile(
         name = cursor.requireString(MediaStore.MediaColumns.DISPLAY_NAME),
         type = type,

@@ -10,18 +10,22 @@ import com.nlgtuankiet.fera.browse.model.MediaGroup
 import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.core.map
 import com.nlgtuankiet.fera.domain.entity.MediaFile
+import com.nlgtuankiet.fera.domain.entity.Storage
 import com.nlgtuankiet.fera.domain.interactor.GetRecentMediaFile
+import com.nlgtuankiet.fera.domain.interactor.GetStorage
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class BrowseState(
   val mediaGroups: Async<List<MediaGroup>> = Uninitialized,
+  val storage: Async<List<Storage>> = Uninitialized,
   val a: Int = 0,
 ) : MvRxState
 
 class BrowseViewModel @Inject constructor(
-  private val getRecentMediaFile: GetRecentMediaFile
+  private val getRecentMediaFile: GetRecentMediaFile,
+  private val getStorage: GetStorage,
 ) : BaseMavericksViewModel<BrowseState>(
   initialState = BrowseState(),
   debugMode = BuildConfig.DEBUG
@@ -35,6 +39,11 @@ class BrowseViewModel @Inject constructor(
       getRecentMediaFile.invoke(limit = Int.MAX_VALUE)
         .execute { async ->
           copy(mediaGroups = async.map { parseMediaGroups(it) })
+        }
+
+      getStorage.invoke()
+        .execute {
+          copy(storage = it)
         }
     }
   }

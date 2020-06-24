@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+      android:bottom="@dimen/browse_category_icon_padding"
+      android:drawable="@drawable/browse_outline_phone_android_24"
+      android:end="@dimen/browse_category_icon_padding"
+      android:start="@dimen/browse_category_icon_padding"
+      android:top="@dimen/browse_category_icon_padding" />
+
+    <item android:drawable="@drawable/ic_outline_circle" />
+</layer-list>

@@ -112,7 +112,6 @@ class OverlineTextView @JvmOverloads constructor(
   defStyleAttr: Int = 0,
 ) : AppCompatTextView(context.wrap(R.style.Overline), attributeSet, defStyleAttr)
 
-
 abstract class TextBaseModel<T : AppCompatTextView> : EpoxyModel<T>() {
 
   @EpoxyAttribute
