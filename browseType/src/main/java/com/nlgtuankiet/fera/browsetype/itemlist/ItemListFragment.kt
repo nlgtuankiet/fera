@@ -18,12 +18,14 @@ class ItemListFragment : Fragment(R.layout.browsetype_itemlist_fragment), Maveri
     super.onViewCreated(view, savedInstanceState)
     val args = arguments?.getParcelable("args") as? ItemListFragmentArgs ?: return
     val index = args.index
-
+    println("ItemListFragment onViewCreated ")
     viewModel.onEach(BrowseTypeState::mediaFolders) { folders ->
       val folder = folders[index]
       view.findViewById<TextView>(R.id.text).text = buildString {
         appendLine(folder.name)
         appendLine(folder.items.joinToString("\n") { it.name })
+      }.also {
+        println("set text: $it")
       }
     }
   }

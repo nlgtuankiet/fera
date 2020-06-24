@@ -26,7 +26,7 @@ class BrowseTypePagerAdapter constructor(
   }
 
   override fun getItemCount(): Int {
-    return withState(viewModel) { it.pageCount }
+    return withState(viewModel) { it.pageCount }.also { println("getItemCount return $it") }
   }
 
   override fun createFragment(position: Int): Fragment {

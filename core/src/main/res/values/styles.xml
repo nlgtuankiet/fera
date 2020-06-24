@@ -4,6 +4,6 @@
     <item name="tabIndicator">@drawable/material_tab_indicator</item>
     <item name="tabIndicatorFullWidth">false</item>
     <item name="tabMode">scrollable</item>
-    <item name="tabTextAppearance">@style/Body1</item>
+<!--    <item name="tabTextAppearance">@style/Body1</item>-->
   </style>
 </resources>
