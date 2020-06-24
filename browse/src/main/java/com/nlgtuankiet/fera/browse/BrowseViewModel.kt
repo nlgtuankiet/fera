@@ -11,6 +11,8 @@ import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.core.map
 import com.nlgtuankiet.fera.domain.entity.MediaFile
 import com.nlgtuankiet.fera.domain.entity.Storage
+import com.nlgtuankiet.fera.domain.entity.name
+import com.nlgtuankiet.fera.domain.entity.parent
 import com.nlgtuankiet.fera.domain.interactor.GetRecentMediaFile
 import com.nlgtuankiet.fera.domain.interactor.GetStorage
 import kotlinx.coroutines.Dispatchers
@@ -58,7 +60,7 @@ class BrowseViewModel @Inject constructor(
       folderEntry.value.groupBy { it.type }.forEach { typeEntry ->
         result.add(
           MediaGroup(
-            name = folderEntry.key.fileName.toString().removePrefix("/"),
+            name = folderEntry.key.name,
             path = folderEntry.key,
             total = typeEntry.value.size,
             type = typeEntry.key,

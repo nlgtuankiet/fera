@@ -2,7 +2,7 @@ package com.nlgtuankiet.fera.browse.model
 
 import com.nlgtuankiet.fera.domain.entity.MediaFile
 import com.nlgtuankiet.fera.domain.entity.MediaType
-import java.nio.file.Path
+import com.nlgtuankiet.fera.domain.entity.Path
 
 data class MediaGroup(
   val name: String,

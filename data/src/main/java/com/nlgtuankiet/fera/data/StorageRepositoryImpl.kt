@@ -9,6 +9,8 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.ProcessLifecycleOwner
 import com.nlgtuankiet.fera.domain.entity.Storage
+import com.nlgtuankiet.fera.domain.entity.asPath
+import com.nlgtuankiet.fera.domain.entity.name
 import com.nlgtuankiet.fera.domain.repository.StorageRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -19,12 +21,12 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.launch
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @OptIn(ExperimentalCoroutinesApi::class)
 @Singleton
+// TODO how to find storage name
 class StorageRepositoryImpl @Inject constructor(
   private val context: Context,
   private val storageManager: StorageManager
@@ -64,17 +66,14 @@ class StorageRepositoryImpl @Inject constructor(
           .removeSuffix(packageName)
           .removeSuffix("/")
           .removeSuffix("Android/data")
-          .let { File(it) }
+          .asPath()
       }
-      .map { file ->
-        val stats = StatFs(file.absolutePath)
-        val name = storageManager.getStorageVolume(file)?.getDescription(context)
-          ?: file.name
-        // TODO better method to trim special white space
-        val refinedName = name.filter { it.isLetterOrDigit() || it == ' ' }
+      .map { path ->
+        val stats = StatFs(path.value)
+        val name = path.name
         Storage(
-          name = refinedName,
-          path = file.toPath(),
+          name = name,
+          path = path,
           availableBytes = stats.availableBytes,
           totalBytes = stats.totalBytes
         )

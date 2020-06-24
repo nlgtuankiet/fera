@@ -4,7 +4,6 @@ import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.BaseMavericksViewModel
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.MvRxViewModelFactory
-import com.airbnb.mvrx.Success
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
@@ -37,36 +36,9 @@ class HomeViewModel @Inject constructor(
     viewModelScope.launch(Dispatchers.IO) {
       getRecentMediaFile.invoke(limit = Int.MAX_VALUE)
         .execute { async ->
-          if (async is Success) {
-            tryParse(async.invoke())
-          }
           copy(recentMediaFile = async)
         }
     }
-  }
-
-  private fun tryParse(medias: List<MediaFile>) {
-    // group by folder
-    val result = mutableListOf<MediaFolder>()
-    val filesByPath = medias.groupBy {
-      it.path.parent
-    }
-    filesByPath.forEach { folderEntry ->
-      folderEntry.value.groupBy { it.type }.forEach { typeEntry ->
-        result.add(
-          MediaFolder(
-            name = folderEntry.key.fileName.toString().removePrefix("/"),
-            path = folderEntry.key,
-            total = typeEntry.value.size,
-            type = typeEntry.key,
-            medias = typeEntry.value
-          )
-        )
-      }
-    }
-
-    val sortedResult = result.sortedByDescending { it.medias.first().date }
-    println(sortedResult)
   }
 
   companion object : MvRxViewModelFactory<HomeViewModel, HomeState> {

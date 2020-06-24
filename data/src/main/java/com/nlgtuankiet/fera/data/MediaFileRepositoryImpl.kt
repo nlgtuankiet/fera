@@ -7,6 +7,7 @@ import android.os.HandlerThread
 import android.provider.MediaStore
 import com.nlgtuankiet.fera.domain.entity.MediaFile
 import com.nlgtuankiet.fera.domain.entity.MediaType
+import com.nlgtuankiet.fera.domain.entity.asPath
 import com.nlgtuankiet.fera.domain.repository.MediaFileRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +18,6 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
-import java.nio.file.Paths
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -89,7 +89,7 @@ class MediaFileRepositoryImpl @Inject constructor(
         name = cursor.requireString(MediaStore.MediaColumns.DISPLAY_NAME),
         type = type,
         date = cursor.requireString(MediaStore.MediaColumns.DATE_MODIFIED),
-        path = Paths.get(cursor.requireString(MediaStore.MediaColumns.DATA)),
+        path = cursor.requireString(MediaStore.MediaColumns.DATA).asPath(),
       )
     }
   }

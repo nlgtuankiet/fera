@@ -1,7 +1,5 @@
 package com.nlgtuankiet.fera.domain.entity
 
-import java.nio.file.Path
-
 data class Storage(
   val name: String,
   val path: Path,

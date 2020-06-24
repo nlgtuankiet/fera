@@ -7,6 +7,7 @@ import android.util.TypedValue
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
 import com.nlgtuankiet.fera.browse.R
+import com.nlgtuankiet.fera.core.ktx.setTextAppearanceCompat
 import com.squareup.contour.ContourLayout
 import com.squareup.contour.SizeMode
 
@@ -50,9 +51,7 @@ class LeftEllipsizePairTextView @JvmOverloads constructor(
     rightTextView = AppCompatTextView(context)
     rightTextView.apply {
       setSingleLine()
-      if (rightStyle != 0) {
-        setTextAppearance(rightStyle)
-      }
+      setTextAppearanceCompat(rightStyle)
       if (rightTextSize != -1f) {
         setTextSize(TypedValue.COMPLEX_UNIT_PX, rightTextSize)
       }
@@ -73,9 +72,7 @@ class LeftEllipsizePairTextView @JvmOverloads constructor(
     leftTextView.apply {
       setSingleLine()
       ellipsize = TextUtils.TruncateAt.END
-      if (leftStyle != 0) {
-        setTextAppearance(leftStyle)
-      }
+      setTextAppearanceCompat(leftStyle)
       if (leftTextSize != -1f) {
         setTextSize(TypedValue.COMPLEX_UNIT_PX, leftTextSize)
       }
