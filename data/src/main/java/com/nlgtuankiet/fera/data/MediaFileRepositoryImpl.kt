@@ -50,7 +50,7 @@ class MediaFileRepositoryImpl @Inject constructor(
     MediaType.Audio
   )
 
-  override suspend fun getRecentFiles(limit: Int): Flow<List<MediaFile>> {
+  override fun getRecentFiles(limit: Int): Flow<List<MediaFile>> {
     return combine(
       imageProvider.getFlow().map { it.take(limit) },
       videoProvider.getFlow().map { it.take(limit) },
@@ -62,6 +62,15 @@ class MediaFileRepositoryImpl @Inject constructor(
         yieldAll(audio)
       }.sortedByDescending { it.date }.take(limit).toList()
     }.distinctUntilChanged().onEach { println("onEach getRecentFiles $it") }
+  }
+
+  override fun getMediaFiles(type: MediaType): Flow<List<MediaFile>> {
+    val provider = when (type) {
+      MediaType.Image -> imageProvider
+      MediaType.Video -> videoProvider
+      MediaType.Audio -> audioProvider
+    }
+    return provider.getFlow()
   }
 
   private fun createImageRepository(

@@ -1,2 +1,3 @@
-apply plugin: 'com.jakewharton.butterknife'
 apply from: "../gradle/module.gradle"
+apply plugin: 'com.jakewharton.butterknife'
+apply plugin: "androidx.navigation.safeargs.kotlin"

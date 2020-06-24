@@ -12,6 +12,11 @@ if (dynamic) {
 
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
+apply plugin: 'kotlin-android-extensions'
+
+androidExtensions {
+  features = ["parcelize"]
+}
 
 kapt { handler -> applyKaptConfig(handler) }
 

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:id="@+id/nav_graph"
+  app:startDestination="@id/home">
+
+  <fragment
+    android:id="@+id/home"
+    android:name="com.nlgtuankiet.fera.home.HomeFragment"
+    android:label="HomeFragment">
+    <deepLink
+      android:id="@+id/home_deep_link"
+      app:uri="fera://home/" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/browse"
+    android:name="com.nlgtuankiet.fera.browse.BrowseFragment"
+    android:label="BrowseFragment">
+    <deepLink
+      android:id="@+id/browse_deep_link"
+      app:uri="fera://browse/" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/browsetype"
+    android:name="com.nlgtuankiet.fera.browsetype.BrowseTypeFragment"
+    android:label="BrowseTypeFragment">
+    <deepLink
+      android:id="@+id/browse_deep_link"
+      app:uri="fera://browsetype/{type}?dir={dir}" />
+    <argument
+      android:name="type"
+      app:argType="string" />
+    <argument
+      android:name="dir"
+      app:argType="string"
+      app:nullable="true" />
+  </fragment>
+
+</navigation>

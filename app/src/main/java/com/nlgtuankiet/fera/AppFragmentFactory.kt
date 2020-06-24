@@ -17,6 +17,8 @@ class AppFragmentFactory @Inject constructor(
       to "com.nlgtuankiet.fera.home.HomeFragmentComponentFactoryProvider",
     "com.nlgtuankiet.fera.browse.BrowseFragment"
       to "com.nlgtuankiet.fera.browse.BrowseFragmentComponentFactoryProvider",
+    "com.nlgtuankiet.fera.browsetype.BrowseTypeFragment"
+      to "com.nlgtuankiet.fera.browsetype.BrowseTypeFragmentComponentFactoryProvider"
   )
   private val providerCache = mutableMapOf<String, FragmentComponentFactoryProvider>()
 
