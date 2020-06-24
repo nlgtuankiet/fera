@@ -42,7 +42,7 @@ jobs:
       - init
       - run:
           name: Lint
-          command: ./gradlew lintDebug
+          command: ./gradlew :app:lintDebug
           no_output_timeout: 10m
       - run:
           name: Danger lint
@@ -176,7 +176,7 @@ workflows:
   #              only:
   #                - master
 
-  benchmark-verify-pull-request-v5:
+  benchmark-verify-pull-request-v6:
     triggers:
       - schedule:
           cron: "0,10,20,30,40,50 * * * *"
