@@ -3,7 +3,7 @@
 
     <dist:module
         dist:instant="false"
-        dist:title="Browse Type">
+        dist:title="Configure">
         <dist:delivery>
             <dist:install-time />
         </dist:delivery>

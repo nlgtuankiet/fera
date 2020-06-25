@@ -23,6 +23,18 @@
   </fragment>
 
   <fragment
+    android:id="@+id/configure"
+    android:name="com.nlgtuankiet.fera.configure.ConfigureFragment"
+    android:label="ConfigureFragment">
+    <deepLink
+      android:id="@+id/configure_deep_link"
+      app:uri="fera://configure/?path={path}" />
+    <argument
+      android:name="path"
+      app:argType="string" />
+  </fragment>
+
+  <fragment
     android:id="@+id/browsetype"
     android:name="com.nlgtuankiet.fera.browsetype.BrowseTypeFragment"
     android:label="BrowseTypeFragment">
