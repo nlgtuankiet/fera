@@ -160,7 +160,7 @@ def applyAndroidConfig = { handler ->
     }
   }
   handler.compileOptions {
-    //    coreLibraryDesugaringEnabled true
+    coreLibraryDesugaringEnabled true
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
@@ -201,6 +201,8 @@ def applyAndroidConfig = { handler ->
 ext.applyAndroidConfig = applyAndroidConfig
 
 def addAllExternalDependencies = { handler ->
+  handler.coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.5'
+
   def dependencies = [
     "androidx.core:core-ktx:1.3.0",
     "androidx.multidex:multidex:2.0.1",
