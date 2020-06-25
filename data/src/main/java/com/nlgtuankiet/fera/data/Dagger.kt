@@ -8,6 +8,7 @@ import com.nlgtuankiet.fera.core.FFmpegPath
 import com.nlgtuankiet.fera.core.FFprobePath
 import com.nlgtuankiet.fera.core.ktx.requireService
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
+import com.nlgtuankiet.fera.domain.gateway.TimeGateway
 import com.nlgtuankiet.fera.domain.repository.MediaFileRepository
 import com.nlgtuankiet.fera.domain.repository.StorageRepository
 import com.squareup.moshi.Moshi
@@ -40,6 +41,7 @@ interface DataComponentImpl : DataComponent {
 }
 
 @Module
+@Suppress("unused")
 interface DataBindingModule {
   @Binds
   fun ffmpegGateway(impl: CommandLineFFmpegGateway): FFmpegGateway
@@ -50,6 +52,9 @@ interface DataBindingModule {
 
   @Binds
   fun storageRepository(impl: StorageRepositoryImpl): StorageRepository
+
+  @Binds
+  fun timeGateway(impl: TimeGatewayImpl): TimeGateway
 }
 
 @Module

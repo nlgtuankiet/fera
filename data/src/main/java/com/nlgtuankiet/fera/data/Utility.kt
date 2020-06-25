@@ -2,6 +2,7 @@ package com.nlgtuankiet.fera.data
 
 import android.database.Cursor
 import android.os.Looper
+import androidx.core.database.getLongOrNull
 import androidx.core.database.getStringOrNull
 
 fun assertNotMainThread() {
@@ -26,4 +27,8 @@ inline fun <T> Cursor.forEach(crossinline block: (Cursor) -> T) {
 
 fun Cursor.requireString(columnName: String): String {
   return requireNotNull(getStringOrNull(getColumnIndex(columnName)))
+}
+
+fun Cursor.requireLong(columnName: String): Long {
+  return requireNotNull(getLongOrNull(getColumnIndex(columnName)))
 }

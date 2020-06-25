@@ -60,7 +60,7 @@ class MediaFileRepositoryImpl @Inject constructor(
         yieldAll(image)
         yieldAll(video)
         yieldAll(audio)
-      }.sortedByDescending { it.date }.take(limit).toList()
+      }.sortedByDescending { it.dateModified }.take(limit).toList()
     }.distinctUntilChanged().onEach { println("onEach getRecentFiles $it") }
   }
 
@@ -97,7 +97,7 @@ class MediaFileRepositoryImpl @Inject constructor(
       MediaFile(
         name = cursor.requireString(MediaStore.MediaColumns.DISPLAY_NAME),
         type = type,
-        date = cursor.requireString(MediaStore.MediaColumns.DATE_MODIFIED),
+        dateModified = cursor.requireLong(MediaStore.MediaColumns.DATE_MODIFIED),
         path = cursor.requireString(MediaStore.MediaColumns.DATA).asPath(),
       )
     }
