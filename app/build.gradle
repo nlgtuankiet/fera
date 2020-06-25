@@ -75,6 +75,7 @@ dependencies { handler ->
 }
 
 dependencies {
+  //  coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.0.5'
   kapt deps.moshiProcessor
   kapt deps.daggerProcessor
   kapt deps.assistedInjectProccesor
