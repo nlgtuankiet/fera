@@ -7,6 +7,7 @@ import com.nlgtuankiet.fera.core.DataComponent
 import com.nlgtuankiet.fera.core.HasCoreComponent
 import com.nlgtuankiet.fera.dagger.AppComponent
 import com.nlgtuankiet.fera.dagger.DaggerAppComponent
+import com.nlgtuankiet.fera.initializer.initialize
 import dagger.android.AndroidInjector
 
 class FeraApplication : Application(), HasCoreComponent, AndroidInjector<MainActivity> {
@@ -20,6 +21,7 @@ class FeraApplication : Application(), HasCoreComponent, AndroidInjector<MainAct
     appComponent = DaggerAppComponent.factory().create(context = this, dataComponent = dataComponent)
     appComponent.inject(this)
     super.onCreate()
+    initialize(this)
   }
 
   override fun attachBaseContext(base: Context) {

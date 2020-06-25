@@ -1,45 +1,26 @@
 apply from: "../gradle/config.gradle"
 
 if (dynamic) {
+  println "apply dynamic"
   apply plugin: "com.android.dynamic-feature"
 } else {
+  println "apply library"
   apply plugin: "com.android.library"
 }
 
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
-apply plugin: 'com.jakewharton.butterknife'
+apply plugin: 'kotlin-android-extensions'
 
-kapt {
-  correctErrorTypes true
+androidExtensions {
+  features = ["parcelize"]
 }
 
-android {
-  lintOptions {
-    checkDependencies true
-    disable 'ObsoleteLintCustomCheck'
-  }
-  compileSdkVersion compileSdk
-  buildToolsVersion buildTools
-  defaultConfig {
-    minSdkVersion minSdk
-    targetSdkVersion targetSdk
-    versionCode vcode
-    versionName vname
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-  }
-  compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-    freeCompilerArgs = ["-XXLanguage:+InlineClasses"]
-  }
-  buildFeatures {
-    viewBinding true
-  }
+kapt { handler -> applyKaptConfig(handler) }
 
+android { handler -> applyAndroidConfig(handler) }
+
+android {
   if (dynamic) {
     buildTypes {
       release {}
@@ -55,18 +36,25 @@ android {
   dependencies {
     kapt deps.daggerProcessor
     kapt deps.moshiProcessor
+    kapt deps.assistedInjectProccesor
+    kapt deps.epoxyProcessor
+
     if (dynamic) {
       implementation project(":app")
     } else {
-      kapt deps.assistedInjectProccesor
-      kapt deps.epoxyProcessor
-      def maybeImplementProject = { projectName ->
-        if (project.name != projectName) {
-          implementation project(":$projectName")
+      // TODO improve this mess
+      def blackList = new HashMap<String, String>()
+      blackList.put("core", "image")
+      def maybeImplementProject = { dependency ->
+        if (project.name != dependency) { // not depend on self
+          if (blackList[project.name] != dependency) {
+            api project(":${dependency}")
+          }
         }
       }
       maybeImplementProject("core")
       maybeImplementProject("domain")
+      maybeImplementProject("image")
     }
   }
 }

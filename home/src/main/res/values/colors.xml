@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- TODO ui 80%?-->
+    <color name="home_square_media_more_overlay">#CCFFFFFF</color>
+</resources>

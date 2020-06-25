@@ -2,21 +2,54 @@ import java.text.SimpleDateFormat
 import java.util.regex.Pattern
 
 def hasProject = false
+ext {
+  allAndroidModules = [
+    "domain",
+    "core",
+    "home",
+    "browse",
+    "browseType",
+    "data",
+    "image",
+  ]
 
-ext.defaultModules = ["domain", "core"]
+  allUtilityModule = [
+    "codegen",
+    "function",
+  ]
+
+  libraryModules = [
+    "domain",
+    "core",
+  ]
+
+  alwaysIncludeModules = [
+    "domain",
+    "home",
+    "core",
+    "image",
+    "data",
+  ]
+
+  dynamicModules = allAndroidModules.stream()
+      .filter { module -> !libraryModules.contains(module) }
+      .collect()
+}
+
 try {
   project
   hasProject = true
-} catch(ignored) {
+} catch (ignored) {
   hasProject = false
 }
 
 if (hasProject && project.hasProperty("dynamic")) {
   ext.dynamic = project.property("dynamic") == true || project.property("dynamic") == ""
-  ext.dynamic = ext.dynamic && !defaultModules.contains(project.name)
+  ext.dynamic = ext.dynamic && !libraryModules.contains(project.name)
 } else {
   ext.dynamic = false
 }
+
 println "dynamic is $dynamic"
 
 ext {
@@ -32,6 +65,9 @@ ext {
   }
 
   shouldInclude = { moduleName ->
+    if (alwaysIncludeModules.contains(moduleName)) {
+      return true
+    }
     if (ext.has('include')) {
       return Pattern.compile(include, Pattern.CASE_INSENSITIVE).matcher(moduleName).find()
     }
@@ -42,7 +78,7 @@ ext {
   }
 
   maybeInclude = { moduleName ->
-    if (shouldInclude(moduleName) || defaultModules.contains(moduleName)) {
+    if (shouldInclude(moduleName)) {
       println "include :$moduleName"
       include(":$moduleName")
     }
@@ -51,7 +87,7 @@ ext {
     }
   }
 
-  minSdk = 16
+  minSdk = 21
   ext.targetSdk = 28
   ext.vcode = 1
   ext.vname = "1.0"
@@ -69,7 +105,8 @@ deps.daggerProcessor = "com.google.dagger:dagger-compiler:$daggerVersion"
 deps.exec = "org.zeroturnaround:zt-exec:1.11"
 deps.execKiller = "org.zeroturnaround:zt-process-killer:1.10"
 
-deps.kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:1.4-M2"
+def kotlinVersion = "1.4-M2"
+deps.kotlinStdLib = "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
 deps.kotlinCoroutine = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.7-1.4-M2"
 deps.appCompat = "androidx.appcompat:appcompat:1.1.0"
 deps.fragment = "androidx.fragment:fragment-ktx:1.3.0-alpha06"
@@ -109,27 +146,94 @@ def addAllRepositories = { handler ->
 }
 ext.addAllRepositories = addAllRepositories
 
-def addAllExternalDependencies = { handler ->
-  handler.api("androidx.core:core-ktx:1.3.0")
-  handler.api("androidx.multidex:multidex:2.0.1")
-  handler.api deps.appCompat
-  handler.api deps.assistedInject
-  handler.api deps.constraintLayout
-  handler.api deps.dagger
-  handler.api deps.daggerAndroid
-  handler.api deps.epoxy
-  handler.api deps.exec
-  handler.api deps.execKiller
-  handler.api deps.fragment
-  handler.api deps.inject
-  handler.api deps.kotlinCoroutine
-  handler.api deps.kotlinStdLib
-  handler.api deps.moshi
-  handler.api deps.mvrx
-  handler.api deps.navigation
-  handler.api deps.navigationDynamic
-  handler.api deps.okHttp
+def applyKaptConfig = { handler ->
+  handler.correctErrorTypes = true
+  handler.useBuildCache = true
+}
 
+ext.applyKaptConfig = applyKaptConfig
+
+def applyAndroidConfig = { handler ->
+  if (project.name != "image") {
+    handler.dataBinding {
+      enabled = true
+    }
+  }
+  handler.compileOptions {
+    //    coreLibraryDesugaringEnabled true
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+  handler.kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+  }
+  handler.compileSdkVersion 29
+  handler.buildToolsVersion "29.0.3"
+  handler.defaultConfig {
+    minSdkVersion minSdk
+    targetSdkVersion targetSdk
+    versionCode vcode
+    versionName vname
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+  handler.lintOptions {
+    checkDependencies true
+    disable 'ObsoleteLintCustomCheck'
+  }
+  handler.buildFeatures {
+    viewBinding true
+  }
+  handler.testOptions {
+    unitTests.all {
+      testLogging {
+        events "passed", "skipped", "failed", "standardOut", "standardError"
+        outputs.upToDateWhen { false }
+        showStandardStreams = true
+        exceptionFormat = 'full'
+      }
+    }
+  }
+  handler.kotlinOptions {
+    jvmTarget = JavaVersion.VERSION_1_8.toString()
+    freeCompilerArgs = ["-XXLanguage:+InlineClasses"]
+  }
+}
+ext.applyAndroidConfig = applyAndroidConfig
+
+def addAllExternalDependencies = { handler ->
+  def dependencies = [
+    "androidx.core:core-ktx:1.3.0",
+    "androidx.multidex:multidex:2.0.1",
+    deps.appCompat,
+    deps.assistedInject,
+    deps.constraintLayout,
+    deps.dagger,
+    deps.daggerAndroid,
+    deps.epoxy,
+    deps.exec,
+    deps.execKiller,
+    deps.fragment,
+    deps.inject,
+    deps.kotlinCoroutine,
+    deps.kotlinStdLib,
+    deps.mvrx,
+    deps.navigation,
+    deps.navigationDynamic,
+    deps.okHttp,
+    'androidx.viewpager2:viewpager2:1.0.0',
+    'app.cash.contour:contour:0.1.7',
+    'com.google.android.material:material:1.3.0-alpha01',
+    'androidx.lifecycle:lifecycle-process:2.3.0-alpha04',
+    'com.airbnb.android:epoxy-databinding:2.6.0',
+    'com.github.bumptech.glide:glide:4.11.0',
+    "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
+    // TODO how to include only 1 jdk?
+    "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${kotlinVersion}",
+  ]
+  dependencies.forEach { d -> handler.api d }
+  handler.api(deps.moshi) {
+    exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
+  }
   handler.testImplementation("junit:junit:4.12")
   handler.androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
   handler.androidTestImplementation("androidx.test.ext:junit:1.1.1")

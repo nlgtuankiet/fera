@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <style name="TabLayout" parent="Widget.MaterialComponents.TabLayout">
+    <item name="tabIndicator">@drawable/material_tab_indicator</item>
+    <item name="tabIndicatorFullWidth">false</item>
+    <item name="tabMode">scrollable</item>
+<!--    <item name="tabTextAppearance">@style/Body1</item>-->
+  </style>
+</resources>

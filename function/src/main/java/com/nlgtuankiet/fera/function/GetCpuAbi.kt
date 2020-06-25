@@ -1,6 +1,5 @@
 package com.nlgtuankiet.fera.function
 
-import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
@@ -12,13 +11,9 @@ import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
 import org.jsoup.Jsoup
 import java.io.File
-import java.util.concurrent.TimeUnit
 import kotlin.system.exitProcess
 
 enum class Abi {
@@ -27,18 +22,6 @@ enum class Abi {
   X86,
   X86X64,
 }
-
-private val okHttpClient = OkHttpClient.Builder()
-  .callTimeout(1, TimeUnit.DAYS)
-  .connectTimeout(1, TimeUnit.DAYS)
-  .addNetworkInterceptor(object : Interceptor {
-    override fun intercept(chain: Interceptor.Chain): Response {
-      val request = chain.request()
-      return chain.proceed(request)
-    }
-  })
-  .build()
-private val gson = Gson()
 
 data class SearchResultEntry(
   val url: String,

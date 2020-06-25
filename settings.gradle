@@ -17,11 +17,13 @@ buildCache {
   local {
     enabled = true
   }
-  //  remote(HttpBuildCache) {
-  //    url = 'http://209.97.161.3:80/cache/'
-  //    allowUntrustedServer = true
-  //    push = true
-  //  }
+  if (isInCI) {
+    remote(HttpBuildCache) {
+      url = 'http://209.97.161.3:80/cache/'
+      allowUntrustedServer = true
+      push = true
+    }
+  }
 }
 
 if (isInCI) {
@@ -30,14 +32,11 @@ if (isInCI) {
 }
 println startParameter
 
-println "kotlin.compiler.execution.strategy is: " + System.getProperty("kotlin.compiler.execution.strategy")
+println "kotlin.compiler.execution.strategy is: ${System.getProperty("kotlin.compiler.execution.strategy")}"
 
-maybeInclude("app")
-maybeInclude("domain")
-maybeInclude("core")
-maybeInclude("home")
-maybeInclude("data")
-maybeInclude("codegen")
-include(":function")
+
+include(":app")
+allAndroidModules.forEach { module -> maybeInclude(module) }
+allUtilityModule.forEach { module -> include(":${module}") }
 
 rootProject.name = "Fera"

@@ -8,15 +8,17 @@ import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.domain.entity.MediaFile
+import com.nlgtuankiet.fera.domain.entity.MediaType
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.nlgtuankiet.fera.domain.interactor.GetRecentMediaFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.nio.file.Path
 import javax.inject.Inject
 
 data class HomeState(
-  private val recentMediaFile: Async<List<MediaFile>> = Uninitialized,
-  private val a: Int = 0,
+  val recentMediaFile: Async<List<MediaFile>> = Uninitialized,
+  val a: Int = 0,
 ) : MvRxState
 
 class HomeViewModel @Inject constructor(
@@ -32,9 +34,9 @@ class HomeViewModel @Inject constructor(
 
   fun refresh() {
     viewModelScope.launch(Dispatchers.IO) {
-      getRecentMediaFile.invoke()
-        .execute {
-          copy(recentMediaFile = it)
+      getRecentMediaFile.invoke(limit = Int.MAX_VALUE)
+        .execute { async ->
+          copy(recentMediaFile = async)
         }
     }
   }
@@ -43,5 +45,17 @@ class HomeViewModel @Inject constructor(
     override fun create(viewModelContext: ViewModelContext, state: HomeState): HomeViewModel? {
       return viewModelContext.fragment<HomeFragment>().viewModelFactory.get()
     }
+  }
+}
+
+data class MediaFolder(
+  val name: String,
+  val path: Path,
+  val total: Int,
+  val type: MediaType,
+  val medias: List<MediaFile>
+) {
+  init {
+    require(medias.isNotEmpty())
   }
 }

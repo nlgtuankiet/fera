@@ -8,6 +8,7 @@ dependencies {
   implementation deps.inject
   kapt deps.daggerProcessor
   implementation deps.dagger
+  testImplementation "junit:junit:4.12"
   implementation deps.kotlinCoroutine
 }
 

@@ -1,19 +1,27 @@
 package com.nlgtuankiet.fera.data
 
 import android.content.Context
+import android.os.storage.StorageManager
 import androidx.annotation.Keep
 import com.nlgtuankiet.fera.core.DataComponent
 import com.nlgtuankiet.fera.core.FFmpegPath
 import com.nlgtuankiet.fera.core.FFprobePath
-import com.nlgtuankiet.fera.domain.MediaFileRepository
+import com.nlgtuankiet.fera.core.ktx.requireService
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
+import com.nlgtuankiet.fera.domain.repository.MediaFileRepository
+import com.nlgtuankiet.fera.domain.repository.StorageRepository
 import com.squareup.moshi.Moshi
 import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
 import dagger.Module
 import dagger.Provides
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import okhttp3.Call
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import java.io.File
+import javax.inject.Provider
 import javax.inject.Singleton
 
 @Component(
@@ -37,7 +45,11 @@ interface DataBindingModule {
   fun ffmpegGateway(impl: CommandLineFFmpegGateway): FFmpegGateway
 
   @Binds
+  @ExperimentalCoroutinesApi
   fun mediaFileRepository(impl: MediaFileRepositoryImpl): MediaFileRepository
+
+  @Binds
+  fun storageRepository(impl: StorageRepositoryImpl): StorageRepository
 }
 
 @Module
@@ -48,6 +60,28 @@ object DataProvisionModule {
   fun moshi(): Moshi {
     return Moshi.Builder()
       .build()
+  }
+
+  @Provides
+  @Singleton
+  fun okHttpClient(): OkHttpClient {
+    assertNotMainThread()
+    return OkHttpClient.Builder()
+      .build()
+  }
+
+  @Provides
+  fun callFactory(clientProvider: Provider<OkHttpClient>): Call.Factory {
+    return object : Call.Factory {
+      override fun newCall(request: Request): Call {
+        return clientProvider.get().newCall(request)
+      }
+    }
+  }
+
+  @Provides
+  fun storageManager(context: Context): StorageManager {
+    return context.requireService()
   }
 
   private fun File.find(name: String): File? {
@@ -86,6 +120,7 @@ object DataProvisionModule {
 }
 
 @Keep
+@Suppress("unused")
 class DataComponentProvider :
   DataComponent.DataComponentProvider {
   override fun get(context: Context): DataComponent {

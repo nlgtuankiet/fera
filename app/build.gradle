@@ -1,42 +1,13 @@
 apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-kapt"
-apply plugin: "androidx.navigation.safeargs.kotlin"
 
 apply from: "../gradle/config.gradle"
 
-kapt {
-  correctErrorTypes true
-}
+android { handler -> applyAndroidConfig(handler) }
+kapt { handler -> applyKaptConfig(handler) }
 
 android {
-  lintOptions {
-    disable 'ObsoleteLintCustomCheck'
-    abortOnError false
-  }
-  compileOptions {
-    //    coreLibraryDesugaringEnabled true
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-  }
-  kotlinOptions {
-    jvmTarget = JavaVersion.VERSION_1_8.toString()
-  }
-  buildFeatures {
-    viewBinding true
-  }
-  compileSdkVersion 29
-  buildToolsVersion "29.0.3"
-  testOptions {
-    unitTests.all {
-      testLogging {
-        events "passed", "skipped", "failed", "standardOut", "standardError"
-        outputs.upToDateWhen { false }
-        showStandardStreams = true
-        exceptionFormat = 'full'
-      }
-    }
-  }
   defaultConfig {
     multiDexEnabled true
     applicationId "com.nlgtuankiet.fera"
@@ -60,7 +31,8 @@ android {
         keyAlias env.getOrDefault("ANDROID_KEYSTORE_ALIAS", "")
         keyPassword env.getOrDefault("ANDROID_KEYSTORE_PASSWORD", "")
       }
-    } catch(Exception ignored) { }
+    } catch (Exception ignored) {
+    }
     ci {
       storeFile new File(rootProject.projectDir, ".circleci/keystore.jks")
       storePassword "123456"
@@ -91,17 +63,15 @@ android {
     }
   }
   if (dynamic) {
-    def dynamicModules = [
-      "home",
-      "data",
-    ]
-
     dynamicModules.forEach { module ->
       if (shouldInclude(module)) {
         dynamicFeatures += ":$module".toString()
       }
     }
   }
+}
+dependencies { handler ->
+  addAllExternalDependencies(handler)
 }
 
 dependencies {
@@ -111,14 +81,11 @@ dependencies {
   kapt deps.assistedInjectProccesor
   kaptTest deps.daggerProcessor
 
-  api(project(":domain"))
-  api(project(":core"))
+  libraryModules.forEach { libraryModule -> api(project(":$libraryModule")) }
+
   if (!dynamic) {
-    api(project(":home"))
-    api(project(":data"))
+    allAndroidModules.forEach { androidModule -> api(project(":$androidModule")) }
   }
 }
-dependencies { handler ->
-  addAllExternalDependencies(handler)
-}
+
 
