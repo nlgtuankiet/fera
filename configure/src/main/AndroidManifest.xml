@@ -1,12 +1,13 @@
-<manifest xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="com.nlgtuankiet.fera.configure">
+<manifest
+  xmlns:dist="http://schemas.android.com/apk/distribution"
+  package="com.nlgtuankiet.fera.configure">
 
-    <dist:module
-        dist:instant="false"
-        dist:title="Configure">
-        <dist:delivery>
-            <dist:install-time />
-        </dist:delivery>
-        <dist:fusing dist:include="true" />
-    </dist:module>
+  <dist:module
+    dist:instant="false"
+    dist:title="Configure">
+    <dist:delivery>
+      <dist:install-time />
+    </dist:delivery>
+    <dist:fusing dist:include="true" />
+  </dist:module>
 </manifest>
