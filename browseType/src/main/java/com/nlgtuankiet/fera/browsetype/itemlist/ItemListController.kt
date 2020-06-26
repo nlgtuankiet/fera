@@ -1,8 +1,11 @@
 package com.nlgtuankiet.fera.browsetype.itemlist
 
+import android.view.View
+import androidx.navigation.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.nlgtuankiet.fera.browsetype.BrowseTypeViewModel
-import com.nlgtuankiet.fera.browsetype.gridImageMedia
+import com.nlgtuankiet.fera.browsetype.grid2ImageMedia
+import com.nlgtuankiet.fera.configure.ConfigureFragmentArgs
 import com.nlgtuankiet.fera.core.epoxy.FullSpan
 import com.nlgtuankiet.fera.core.epoxy.body1TextView
 import com.nlgtuankiet.fera.core.ktx.state
@@ -34,9 +37,15 @@ class ItemListController constructor(
         spanSizeOverride(FullSpan)
       }
       items.forEach {
-        gridImageMedia {
+        grid2ImageMedia {
           id(it.hashCode())
           imageSource(it.path.value)
+          onClickListener { view: View ->
+            view.findNavController().navigate(
+              com.nlgtuankiet.fera.core.R.id.configure,
+              ConfigureFragmentArgs(path = it.path.value).toBundle()
+            )
+          }
         }
       }
     }

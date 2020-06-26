@@ -39,4 +39,9 @@ object ConfigureProvision {
   fun viewModel(fragment: ConfigureFragment): ConfigureViewModel {
     return fragment.viewModel
   }
+
+  @Provides
+  fun args(fragment: ConfigureFragment): ConfigureFragmentArgs {
+    return ConfigureFragmentArgs.fromBundle(fragment.requireArguments())
+  }
 }

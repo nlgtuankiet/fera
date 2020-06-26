@@ -1,6 +1,6 @@
 <manifest
   xmlns:dist="http://schemas.android.com/apk/distribution"
-  package="com.nlgtuankiet.fera.configure">
+  package="com.nlgtuankiet.fera.browsetype">
 
   <dist:module
     dist:instant="false"

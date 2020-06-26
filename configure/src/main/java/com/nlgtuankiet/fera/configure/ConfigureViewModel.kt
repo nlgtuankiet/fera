@@ -1,20 +1,33 @@
 package com.nlgtuankiet.fera.configure
 
+import com.airbnb.mvrx.Async
 import com.airbnb.mvrx.BaseMavericksViewModel
 import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
+import com.nlgtuankiet.fera.domain.entity.MediaInfo
+import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 data class ConfigureState(
-  val a: Int = 0,
+  val mediaInfo: Async<MediaInfo> = Uninitialized
 ) : MvRxState
 
-class ConfigureViewModel @Inject constructor() : BaseMavericksViewModel<ConfigureState>(
-  initialState = ConfigureState(),
-  debugMode = BuildConfig.DEBUG
-) {
+class ConfigureViewModel @Inject constructor(
+  private val getMediaInfo: GetMediaInfo,
+  private val args: ConfigureFragmentArgs
+) : BaseMavericksViewModel<ConfigureState>(ConfigureState(), BuildConfig.DEBUG) {
+
+  init {
+    suspend {
+      getMediaInfo(args.path)
+    }.execute(Dispatchers.IO) {
+      copy(mediaInfo = it)
+    }
+  }
 
   companion object : MvRxViewModelFactory<ConfigureViewModel, ConfigureState> {
     override fun create(

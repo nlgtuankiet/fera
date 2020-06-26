@@ -20,10 +20,6 @@ class ConfigureFragment @Inject constructor(
   private val getMediaInfo: GetMediaInfo,
 ) : Fragment(R.layout.configure_fragment), MavericksView {
 
-  init {
-    println("init BrowseTypeFragment")
-  }
-
   val viewModel: ConfigureViewModel by fragmentViewModel()
   private lateinit var binding: ConfigureFragmentBinding
 
@@ -31,9 +27,9 @@ class ConfigureFragment @Inject constructor(
     super.onViewCreated(view, savedInstanceState)
     binding = ConfigureFragmentBinding.bind(view)
     binding.epoxyRecyclerView.setController(configureController)
-    configureController.requestModelBuild()
   }
 
   override fun invalidate() {
+    configureController.requestModelBuild()
   }
 }

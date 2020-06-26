@@ -15,20 +15,28 @@
     <variable
       name="imageOption"
       type="RequestOption" />
+
+    <variable
+      name="onClickListener"
+      type="android.view.View.OnClickListener" />
+
+
+
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:onClick="@{onClickListener}">
 
     <ImageView
-      app:source="@{imageSource}"
-      app:option="@{imageOption}"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       app:layout_constraintDimensionRatio="1:1"
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent"
+      app:option="@{imageOption}"
+      app:source="@{imageSource}"
       tools:src="@tools:sample/avatars" />
 
   </androidx.constraintlayout.widget.ConstraintLayout>
