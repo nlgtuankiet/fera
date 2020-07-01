@@ -176,33 +176,26 @@ workflows:
   #              only:
   #                - master
 
-  benchmark-verify-pull-request-v6:
-    triggers:
-      - schedule:
-          cron: "0,10,20,30,40,50 * * * *"
-          filters:
-            branches:
-              only:
-                - benchmark
-    jobs:
-      - compare-apk:
-          filters:
-            branches:
-              ignore:
-                - master
-      - lint:
-          filters:
-            branches:
-              ignore:
-                - master
-      - test-spotless:
-          filters:
-            branches:
-              ignore:
-                - master
-      - dynamic-build:
-          filters:
-            branches:
-              ignore:
-                - master
+#  benchmark-verify-pull-request-v6:
+#    jobs:
+#      - compare-apk:
+#          filters:
+#            branches:
+#              ignore:
+#                - master
+#      - lint:
+#          filters:
+#            branches:
+#              ignore:
+#                - master
+#      - test-spotless:
+#          filters:
+#            branches:
+#              ignore:
+#                - master
+#      - dynamic-build:
+#          filters:
+#            branches:
+#              ignore:
+#                - master
 
