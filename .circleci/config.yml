@@ -118,11 +118,6 @@ workflows:
             branches:
               ignore:
                 - master
-      - verify-pull-request:
-          filters:
-            branches:
-              ignore:
-                - master
 
   master-flow:
     jobs:
