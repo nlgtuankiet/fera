@@ -33,6 +33,7 @@ allprojects {
         target fileTree('.') {
           include '**/*.xml', '**/*.xsd'
           exclude '**/build/**'
+          exclude '**/.idea/**'
         }
         // Use for example eclipseWtp('xml', '4.7.3a') to specify a specific version of Eclipse,
         // available versions are: https://github.com/diffplug/spotless/tree/main/lib-extra/src/main/resources/com/diffplug/spotless/extra/eclipse_wtp_formatters

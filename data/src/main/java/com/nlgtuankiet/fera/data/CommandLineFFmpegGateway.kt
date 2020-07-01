@@ -1,6 +1,5 @@
 package com.nlgtuankiet.fera.data
 
-import android.content.Context
 import com.nlgtuankiet.fera.core.FFmpegPath
 import com.nlgtuankiet.fera.core.FFprobePath
 import com.nlgtuankiet.fera.data.ffmpeg.model.FFprobeFormatOutput
@@ -25,7 +24,6 @@ import javax.inject.Singleton
 
 @Singleton
 class CommandLineFFmpegGateway @Inject constructor(
-  private val context: Context,
   @FFmpegPath
   private val ffmpegPathProvider: Provider<String>,
   @FFprobePath
