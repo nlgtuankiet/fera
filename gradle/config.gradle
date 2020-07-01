@@ -179,7 +179,8 @@ def applyAndroidConfig = { handler ->
   }
   handler.lintOptions {
     checkDependencies true
-    disable 'ObsoleteLintCustomCheck'
+    checkGeneratedSources true
+    lintConfig file("${project.rootProject.projectDir}/app/lint.xml")
   }
   handler.buildFeatures {
     viewBinding true

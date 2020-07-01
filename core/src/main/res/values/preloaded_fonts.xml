@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
   <array
     name="preloaded_fonts"
-    translatable="false">
+    translatable="false"
+    tools:ignore="UnusedResources">
     <item>@font/open_sans</item>
     <item>@font/open_sans_bold</item>
     <item>@font/open_sans_light</item>

@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources
+  xmlns:tools="http://schemas.android.com/tools"
+  tools:ignore="UnusedResources">
   <!-- white | blue a200 -->
   <color name="colorPrimary">#2196f3</color>
   <color name="colorPrimaryDark">#1976d2</color>
