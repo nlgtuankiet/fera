@@ -28,14 +28,14 @@ class ConfigureController @Inject constructor(
           id("codec")
           icon(android.R.drawable.ic_dialog_alert)
           specName("Codec")
-          specValue(stream.codecName ?: "")
+          specValue(stream.codec.code.value)
         }
 
         spec {
           id("codec type")
           icon(android.R.drawable.ic_delete)
           specName("Codec type")
-          specValue(stream.codecType ?: "")
+          specValue(stream.codec.type.toString())
         }
       }
 

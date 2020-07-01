@@ -6,7 +6,12 @@ import androidx.annotation.Keep
 import com.nlgtuankiet.fera.core.DataComponent
 import com.nlgtuankiet.fera.core.FFmpegPath
 import com.nlgtuankiet.fera.core.FFprobePath
+import com.nlgtuankiet.fera.core.LibraryPath
 import com.nlgtuankiet.fera.core.ktx.requireService
+import com.nlgtuankiet.fera.data.ffmpeg.setLibraryPath
+import com.nlgtuankiet.fera.domain.Log
+import com.nlgtuankiet.fera.domain.entity.asPath
+import com.nlgtuankiet.fera.domain.entity.parent
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.nlgtuankiet.fera.domain.gateway.TimeGateway
 import com.nlgtuankiet.fera.domain.repository.MediaFileRepository
@@ -34,9 +39,12 @@ import javax.inject.Singleton
 @Singleton
 interface DataComponentImpl : DataComponent {
 
+  @get:LibraryPath
+  val libraryPath: Provider<String>
+
   @Component.Factory
   interface Factory {
-    fun create(@BindsInstance context: Context): DataComponent
+    fun create(@BindsInstance context: Context): DataComponentImpl
   }
 }
 
@@ -111,7 +119,15 @@ object DataProvisionModule {
   fun ffmpegPath(context: Context): String {
     assertNotMainThread()
     return File(context.packageResourcePath).parentFile!!
-      .find("libffmpeg.so")!!.absolutePath
+      .find("libffmpeg.so")!!.absolutePath.also { Log("ffmpeg path is $it") }
+  }
+
+  @Provides
+  @Singleton
+  @LibraryPath
+  fun libraryPath(@FFmpegPath fFmpegPath: String): String {
+    assertNotMainThread()
+    return fFmpegPath.asPath().parent.value
   }
 
   @Provides
@@ -129,6 +145,8 @@ object DataProvisionModule {
 class DataComponentProvider :
   DataComponent.DataComponentProvider {
   override fun get(context: Context): DataComponent {
-    return DaggerDataComponentImpl.factory().create(context)
+    return DaggerDataComponentImpl.factory().create(context).also {
+      setLibraryPath(it.libraryPath)
+    }
   }
 }

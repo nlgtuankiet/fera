@@ -6,11 +6,19 @@ import org.zeroturnaround.exec.ProcessExecutor
 import org.zeroturnaround.exec.ProcessResult
 import org.zeroturnaround.exec.stream.LogOutputStream
 import org.zeroturnaround.process.Processes
+import javax.inject.Provider
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 
 // TODO improve .start on a thread pool
 // TODO enable redirectError cause redirectOutput not working
+
+private lateinit var libraryPath: Provider<String>
+
+fun setLibraryPath(value: Provider<String>) {
+  libraryPath = value
+}
+
 suspend fun runCommand(
   command: String,
   onProcess: (String) -> Unit
@@ -21,9 +29,10 @@ suspend fun runCommand(
     .map { it.trim() }
     .filter { it.isNotEmpty() }
     .toList()
-  val process = ProcessExecutor(args)
-    .readOutput(true)
-    .redirectOutput(
+  val process = ProcessExecutor(args).apply {
+    readOutput(true)
+    environment("LD_LIBRARY_PATH", libraryPath.get())
+    redirectOutput(
       object : LogOutputStream() {
         override fun processLine(line: String) {
           if (continuation.isActive) {
@@ -32,6 +41,7 @@ suspend fun runCommand(
         }
       }
     )
+  }.start()
 //    .redirectError(
 //      object : LogOutputStream() {
 //        override fun processLine(line: String) {
@@ -39,7 +49,6 @@ suspend fun runCommand(
 //        }
 //      }
 //    )
-    .start()
 
   continuation.invokeOnCancellation {
     Log("cancel command: $command")
@@ -79,4 +88,12 @@ suspend fun runCommand(
         }
       }
     }
+}
+
+suspend fun runCommandToString(command: String): String {
+  return buildString {
+    runCommand(command) {
+      appendLine(it)
+    }
+  }
 }
