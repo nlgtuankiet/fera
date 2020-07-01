@@ -2,31 +2,39 @@ package com.nlgtuankiet.fera.browsetype.itemlist
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.parentFragmentViewModel
 import com.nlgtuankiet.fera.browsetype.BrowseTypeState
 import com.nlgtuankiet.fera.browsetype.BrowseTypeViewModel
-import com.nlgtuankiet.fera.browsetype.R
+import com.nlgtuankiet.fera.core.Layout
+import com.nlgtuankiet.fera.core.coreComponent
+import com.nlgtuankiet.fera.core.databinding.EpoxyRecyclerViewBinding
 
-class ItemListFragment : Fragment(R.layout.browsetype_itemlist_fragment), MavericksView {
+class ItemListFragment : Fragment(Layout.EpoxyRecyclerView), MavericksView {
 
-  val viewModel: BrowseTypeViewModel by parentFragmentViewModel()
+  private val viewModel: BrowseTypeViewModel by parentFragmentViewModel()
+  private lateinit var binding: EpoxyRecyclerViewBinding
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    val args = arguments?.getParcelable("args") as? ItemListFragmentArgs ?: return
-    val index = args.index
-    println("ItemListFragment onViewCreated ")
-    viewModel.onEach(BrowseTypeState::mediaFolders) { folders ->
-      val folder = folders[index]
-      view.findViewById<TextView>(R.id.text).text = buildString {
-        appendLine(folder.name)
-        appendLine(folder.items.joinToString("\n") { it.name })
-      }.also {
-        println("set text: $it")
+    binding = EpoxyRecyclerViewBinding.bind(view)
+    val args: ItemListFragmentArgs = arguments?.getParcelable("args") as? ItemListFragmentArgs
+      ?: return
+    val controller = ItemListController(
+      viewModel = viewModel,
+      args = args,
+      timeGateway = coreComponent.timeGateway,
+    )
+    // TODO dynamic span count
+    binding.epoxyRecyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
+      .apply {
+        spanSizeLookup = controller.spanSizeLookup
       }
+    binding.epoxyRecyclerView.setController(controller)
+    viewModel.onEach(BrowseTypeState::mediaFolders) { folders ->
+      controller.requestModelBuild()
     }
   }
 

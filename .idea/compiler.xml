@@ -2,10 +2,18 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="codecgen" target="1.7" />
-      <module name="codegen" target="1.7" />
-      <module name="domain" target="1.7" />
-      <module name="function" target="1.7" />
+      <module
+        name="codecgen"
+        target="1.7" />
+      <module
+        name="codegen"
+        target="1.7" />
+      <module
+        name="domain"
+        target="1.7" />
+      <module
+        name="function"
+        target="1.7" />
     </bytecodeTargetLevel>
   </component>
 </project>

@@ -23,17 +23,34 @@ class AppFragmentFactory @Inject constructor(
   private val providerCache = mutableMapOf<String, FragmentComponentFactoryProvider>()
 
   override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
-    println("create $className")
-    val factoryProviderName = nameMapping[className]
-      ?: return super.instantiate(classLoader, className)
-    val cache = providerCache[className]
-    return if (cache != null) {
-      cache.get().create(context.coreComponent).fragment()
-    } else {
-      val instance =
-        Class.forName(factoryProviderName).newInstance() as FragmentComponentFactoryProvider
-      providerCache[className] = instance
-      instance.get().create(context.coreComponent).fragment()
+    return createFromCache(classLoader, className)
+      ?: createFromMapping(classLoader, className)
+      ?: createFromFragmentName(classLoader, className)
+      ?: super.instantiate(classLoader, className)
+  }
+
+  private fun createFromCache(classLoader: ClassLoader, className: String): Fragment? {
+    val cache = providerCache[className] ?: return null
+    return cache.get().create(context.coreComponent).fragment()
+  }
+
+  private fun createFromFragmentName(classLoader: ClassLoader, className: String): Fragment? {
+    val providerName = "${className}ComponentFactoryProvider"
+    return try {
+      val provider = Class.forName(providerName).newInstance()
+        as FragmentComponentFactoryProvider
+      providerCache[className] = provider
+      provider.get().create(context.coreComponent).fragment()
+    } catch (ignored: Exception) {
+      null
     }
+  }
+
+  private fun createFromMapping(classLoader: ClassLoader, className: String): Fragment? {
+    val factoryProviderName = nameMapping[className] ?: return null
+    val instance =
+      Class.forName(factoryProviderName).newInstance() as FragmentComponentFactoryProvider
+    providerCache[className] = instance
+    return instance.get().create(context.coreComponent).fragment()
   }
 }

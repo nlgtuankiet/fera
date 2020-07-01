@@ -50,8 +50,8 @@ class BrowseTypeViewModel @Inject constructor(
 
   fun List<MediaFile>.sortBy(by: SortBy): List<MediaFile> {
     return when (by) {
-      SortBy.Newest -> sortedByDescending { it.date }
-      SortBy.Oldest -> sortedBy { it.date }
+      SortBy.Newest -> sortedByDescending { it.dateModified }
+      SortBy.Oldest -> sortedBy { it.dateModified }
     }
   }
 
@@ -75,7 +75,7 @@ class BrowseTypeViewModel @Inject constructor(
             name = "All",
             items = mediaFiles.sortBy(sortBy)
           )
-          mediaFolders.sortByDescending { it.items.first().date }
+          mediaFolders.sortByDescending { it.items.first().dateModified }
           val finalList: List<MediaFolder> = listOf(allFolder) + mediaFolders
           copy(
             mediaFiles = async,

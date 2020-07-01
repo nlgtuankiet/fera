@@ -9,6 +9,7 @@ dependencies {
   kapt deps.daggerProcessor
   implementation deps.dagger
   testImplementation "junit:junit:4.12"
+  implementation "org.threeten:threetenbp:1.4.4:no-tzdb"
   implementation deps.kotlinCoroutine
 }
 

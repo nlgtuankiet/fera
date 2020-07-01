@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+  <issue
+    id="ObsoleteLintCustomCheck"
+    severity="ignore" />
+  <issue
+    id="ContentDescription"
+    severity="ignore" />
+
+  <issue id="ResourceType">
+    <ignore path="build" />
+  </issue>
+  <issue id="RestrictedApi">
+    <ignore path="build" />
+  </issue>
+</lint>

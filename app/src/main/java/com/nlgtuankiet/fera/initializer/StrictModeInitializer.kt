@@ -36,10 +36,9 @@ fun addWhitelistStrictMode() {
     "android.util.BoostFramework.<init>",
 
     // TODO not sure what is the reason for this?
-    "android.graphics.fonts.HwTypefaceEx.",
-
-    "android.graphics.AwareBitmapCacher.",
     "android.content.Context.getDrawable",
+    "android.graphics.",
+    "com.samsung.android.knox.",
 
     // https://bumptech.github.io/glide/doc/placeholders.html#are-placeholders-loaded-asynchronously
     "com.bumptech.glide.load.resource.drawable.DrawableDecoderCompat.getDrawable",

@@ -10,6 +10,11 @@ annotation class FFmpegPath
 @Qualifier
 @MustBeDocumented
 @Retention(AnnotationRetention.RUNTIME)
+annotation class LibraryPath
+
+@Qualifier
+@MustBeDocumented
+@Retention(AnnotationRetention.RUNTIME)
 annotation class FFprobePath
 
 @Qualifier

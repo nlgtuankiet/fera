@@ -37,7 +37,6 @@ object BrowseTypeProvision {
   @Provides
   @Retained
   fun viewModel(fragment: BrowseTypeFragment): BrowseTypeViewModel {
-    println("init request BrowseTypeViewModel from BrowseTypeProvision")
     return fragment.viewModel
   }
 

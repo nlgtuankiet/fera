@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <data>
+
+    <variable
+      name="icon"
+      type="Integer" />
+
+    <variable
+      name="specName"
+      type="String" />
+
+    <variable
+      name="specValue"
+      type="String" />
+
+    <variable
+      name="onClickListener"
+      type="android.view.View.OnClickListener" />
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    tools:ignore="UnusedAttribute"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:foreground="?attr/selectableItemBackground"
+    android:onClick="@{onClickListener}"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="8dp">
+
+    <ImageView
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      android:id="@+id/icon"
+      android:layout_width="24dp"
+      android:layout_height="24dp"
+      app:source="@{icon}"
+      tools:src="@tools:sample/avatars" />
+
+    <TextView
+      android:id="@+id/spec_name"
+      style="@style/Body1"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="8dp"
+      android:layout_marginEnd="8dp"
+      android:maxLines="1"
+      android:text="@{specName}"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/spec_value"
+      app:layout_constraintStart_toEndOf="@id/icon"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="Codec" />
+
+    <TextView
+      android:id="@+id/spec_value"
+      style="@style/Body2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:text="@{specValue}"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="H264" />
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

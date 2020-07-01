@@ -70,7 +70,7 @@ class BrowseViewModel @Inject constructor(
       }
     }
 
-    return result.sortedByDescending { it.medias.first().date }
+    return result.sortedByDescending { it.medias.first().dateModified }
   }
 
   companion object : MvRxViewModelFactory<BrowseViewModel, BrowseState> {

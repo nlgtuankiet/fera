@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation
+  xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:app="http://schemas.android.com/apk/res-auto"
   android:id="@+id/nav_graph"
   app:startDestination="@id/home">
@@ -20,6 +21,18 @@
     <deepLink
       android:id="@+id/browse_deep_link"
       app:uri="fera://browse/" />
+  </fragment>
+
+  <fragment
+    android:id="@+id/configure"
+    android:name="com.nlgtuankiet.fera.configure.ConfigureFragment"
+    android:label="ConfigureFragment">
+    <deepLink
+      android:id="@+id/configure_deep_link"
+      app:uri="fera://configure/?path={path}" />
+    <argument
+      android:name="path"
+      app:argType="string" />
   </fragment>
 
   <fragment
