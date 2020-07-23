@@ -29,5 +29,10 @@ stages:
 jobs:
   include:
     - stage: verify-pr
-      script: echo "aaa"
-      script: ls -lha
+      script: echo "verify-pr 1"
+    - stage: verify-pr
+      script: echo "verify-pr 2"
+    - stage: verify-pr2
+      script: echo "verify-pr2 1"
+    - stage: verify-pr2
+      script: echo "verify-pr2 2"
