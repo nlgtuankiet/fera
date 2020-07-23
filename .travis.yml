@@ -24,6 +24,6 @@ jobs:
   include:
     - stage: verify-pr
       name: "verify pr step 1"
-      script: echo "verufy pr step 1"
+      script: ls -lha
     - script: echo "verify pr step 2"
       name: "verify pr step 2"
