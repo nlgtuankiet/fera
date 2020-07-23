@@ -23,6 +23,7 @@ licenses:
 jobs:
   include:
     - stage: verify-pr
+      if: branch = master
       name: "verify pr step 1"
       script: ls -lha
     - script: echo "verify pr step 2"
