@@ -28,10 +28,12 @@ stages:
 
 jobs:
   include:
+    - if: branch = master
     - stage: verify-pr
       script: echo "verify-pr 1"
     - stage: verify-pr
       script: echo "verify-pr 2"
+    - if: branch = master2
     - stage: verify-pr2
       script: echo "verify-pr2 1"
     - stage: verify-pr2
