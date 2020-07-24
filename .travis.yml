@@ -22,17 +22,21 @@ licenses:
 
 stages:
   - name: verify-pr
-    if: branch != master
   - name: master-build
-    if: branch = master
 
 jobs:
   include:
     - stage: verify-pr
+      branches:
+        except:
+          - master
       script: echo "verify-pr 1"
     - stage: verify-pr
       script: echo "verify-pr m2"
     - stage: master-build
+      branches:
+        only:
+          - master
       script: git rev-parse HEAD
     - stage: master-build
       script: git rev-parse HEAD
