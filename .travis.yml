@@ -38,7 +38,7 @@ jobs:
       script: ./gradlew :app:lintDebug &&
         bundle install && bundle exec danger --new-comment --dangerfile=lint.danger
     - stage: verify-pr
-      name: test-spotless
+      name: test-spotless2
       script: ./gradlew testDebugUnitTest spotlessCheck
     - stage: verify-pr
       name: dynamic-build
