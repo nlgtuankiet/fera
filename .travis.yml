@@ -44,7 +44,7 @@ jobs:
       script: bash ./scripts/setup.sh &&
       ./gradlew testDebugUnitTest spotlessCheck
     - stage: verify-pr
-      name: dynamic-build222
+      name: dynamic-build2222
       script: bash ./scripts/setup.sh &&
         ./gradlew :app:bundleDebug -Pdynamic &&
         ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
