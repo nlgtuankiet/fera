@@ -47,7 +47,7 @@ setupFfmpeg() {
   echo "setup ffmpeg"
   mkdir -p ../mobile-ffmpeg/prebuilt/
 
-  wget https://storage.googleapis.com/fera-verto.appspot.com/ffmpeg/prebuilt1.zip \
+  wget https://storage.googleapis.com/fera-verto.appspot.com/ffmpeg/prebuilt2.zip \
     -O ../mobile-ffmpeg/prebuilt.zip
 
   unzip ../mobile-ffmpeg/prebuilt.zip -d ../mobile-ffmpeg/
