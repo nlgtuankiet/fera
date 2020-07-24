@@ -42,14 +42,14 @@ jobs:
     - stage: verify-pr
       name: test-spotless
       script: bash ./scripts/setup.sh &&
-      ./gradlew testDebugUnitTest spotlessCheck
+        ./gradlew testDebugUnitTest spotlessCheck
     - stage: verify-pr
-      name: dynamic-build2222
+      name: dynamic-build
       script: bash ./scripts/setup.sh &&
         ./gradlew :app:bundleDebug -Pdynamic &&
         ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
     - stage: master-build
       name: upload-apk
       script: bash ./scripts/setup.sh &&
-        && sh ./scripts/build_release_apk.sh
-        && bash ./scripts/upload_master_apk.sh
+        sh ./scripts/build_release_apk.sh &&
+        bash ./scripts/upload_master_apk.sh
