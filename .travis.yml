@@ -33,6 +33,6 @@ jobs:
     - stage: verify-pr
       script: echo "verify-pr 2"
     - stage: master-build
-      script: echo "verify-pr2 1"
+      script: git rev-parse HEAD
     - stage: master-build
       script: git rev-parse HEAD
