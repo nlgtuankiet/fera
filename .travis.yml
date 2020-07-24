@@ -32,7 +32,7 @@ jobs:
       script: echo "verify-pr 1"
     - stage: verify-pr
       script: echo "verify-pr 2"
-    - stage: verify-pr2
+    - stage: master-build
       script: echo "verify-pr2 1"
-    - stage: verify-pr2
+    - stage: master-build
       script: echo "verify-pr2 2"
