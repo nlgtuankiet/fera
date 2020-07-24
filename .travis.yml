@@ -30,22 +30,26 @@ jobs:
   include:
     - stage: verify-pr
       name: compare-apk
-      script: sh ./scripts/build_release_apk.sh &&
+      script: bash ./scripts/setup.sh &&
+        sh ./scripts/build_release_apk.sh &&
         bash ./scripts/download_master_apk.sh &&
         bundle install && bundle exec danger --new-comment --dangerfile=compare-apk.danger
     - stage: verify-pr
       name: lint
-      script: ./gradlew :app:lintDebug &&
+      script: bash ./scripts/setup.sh &&
+        ./gradlew :app:lintDebug &&
         bundle install && bundle exec danger --new-comment --dangerfile=lint.danger
     - stage: verify-pr
-      name: test-spotless2
-      script: ./gradlew testDebugUnitTest spotlessCheck
+      name: test-spotless
+      script: bash ./scripts/setup.sh &&
+      ./gradlew testDebugUnitTest spotlessCheck
     - stage: verify-pr
       name: dynamic-build
-      script: ./gradlew :app:bundleDebug -Pdynamic &&
+      script: bash ./scripts/setup.sh &&
+        ./gradlew :app:bundleDebug -Pdynamic &&
         ./gradlew :app:bundleDebug -Pdynamic -Pexclude=".*"
     - stage: master-build
       name: upload-apk
-      script: bash ./scripts/setup.sh
+      script: bash ./scripts/setup.sh &&
         && sh ./scripts/build_release_apk.sh
         && bash ./scripts/upload_master_apk.sh
