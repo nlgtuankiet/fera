@@ -31,7 +31,7 @@ jobs:
     - stage: verify-pr
       script: echo "verify-pr 1"
     - stage: verify-pr
-      script: echo "verify-pr 2"
+      script: echo "verify-pr m2"
     - stage: master-build
       script: git rev-parse HEAD
     - stage: master-build
