@@ -35,4 +35,4 @@ jobs:
     - stage: master-build
       script: echo "verify-pr2 1"
     - stage: master-build
-      script: echo "verify-pr2 2"
+      script: git rev-parse HEAD
