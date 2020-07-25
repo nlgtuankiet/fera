@@ -1,48 +1,198 @@
 package com.nlgtuankiet.fera.configure
 
+import android.content.Context
+import androidx.core.util.rangeTo
 import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.withState
+import com.nlgtuankiet.fera.core.OneGbps
+import com.nlgtuankiet.fera.core.OneKbps
+import com.nlgtuankiet.fera.core.OneMbps
 import com.nlgtuankiet.fera.core.Retained
+import com.nlgtuankiet.fera.core.epoxy.Spacing
+import com.nlgtuankiet.fera.core.epoxy.body1TextView
 import com.nlgtuankiet.fera.core.epoxy.buildSubModels
+import com.nlgtuankiet.fera.core.epoxy.headline1TextView
+import com.nlgtuankiet.fera.core.epoxy.headline6TextView
 import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
+import com.nlgtuankiet.fera.core.epoxy.spacingOf
+import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
+import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
+import com.nlgtuankiet.fera.core.ktx.pxOf
+import com.nlgtuankiet.fera.domain.entity.AudioStream
+import com.nlgtuankiet.fera.domain.entity.CodecType
+import com.nlgtuankiet.fera.domain.entity.MediaInfo
+import com.nlgtuankiet.fera.domain.entity.VideoStream
+import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Provider
 
 class ConfigureController @Inject constructor(
-  @Retained private val viewModelProvider: Provider<ConfigureViewModel>
+  @Retained private val viewModelProvider: Provider<ConfigureViewModel>,
+  private val fragmentProvider: Provider<ConfigureFragment>
 ) : AsyncEpoxyController() {
+  private val context: Context
+    get() = fragmentProvider.get().requireContext()
 
-  override fun buildModels() {
-    val state = withState(viewModelProvider.get()) { it }
-    println("$state")
-    val mediaInfo = state.mediaInfo.invoke() ?: return
+  private fun buildContainer(state: ConfigureState, mediaInfo: MediaInfo) {
     horizontalDividerView {
       id("top")
-      height(100)
+      height(context.pxOf(24))
+    }
+    val containerModels = buildSubModels {
+      headline6TextView {
+        id("container")
+        text("Container")
+        padding(spacingOf(context.pxOf(16)))
+      }
+
+      doubleTextView {
+        id("format")
+        leftText("Format")
+        rightText(mediaInfo.format.name)
+        padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+      }
     }
 
-    mediaInfo.streams.forEach { stream ->
-      val models = buildSubModels {
+    cardEpoxyRecyclerView {
+      id("container for ${mediaInfo.hashCode()}")
+      models(containerModels)
+    }
+  }
 
-        spec {
-          id("codec")
-          icon(android.R.drawable.ic_dialog_alert)
-          specName("Codec")
-          specValue(stream.codec.code.value)
+  private fun getBitRateText(rate: Long): String {
+    return when(rate) {
+      in 0 until OneKbps -> "$rate bps"
+      OneKbps -> "1 Kbps"
+      in OneKbps until OneMbps -> "%.1f Kbps".format(rate.toDouble() / OneKbps)
+      OneMbps -> "1 Mbps"
+      in OneMbps until OneGbps -> "%.1f Mbps".format(rate.toDouble() / OneMbps)
+      OneGbps -> "1 Gbps"
+      else -> "%.2f Gbps".format(rate.toDouble() / OneGbps)
+    }
+  }
+
+  private fun buildVideoStreams(state: ConfigureState, mediaInfo: MediaInfo) {
+
+    mediaInfo.streams.mapNotNull { it as? VideoStream }.forEachIndexed { index, stream ->
+      val streamIndex = stream.index
+      horizontalDividerView {
+        id("divider stream $streamIndex")
+        height(100)
+      }
+
+      val models = buildSubModels {
+        headline6TextView {
+          id("title $streamIndex")
+          text("Video track #${index + 1}")
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
         }
 
-        spec {
-          id("codec type")
-          icon(android.R.drawable.ic_delete)
-          specName("Codec type")
-          specValue(stream.codec.type.toString())
+        // codec
+        doubleTextView {
+          id("codec $streamIndex")
+          leftText("Codec")
+          rightText(stream.codec.code.value)
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        }
+
+        // size
+        doubleTextView {
+          id("size $streamIndex")
+          leftText("Size")
+          rightText("${stream.size.width}x${stream.size.height} (${stream.ratio})")
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        }
+
+        // frame rate
+        doubleTextView {
+          id("frame rate $streamIndex")
+          leftText("Frame rate")
+          rightText("%.2f fps".format(stream.frameRate))
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        }
+
+        // bit rate
+        doubleTextView {
+          id("bit rate $streamIndex")
+          leftText("Bitrate")
+          rightText(getBitRateText(stream.bitRate))
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
         }
       }
 
       cardEpoxyRecyclerView {
-        id(stream.hashCode())
+        id("video container for $streamIndex")
         models(models)
       }
+    }
+  }
+
+  private fun buildAudioStreams(state: ConfigureState, mediaInfo: MediaInfo) {
+    mediaInfo.streams.mapNotNull { it as? AudioStream }.forEachIndexed { index, stream ->
+      val streamIndex = stream.index
+      horizontalDividerView {
+        id("divider stream $streamIndex")
+        height(context.pxOf(16))
+      }
+
+      val models = buildSubModels {
+        headline6TextView {
+          id("title $streamIndex")
+          text("Audio track #${index + 1}")
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        }
+
+        // codec
+        doubleTextView {
+          id("codec of ${streamIndex}}")
+          leftText("Codec")
+          rightText(stream.codec.code.value)
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        }
+
+        doubleTextView {
+          id("sample rate of ${streamIndex}}")
+          leftText("Sample rate")
+          // TODO improve KHz
+          rightText("${stream.sampleRate} Hz")
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        }
+
+        doubleTextView {
+          id("channels of ${streamIndex}}")
+          leftText("Channels")
+          rightText(stream.channels.toString())
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        }
+
+        doubleTextView {
+          id("bitrate of ${streamIndex}}")
+          leftText("Bitrate")
+          rightText(getBitRateText(stream.bitRate))
+          padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        }
+      }
+
+      cardEpoxyRecyclerView {
+        id("audio container for $streamIndex")
+        models(models)
+      }
+    }
+  }
+
+  override fun buildModels() {
+    val state = withState(viewModelProvider.get()) { it }
+    (state.mediaInfo as? Fail)?.let { throw it.error }
+    val mediaInfo = state.mediaInfo.invoke() ?: return
+
+    buildContainer(state, mediaInfo)
+    buildVideoStreams(state, mediaInfo)
+    buildAudioStreams(state, mediaInfo)
+
+    horizontalDividerView {
+      id("last divider")
+      height(context.pxOf(24))
     }
   }
 }

@@ -21,9 +21,15 @@
     <variable
       name="contentWhiteOverlay"
       type="Boolean" />
+
+    <variable
+      name="onClick"
+      type="android.view.View.OnClickListener" />
+
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
+    android:onClick="@{onClick}"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     tools:layout_width="120dp">

@@ -2,9 +2,13 @@ package com.nlgtuankiet.fera.core.epoxy
 
 import android.content.Context
 import android.util.AttributeSet
+import android.view.ViewGroup
 import androidx.annotation.ColorRes
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.content.ContextCompat
+import androidx.core.view.updateLayoutParams
+import androidx.core.view.updateMargins
+import androidx.core.view.updatePadding
 import com.airbnb.epoxy.EpoxyAttribute
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.ModelView
@@ -112,7 +116,7 @@ class OverlineTextView @JvmOverloads constructor(
   defStyleAttr: Int = 0,
 ) : AppCompatTextView(context.wrap(R.style.Overline), attributeSet, defStyleAttr)
 
-abstract class TextBaseModel<T : AppCompatTextView> : EpoxyModel<T>() {
+abstract class TextBaseModel<T : AppCompatTextView> : ViewBaseModel<T>() {
 
   @EpoxyAttribute
   var text: CharSequence? = null

@@ -65,9 +65,9 @@ class BrowseController @Inject constructor(
       if (index != lastIndex) {
         horizontalDividerView {
           id(storage.hashCode())
-          padding(Spacing(start = context.pxOf(16 + 24 + 16)))
+//          padding(Spacing(start = context.pxOf(16 + 24 + 16)))
           height(context.pxOf(1))
-          color(context.colorOf(R.color.browse_color_on_surface_a12))
+//          color(context.colorOf(R.color.browse_color_on_surface_a12))
         }
       }
     }
@@ -104,9 +104,9 @@ class BrowseController @Inject constructor(
       if (index != lastIndex) {
         horizontalDividerView {
           id(mediaType.hashCode())
-          padding(Spacing(start = context.pxOf(16 + 24 + 16)))
+//          padding(Spacing(start = context.pxOf(16 + 24 + 16)))
           height(context.pxOf(1))
-          color(context.colorOf(R.color.browse_color_on_surface_a12))
+//          color(context.colorOf(R.color.browse_color_on_surface_a12))
         }
       }
     }

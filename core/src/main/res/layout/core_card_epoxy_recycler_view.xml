@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.nlgtuankiet.fera.core.epoxy.view.CardEpoxyRecyclerView
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginStart="16dp"
+  android:layout_marginEnd="16dp"
+  app:cardElevation="2dp">
+
+  <com.nlgtuankiet.fera.core.view.BaseEpoxyRecyclerView
+    android:id="@+id/epoxy_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" />
+
+</com.nlgtuankiet.fera.core.epoxy.view.CardEpoxyRecyclerView>

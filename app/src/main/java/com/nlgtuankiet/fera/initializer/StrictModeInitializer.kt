@@ -50,8 +50,7 @@ fun addWhitelistStrictMode() {
 
   class StrictModeHackArrayList : ArrayList<Object>() {
     override fun add(element: Object): Boolean {
-      val stacktrace = getStacktraceOf(element)
-      println("check for stacktrace: $stacktrace")
+      val stacktrace = runCatching { getStacktraceOf(element) }.getOrNull() ?: return false
       for (whitelisted in whitelists) {
         if (stacktrace.contains(whitelisted)) {
           Log.w("Skipping whitelisted StrictMode violation: $whitelisted")
