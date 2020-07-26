@@ -2,6 +2,11 @@ package com.nlgtuankiet.fera.domain.entity
 
 inline class CodecCode(val value: String)
 
+fun codecCodeOf(value: String): CodecCode {
+  require(value.isNotBlank())
+  return CodecCode(value)
+}
+
 @Suppress("NOTHING_TO_INLINE")
 inline fun String.asCodecCode(): CodecCode = CodecCode(this)
 

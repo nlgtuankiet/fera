@@ -13,10 +13,9 @@ import com.nlgtuankiet.fera.domain.entity.CodecCode
 import com.nlgtuankiet.fera.domain.entity.CodecType
 import com.nlgtuankiet.fera.domain.entity.DecoderCode
 import com.nlgtuankiet.fera.domain.entity.EncoderCode
-import com.nlgtuankiet.fera.domain.entity.Format
+import com.nlgtuankiet.fera.domain.entity.MediaFormat
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.Size
-import com.nlgtuankiet.fera.domain.entity.Stream
 import com.nlgtuankiet.fera.domain.entity.VideoStream
 import com.nlgtuankiet.fera.domain.entity.asCodecCode
 import com.nlgtuankiet.fera.domain.entity.asDecoderCode
@@ -206,7 +205,7 @@ class CommandLineFFmpegGateway @Inject constructor(
         else -> error("")
       }
     }
-    val format = Format(
+    val format = MediaFormat(
       name = formatOutput.format.name,
       longName = "",
     )
@@ -218,14 +217,12 @@ class CommandLineFFmpegGateway @Inject constructor(
   }
 
   // for debug only
-  override suspend fun test(command: String, useFfmpeg: Boolean) {
+  override suspend fun runRawCommand(command: String, useFfmpeg: Boolean): String {
     val program = if (useFfmpeg) {
       ffmpegPath
     } else {
       ffprobePath
     }
-    runCommand("$program $command") {
-      println(it)
-    }
+    return runCommandToString("$program $command")
   }
 }

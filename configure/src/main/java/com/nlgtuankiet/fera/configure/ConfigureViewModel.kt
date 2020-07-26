@@ -8,8 +8,10 @@ import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
+import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import javax.inject.Inject
 
 data class ConfigureState(
@@ -18,6 +20,7 @@ data class ConfigureState(
 
 class ConfigureViewModel @Inject constructor(
   private val getMediaInfo: GetMediaInfo,
+  private val fFmpegGateway: FFmpegGateway,
   private val args: ConfigureFragmentArgs
 ) : BaseMavericksViewModel<ConfigureState>(ConfigureState(), BuildConfig.DEBUG) {
 

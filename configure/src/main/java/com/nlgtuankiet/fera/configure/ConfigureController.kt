@@ -29,7 +29,8 @@ import javax.inject.Provider
 
 class ConfigureController @Inject constructor(
   @Retained private val viewModelProvider: Provider<ConfigureViewModel>,
-  private val fragmentProvider: Provider<ConfigureFragment>
+  private val fragmentProvider: Provider<ConfigureFragment>,
+  private val navigator: ConfigureNavigator,
 ) : AsyncEpoxyController() {
   private val context: Context
     get() = fragmentProvider.get().requireContext()
@@ -51,9 +52,12 @@ class ConfigureController @Inject constructor(
         leftText("Format")
         rightText(mediaInfo.format.name)
         padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+        onClickListener { _ ->
+          navigator.toSelectFormat()
+        }
       }
     }
-
+    println("build card for ${mediaInfo.hashCode() % 100} ${containerModels.hashCode() % 100}")
     cardEpoxyRecyclerView {
       id("container for ${mediaInfo.hashCode()}")
       models(containerModels)
