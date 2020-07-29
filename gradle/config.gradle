@@ -9,6 +9,7 @@ ext {
     "home",
     "browse",
     "browseType",
+    "selectFormat",
     "configure",
     "data",
     "image",

@@ -1,17 +1,17 @@
 package com.nlgtuankiet.fera.configure
 
-import com.nlgtuankiet.fera.configure.select.format.SelectFormatFragment
+import androidx.navigation.findNavController
+import com.nlgtuankiet.fera.selectformat.SelectFormatFragmentArgs
 import javax.inject.Inject
-import javax.inject.Provider
 
 class ConfigureNavigator @Inject constructor(
-  private val fragmentProvider: Provider<ConfigureFragment>
+  private val fragment: ConfigureFragment,
+  private val viewModel: ConfigureViewModel,
 ) {
-  fun toSelectFormat() {
-    fragmentProvider.get().childFragmentManager
-      .beginTransaction()
-      .add(R.id.dialog_fragment_container, SelectFormatFragment())
-      .addToBackStack(SelectFormatFragment::class.java.name)
-      .commit()
+
+  fun toSelectFormat(args: SelectFormatFragmentArgs) {
+    fragment.requireView().findNavController()
+      .navigate(com.nlgtuankiet.fera.core.R.id.select_format, args.toBundle())
+    viewModel.onRequestFormat(args.requestCode)
   }
 }

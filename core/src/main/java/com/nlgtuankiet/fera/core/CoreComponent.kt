@@ -2,9 +2,11 @@ package com.nlgtuankiet.fera.core
 
 import android.content.Context
 import androidx.fragment.app.Fragment
+import com.nlgtuankiet.fera.core.result.ResultManager
 
 interface CoreComponent : DataComponent {
   val context: Context
+  val resultManager: ResultManager
 }
 
 interface HasCoreComponent {

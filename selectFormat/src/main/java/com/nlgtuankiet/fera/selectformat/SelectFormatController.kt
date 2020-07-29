@@ -1,12 +1,15 @@
-package com.nlgtuankiet.fera.configure.select.format
+package com.nlgtuankiet.fera.selectformat
 
 import android.content.Context
 import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
+import androidx.navigation.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
-import com.nlgtuankiet.fera.configure.ConfigureViewModel
+import com.nlgtuankiet.fera.core.FragmentScope
+import com.nlgtuankiet.fera.core.Retained
+import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.epoxy.buildSubModels
 import com.nlgtuankiet.fera.core.epoxy.headline6TextView
 import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
@@ -14,11 +17,17 @@ import com.nlgtuankiet.fera.core.epoxy.spacingOf
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
 import com.nlgtuankiet.fera.core.ktx.pxOf
+import com.nlgtuankiet.fera.core.result.ResultManager
 import com.nlgtuankiet.fera.core.state
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class SelectFormatController(
-  private val configureViewModel: ConfigureViewModel,
+@FragmentScope
+class SelectFormatController @Inject constructor(
+  @Retained
   private val viewModel: SelectFormatViewModel,
+  private val resultManager: ResultManager,
+  private val args: SelectFormatFragmentArgs,
   private val fragment: SelectFormatFragment,
 ) : AsyncEpoxyController() {
 
@@ -83,6 +92,14 @@ class SelectFormatController(
               .withForeground(queryRegex)
           )
           padding(spacing16)
+          onClickListener { _ ->
+            setResult(
+              SelectFormatResult(
+                muxer.commonExtension.first(),
+                muxer.code
+              )
+            )
+          }
         }
 
         muxer.defaultVideoCodec?.let { defaultVideoCodec ->
@@ -123,5 +140,12 @@ class SelectFormatController(
         height(context.pxOf(16))
       }
     }
+  }
+
+  private fun setResult(result: SelectFormatResult) {
+    // TODO validate
+    val controller = fragment.requireView().findNavController()
+    resultManager.sendResult(args.requestCode, result)
+    controller.popBackStack()
   }
 }

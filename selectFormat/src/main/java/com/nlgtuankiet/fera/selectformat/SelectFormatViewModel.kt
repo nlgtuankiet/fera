@@ -1,8 +1,11 @@
-package com.nlgtuankiet.fera.configure.select.format
+package com.nlgtuankiet.fera.selectformat
 
 import com.airbnb.mvrx.BaseMavericksViewModel
 import com.airbnb.mvrx.MvRxState
-import com.nlgtuankiet.fera.configure.BuildConfig
+import com.airbnb.mvrx.MvRxViewModelFactory
+import com.airbnb.mvrx.ViewModelContext
+import com.nlgtuankiet.fera.core.fragment
+import com.nlgtuankiet.fera.core.result.ResultManager
 import com.nlgtuankiet.fera.domain.entity.Muxer
 import com.nlgtuankiet.fera.domain.entity.Muxers
 import kotlinx.coroutines.Dispatchers
@@ -18,19 +21,14 @@ data class SelectFormatState(
 ) : MvRxState
 
 class SelectFormatViewModel @Inject constructor(
-  private val initialState: SelectFormatState,
+  private val resultManager: ResultManager,
+  private val args: SelectFormatFragmentArgs
 ) : BaseMavericksViewModel<SelectFormatState>(
-  initialState = initialState,
+  initialState = SelectFormatState(),
   debugMode = BuildConfig.DEBUG
 ) {
 
   private var setQueryJob: Job? = null
-
-  fun onBackPress() = withState { state ->
-    if (state.isTyping) {
-      setState { copy(isTyping = false) }
-    }
-  }
 
   fun setQuery(value: String) {
     setQueryJob?.cancel()
@@ -39,6 +37,20 @@ class SelectFormatViewModel @Inject constructor(
       setState {
         copy(query = value.trim())
       }
+    }
+  }
+
+  override fun onCleared() {
+    super.onCleared()
+    resultManager.cancel(requestCode = args.requestCode)
+  }
+
+  companion object : MvRxViewModelFactory<SelectFormatViewModel, SelectFormatState> {
+    override fun create(
+      viewModelContext: ViewModelContext,
+      state: SelectFormatState
+    ): SelectFormatViewModel? {
+      return viewModelContext.fragment<SelectFormatFragment>().viewModelFactory.get()
     }
   }
 }

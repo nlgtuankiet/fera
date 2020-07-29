@@ -5,6 +5,7 @@ import androidx.core.util.rangeTo
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.withState
+import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.OneGbps
 import com.nlgtuankiet.fera.core.OneKbps
 import com.nlgtuankiet.fera.core.OneMbps
@@ -19,21 +20,25 @@ import com.nlgtuankiet.fera.core.epoxy.spacingOf
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
 import com.nlgtuankiet.fera.core.ktx.pxOf
+import com.nlgtuankiet.fera.core.result.createNewRequestCode
 import com.nlgtuankiet.fera.domain.entity.AudioStream
 import com.nlgtuankiet.fera.domain.entity.CodecType
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.VideoStream
+import com.nlgtuankiet.fera.selectformat.SelectFormatFragmentArgs
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Provider
+import javax.inject.Singleton
 
+@FragmentScope
 class ConfigureController @Inject constructor(
-  @Retained private val viewModelProvider: Provider<ConfigureViewModel>,
-  private val fragmentProvider: Provider<ConfigureFragment>,
+  @Retained private val viewModel: ConfigureViewModel,
+  private val fragment: ConfigureFragment,
   private val navigator: ConfigureNavigator,
 ) : AsyncEpoxyController() {
   private val context: Context
-    get() = fragmentProvider.get().requireContext()
+    get() = fragment.requireContext()
 
   private fun buildContainer(state: ConfigureState, mediaInfo: MediaInfo) {
     horizontalDividerView {
@@ -53,7 +58,7 @@ class ConfigureController @Inject constructor(
         rightText(mediaInfo.format.name)
         padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
         onClickListener { _ ->
-          navigator.toSelectFormat()
+          navigator.toSelectFormat(SelectFormatFragmentArgs(createNewRequestCode()))
         }
       }
     }
@@ -186,7 +191,7 @@ class ConfigureController @Inject constructor(
   }
 
   override fun buildModels() {
-    val state = withState(viewModelProvider.get()) { it }
+    val state = withState(viewModel) { it }
     (state.mediaInfo as? Fail)?.let { throw it.error }
     val mediaInfo = state.mediaInfo.invoke() ?: return
 

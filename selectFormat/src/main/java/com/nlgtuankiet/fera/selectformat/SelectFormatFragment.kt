@@ -1,41 +1,38 @@
-package com.nlgtuankiet.fera.configure.select.format
+package com.nlgtuankiet.fera.selectformat
 
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
-import androidx.activity.addCallback
-import androidx.core.view.isGone
 import androidx.core.view.isInvisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.mvrx.MavericksView
+import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.fragmentViewModel
-import com.airbnb.mvrx.parentFragmentViewModel
-import com.nlgtuankiet.fera.configure.ConfigureViewModel
-import com.nlgtuankiet.fera.configure.R
+import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.ktx.addOnScrollStateChangeListener
 import com.nlgtuankiet.fera.core.ktx.hideKeyboard
-import com.nlgtuankiet.fera.core.ktx.showKeyboard
+import com.nlgtuankiet.fera.core.result.ResultManager
+import javax.inject.Inject
+import javax.inject.Provider
+import javax.inject.Singleton
 
-class SelectFormatFragment : Fragment(R.layout.select_format_fragment), MavericksView {
+@FragmentScope
+class SelectFormatFragment @Inject constructor(
+  private val controllerProvider: Provider<SelectFormatController>,
+  val viewModelFactory: Provider<SelectFormatViewModel>,
+) : Fragment(R.layout.select_format_fragment), MavericksView {
 
-  private val configureViewModel: ConfigureViewModel by parentFragmentViewModel()
-  private val viewModel: SelectFormatViewModel by fragmentViewModel()
-  private val controller: SelectFormatController by lazy {
-    SelectFormatController(
-      configureViewModel,
-      viewModel,
-      this,
-    )
-  }
+  val viewModel: SelectFormatViewModel by fragmentViewModel()
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     val epoxyRecyclerView = view.findViewById<EpoxyRecyclerView>(R.id.epoxy_recycler_view)
-    epoxyRecyclerView.setController(controller)
+    epoxyRecyclerView.setController(controllerProvider.get())
     val queryEditText = view.findViewById<EditText>(R.id.query_edit_text)
     val cancelButton = view.findViewById<ImageView>(R.id.cancel_button)
     cancelButton.setOnClickListener {
@@ -66,6 +63,11 @@ class SelectFormatFragment : Fragment(R.layout.select_format_fragment), Maverick
   }
 
   override fun invalidate() {
-    controller.requestModelBuild()
+    controllerProvider.get().requestModelBuild()
+  }
+
+  override fun onDestroyView() {
+    super.onDestroyView()
+    controllerProvider.get().cancelPendingModelBuild()
   }
 }

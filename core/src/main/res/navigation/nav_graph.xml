@@ -24,6 +24,19 @@
   </fragment>
 
   <fragment
+    android:id="@+id/select_format"
+    android:name="com.nlgtuankiet.fera.selectformat.SelectFormatFragment"
+    android:label="SelectFormatFragment">
+    <deepLink
+      android:id="@+id/select_format_deep_link"
+      app:uri="fera://selectformat/?requestCode={requestCode}" />
+    <argument
+      android:name="requestCode"
+      app:argType="string"
+      app:nullable="false" />
+  </fragment>
+
+  <fragment
     android:id="@+id/configure"
     android:name="com.nlgtuankiet.fera.configure.ConfigureFragment"
     android:label="ConfigureFragment">
