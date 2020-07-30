@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.nlgtuankiet.fera.core.R
@@ -19,7 +20,6 @@ class DoubleTextView @JvmOverloads constructor(
   private val leftTextView: TextView by bind(R.id.left_text_view)
   private val rightTextView: TextView by bind(R.id.right_text_view)
 
-
   @ModelProp
   fun setLeftText(value: CharSequence) {
     leftTextView.text = value
@@ -29,5 +29,4 @@ class DoubleTextView @JvmOverloads constructor(
   fun setRightText(value: CharSequence) {
     rightTextView.text = value
   }
-
 }

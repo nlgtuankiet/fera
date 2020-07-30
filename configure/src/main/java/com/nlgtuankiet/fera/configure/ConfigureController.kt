@@ -3,6 +3,7 @@ package com.nlgtuankiet.fera.configure
 import android.content.Context
 import androidx.core.util.rangeTo
 import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.epoxy.EpoxyController
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.withState
 import com.nlgtuankiet.fera.core.FragmentScope

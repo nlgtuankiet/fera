@@ -5,8 +5,10 @@ import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableString
 import android.text.style.BackgroundColorSpan
+import androidx.core.view.postDelayed
 import androidx.navigation.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
+import com.airbnb.epoxy.EpoxyController
 import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.Retained
 import com.nlgtuankiet.fera.core.result.SelectFormatResult
@@ -16,9 +18,12 @@ import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
 import com.nlgtuankiet.fera.core.epoxy.spacingOf
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
+import com.nlgtuankiet.fera.core.epoxy.view.simpleFrameView
 import com.nlgtuankiet.fera.core.ktx.pxOf
 import com.nlgtuankiet.fera.core.result.ResultManager
 import com.nlgtuankiet.fera.core.state
+import com.nlgtuankiet.fera.domain.entity.Extension
+import com.nlgtuankiet.fera.domain.entity.Muxer
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -61,15 +66,18 @@ class SelectFormatController @Inject constructor(
       height(context.pxOf(16))
     }
 
-    state.muxers.forEach { muxer ->
+    state.extensionWithMuxers.forEach { entry ->
+      val isSingleMuxer = entry.muxers.size == 1
+
       val hasMatch = if (state.query.isBlank()) {
         true
       } else {
-        muxer.code.value.contains(queryRegex)
-            || muxer.commonExtension.any { it.value.contains(queryRegex) }
-            || muxer.defaultVideoCodec?.value?.contains(queryRegex) == true
-            || muxer.defaultAudioCodec?.value?.contains(queryRegex) == true
-            || muxer.defaultSubtitleCodec?.value?.contains(queryRegex) == true
+        if (isSingleMuxer) {
+          entry.extension.value.contains(queryRegex)
+        } else {
+          entry.extension.value.contains(queryRegex)
+              || entry.muxers.any { it.code.value.contains(queryRegex) }
+        }
       }
 
       if (!hasMatch) {
@@ -78,65 +86,41 @@ class SelectFormatController @Inject constructor(
 
       val models = buildSubModels {
         headline6TextView {
-          id(muxer.code.value)
-          text(muxer.code.value.withForeground(queryRegex))
+          id("extension ${entry.extension.value}")
+          text(entry.extension.value.withForeground(queryRegex))
           padding(spacing16)
         }
-
-        doubleTextView {
-          id("extensions ${muxer.code.value}")
-          leftText("Common extensions")
-          rightText(
-            muxer.commonExtension
-              .joinToString(" ") { it.value }
-              .withForeground(queryRegex)
-          )
-          padding(spacing16)
-          onClickListener { _ ->
-            setResult(
-              SelectFormatResult(
-                muxer.commonExtension.first(),
-                muxer.code
-              )
-            )
-          }
-        }
-
-        muxer.defaultVideoCodec?.let { defaultVideoCodec ->
-          doubleTextView {
-            id("default video codec ${muxer.code.value}")
-            leftText("Default video codec")
-            rightText(defaultVideoCodec.value.withForeground(queryRegex))
-            padding(spacing16)
-          }
-        }
-
-        muxer.defaultAudioCodec?.let { defaultAudioCodec ->
-          doubleTextView {
-            id("defaultAudioCodec ${muxer.code.value}")
-            leftText("Default video codec")
-            rightText(defaultAudioCodec.value.withForeground(queryRegex))
-            padding(spacing16)
-          }
-        }
-
-        muxer.defaultSubtitleCodec?.let { defaultSubtitleCodec ->
-          doubleTextView {
-            id("defaultSubtitleCodec ${muxer.code.value}")
-            leftText("Default video codec")
-            rightText(defaultSubtitleCodec.value.withForeground(queryRegex))
-            padding(spacing16)
+        if (!isSingleMuxer) {
+          entry.muxers.forEach { muxer ->
+            doubleTextView {
+              val muxerCode = muxer.code.value
+              id("muxer ${muxer.code.value} $muxerCode")
+              leftText("Muxer")
+              rightText(muxerCode.withForeground(queryRegex))
+              padding(spacing16)
+              onClickListener { _ ->
+                setResult(
+                  SelectFormatResult(
+                    muxer.commonExtension.first(),
+                    muxer.code
+                  )
+                )
+              }
+            }
           }
         }
       }
 
       cardEpoxyRecyclerView {
-        id(muxer.code.value)
+        id(entry.extension.value)
         models(models)
+          onClickListener { _ ->
+
+          }
       }
 
       horizontalDividerView {
-        id("divider $muxer.code.value")
+        id("divider ${entry.extension.value}")
         height(context.pxOf(16))
       }
     }
