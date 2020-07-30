@@ -6,6 +6,7 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.core.result.ResultManager
+import com.nlgtuankiet.fera.domain.entity.Codec
 import com.nlgtuankiet.fera.domain.entity.Extension
 import com.nlgtuankiet.fera.domain.entity.Muxer
 import com.nlgtuankiet.fera.domain.entity.Muxers
@@ -15,7 +16,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-val ExtensionsWithMuxers: List<ExtensionAndMuxer> = run {
+val ExtensionsWithMuxers: List<ExtensionAndMuxer> by lazy {
   val extensions = mutableMapOf<Extension, MutableSet<Muxer>>()
   Muxers.forEach { muxer ->
     muxer.commonExtension.forEach { extension ->
@@ -35,6 +36,7 @@ data class ExtensionAndMuxer(
 
 data class SelectFormatState(
   val extensionWithMuxers: List<ExtensionAndMuxer> = ExtensionsWithMuxers,
+  val codecs: List<Codec> = emptyList(),
   val isTyping: Boolean = false,
   val query: String = ""
 ) : MvRxState

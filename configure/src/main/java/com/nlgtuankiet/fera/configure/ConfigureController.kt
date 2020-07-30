@@ -20,6 +20,7 @@ import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
 import com.nlgtuankiet.fera.core.epoxy.spacingOf
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
+import com.nlgtuankiet.fera.core.ktx.colorOf
 import com.nlgtuankiet.fera.core.ktx.pxOf
 import com.nlgtuankiet.fera.core.result.createNewRequestCode
 import com.nlgtuankiet.fera.domain.entity.AudioStream
@@ -42,6 +43,7 @@ class ConfigureController @Inject constructor(
     get() = fragment.requireContext()
 
   private fun buildContainer(state: ConfigureState, mediaInfo: MediaInfo) {
+    println("rebuild container with ${state.selectedFormat}")
     horizontalDividerView {
       id("top")
       height(context.pxOf(24))
@@ -56,10 +58,21 @@ class ConfigureController @Inject constructor(
       doubleTextView {
         id("format")
         leftText("Format")
-        rightText(mediaInfo.format.name)
+        val formatSelected = state.selectedFormat != null
+        val rightText = if (state.selectedFormat != null) {
+          if (state.selectedExtensionHasManyMuxer) {
+            "${state.selectedFormat.extension.value} (using ${state.selectedFormat.muxerCode.value})"
+          } else {
+            state.selectedFormat.extension.value
+          }
+        } else {
+          mediaInfo.format.name
+        }
+        rightText(rightText)
+        backColor(if (formatSelected) context.colorOf(android.R.color.holo_orange_light) else 0)
         padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
         onClickListener { _ ->
-          navigator.toSelectFormat(SelectFormatFragmentArgs(createNewRequestCode()))
+          navigator.toSelectFormat()
         }
       }
     }

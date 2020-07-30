@@ -6,10 +6,11 @@ import com.airbnb.mvrx.MvRxState
 import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
-import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.core.result.ResultManager
+import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
+import com.nlgtuankiet.fera.domain.entity.Muxers
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import kotlinx.coroutines.Dispatchers
@@ -18,6 +19,8 @@ import javax.inject.Inject
 
 data class ConfigureState(
   val mediaInfo: Async<MediaInfo> = Uninitialized,
+  val selectedFormat: SelectFormatResult? = null,
+  val selectedExtensionHasManyMuxer: Boolean = false,
 ) : MvRxState
 
 class ConfigureViewModel @Inject constructor(
@@ -28,6 +31,7 @@ class ConfigureViewModel @Inject constructor(
 ) : BaseMavericksViewModel<ConfigureState>(ConfigureState(), BuildConfig.DEBUG) {
 
   init {
+    println("ConfigureViewModel instance is ${this}")
     suspend {
       getMediaInfo(args.path)
     }.execute(Dispatchers.IO) {
@@ -38,12 +42,14 @@ class ConfigureViewModel @Inject constructor(
   fun onRequestFormat(requestCode: String) {
     viewModelScope.launch {
       val result = resultManager.getResult<SelectFormatResult>(requestCode)
-      println("new result is $result")
+      println("get result: $result")
+      val hasManyMuxer = Muxers.filter { it.commonExtension.contains(result.extension) }.count() > 1
+      setState {
+        println("run set state with ${result}")
+        copy(selectedFormat = result, selectedExtensionHasManyMuxer = hasManyMuxer)
+      }
+      println("after set state")
     }
-  }
-
-  fun onSelectFormatResult(result: SelectFormatResult) {
-    println("result: $result")
   }
 
   companion object : MvRxViewModelFactory<ConfigureViewModel, ConfigureState> {

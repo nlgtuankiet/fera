@@ -34,6 +34,11 @@
       android:name="requestCode"
       app:argType="string"
       app:nullable="false" />
+
+    <argument
+      android:name="type"
+      app:argType="com.nlgtuankiet.fera.core.result.SelectType"
+      android:defaultValue="Muxer" />
   </fragment>
 
   <fragment
