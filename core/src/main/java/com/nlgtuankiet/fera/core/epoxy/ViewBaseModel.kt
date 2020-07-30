@@ -66,7 +66,6 @@ abstract class ViewBaseModel<T : View> : EpoxyModel<T>() {
 
   override fun unbind(view: T) {
     super.unbind(view)
-    onClickListener = null
     if (view is OnUnbindHandler) {
       view.onUnbind(view)
     }
