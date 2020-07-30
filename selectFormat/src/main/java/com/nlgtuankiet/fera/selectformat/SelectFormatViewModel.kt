@@ -7,6 +7,9 @@ import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.core.result.ResultManager
 import com.nlgtuankiet.fera.domain.entity.Codec
+import com.nlgtuankiet.fera.domain.entity.CodecType
+import com.nlgtuankiet.fera.domain.entity.Codecs
+import com.nlgtuankiet.fera.domain.entity.DecoderCode
 import com.nlgtuankiet.fera.domain.entity.Extension
 import com.nlgtuankiet.fera.domain.entity.Muxer
 import com.nlgtuankiet.fera.domain.entity.Muxers
@@ -29,6 +32,10 @@ val ExtensionsWithMuxers: List<ExtensionAndMuxer> by lazy {
     .sortedBy { it.extension.value }
 }
 
+val VideoEncoders: List<Codec> by lazy {
+  Codecs.filter { it.type == CodecType.Video && it.canEncode }
+}
+
 data class ExtensionAndMuxer(
   val extension: Extension,
   val muxers: List<Muxer>,
@@ -36,6 +43,7 @@ data class ExtensionAndMuxer(
 
 data class SelectFormatState(
   val extensionWithMuxers: List<ExtensionAndMuxer> = ExtensionsWithMuxers,
+  val videoEncodecs: List<Codec> = VideoEncoders,
   val codecs: List<Codec> = emptyList(),
   val isTyping: Boolean = false,
   val query: String = ""

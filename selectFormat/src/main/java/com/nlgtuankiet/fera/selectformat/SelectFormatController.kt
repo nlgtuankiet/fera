@@ -16,9 +16,11 @@ import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
 import com.nlgtuankiet.fera.core.epoxy.spacingOf
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
+import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.core.ktx.pxOf
 import com.nlgtuankiet.fera.core.result.ResultManager
 import com.nlgtuankiet.fera.core.result.SelectType
+import com.nlgtuankiet.fera.core.result.SelectVideoEncoderResult
 import com.nlgtuankiet.fera.core.state
 import javax.inject.Inject
 
@@ -84,7 +86,7 @@ class SelectFormatController @Inject constructor(
           text(entry.extension.value.withForeground(queryRegex))
           padding(spacing16)
           onClickListener { _ ->
-            setResult(SelectFormatResult(entry.extension, entry.muxers.first().code))
+            sendSelectFormatResult(SelectFormatResult(entry.extension, entry.muxers.first().code))
           }
         }
         if (!isSingleMuxer) {
@@ -96,7 +98,7 @@ class SelectFormatController @Inject constructor(
               rightText(muxerCode.withForeground(queryRegex))
               padding(spacing16)
               onClickListener { _ ->
-                setResult(SelectFormatResult(entry.extension, muxer.code))
+                sendSelectFormatResult(SelectFormatResult(entry.extension, muxer.code))
               }
             }
           }
@@ -118,19 +120,83 @@ class SelectFormatController @Inject constructor(
     }
   }
 
-  private fun buildVideoDecoder(state: SelectFormatState) {
+  private fun buildVideoEncoder(state: SelectFormatState) {
+    val spacing16 = spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16)
+    val queryRegex = state.query.toLowerCase().toRegex()
 
+    horizontalDividerView {
+      id("divider top")
+      height(context.pxOf(16))
+    }
+
+    state.videoEncodecs.forEach { codec ->
+      val models = buildSubModels {
+        val hasManyEncoder = codec.encoders?.size != 1
+        headline6TextView {
+          id(codec.code.value)
+          text(codec.code.value)
+          padding(spacing16)
+          onClickListener { _ ->
+            sendSelectVideoDecoderResult(
+              SelectVideoEncoderResult(
+                codecCode = codec.code,
+                encoderCode = codec.encoders.notNull().first(),
+                hasManyEncoder = hasManyEncoder,
+              )
+            )
+          }
+        }
+
+        if (hasManyEncoder) {
+          codec.encoders?.forEach { encoderCode ->
+            doubleTextView {
+              id(codec.code.value + encoderCode.value)
+              leftText("Encoder")
+              rightText(encoderCode.value)
+              padding(spacing16)
+              onClickListener { _ ->
+                sendSelectVideoDecoderResult(
+                  SelectVideoEncoderResult(
+                    codecCode = codec.code,
+                    encoderCode = encoderCode,
+                    hasManyEncoder = hasManyEncoder,
+                  )
+                )
+              }
+            }
+          }
+        }
+      }
+
+      cardEpoxyRecyclerView {
+        id("card ${codec.code.value}")
+        models(models)
+        // TODO why on click listener not working
+      }
+
+      horizontalDividerView {
+        id("divider ${codec.code.value}")
+        height(context.pxOf(16))
+      }
+    }
   }
 
   override fun buildModels() {
     val state: SelectFormatState = viewModel.state
     when(args.type) {
-      SelectType.VideoDecoder -> buildVideoDecoder(state)
+      SelectType.VideoEncoder -> buildVideoEncoder(state)
       SelectType.Muxer -> buildMuxers(state)
     }
   }
 
-  private fun setResult(result: SelectFormatResult) {
+  private fun sendSelectVideoDecoderResult(result: SelectVideoEncoderResult) {
+    println("sendSelectVideoDecoderResult")
+    val controller = fragment.requireView().findNavController()
+    resultManager.sendResult(args.requestCode, result)
+    controller.popBackStack()
+  }
+
+  private fun sendSelectFormatResult(result: SelectFormatResult) {
     val controller = fragment.requireView().findNavController()
     resultManager.sendResult(args.requestCode, result)
     controller.popBackStack()

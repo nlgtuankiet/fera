@@ -43,11 +43,11 @@ class ConfigureController @Inject constructor(
     get() = fragment.requireContext()
 
   private fun buildContainer(state: ConfigureState, mediaInfo: MediaInfo) {
-    println("rebuild container with ${state.selectedFormat}")
     horizontalDividerView {
       id("top")
       height(context.pxOf(24))
     }
+
     val containerModels = buildSubModels {
       headline6TextView {
         id("container")
@@ -76,7 +76,6 @@ class ConfigureController @Inject constructor(
         }
       }
     }
-    println("build card for ${mediaInfo.hashCode() % 100} ${containerModels.hashCode() % 100}")
     cardEpoxyRecyclerView {
       id("container for ${mediaInfo.hashCode()}")
       models(containerModels)
@@ -96,7 +95,7 @@ class ConfigureController @Inject constructor(
   }
 
   private fun buildVideoStreams(state: ConfigureState, mediaInfo: MediaInfo) {
-
+    val yellowColor = context.colorOf(android.R.color.holo_orange_light)
     mediaInfo.streams.mapNotNull { it as? VideoStream }.forEachIndexed { index, stream ->
       val streamIndex = stream.index
       horizontalDividerView {
@@ -112,11 +111,26 @@ class ConfigureController @Inject constructor(
         }
 
         // codec
+        val selectedCodec = state.selectedVideoEncoder[streamIndex]
+
         doubleTextView {
           id("codec $streamIndex")
           leftText("Codec")
-          rightText(stream.codec.code.value)
+          if (selectedCodec != null) {
+            if (selectedCodec.hasManyEncoder) {
+              rightText("${selectedCodec.codecCode.value} (using ${selectedCodec.encoderCode.value})")
+            } else {
+              rightText(selectedCodec.codecCode.value)
+            }
+          } else {
+            rightText(stream.codec.code.value)
+          }
+          backColor(if (selectedCodec != null) yellowColor else 0)
+
           padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+          onClickListener { _ ->
+            navigator.toSelectVideoEncoder(videoStreamIndex = stream.index)
+          }
         }
 
         // size

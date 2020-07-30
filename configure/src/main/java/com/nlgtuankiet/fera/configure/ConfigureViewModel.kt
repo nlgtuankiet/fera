@@ -7,8 +7,10 @@ import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.Uninitialized
 import com.airbnb.mvrx.ViewModelContext
 import com.nlgtuankiet.fera.core.fragment
+import com.nlgtuankiet.fera.core.ktx.copy
 import com.nlgtuankiet.fera.core.result.ResultManager
 import com.nlgtuankiet.fera.core.result.SelectFormatResult
+import com.nlgtuankiet.fera.core.result.SelectVideoEncoderResult
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.Muxers
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
@@ -21,6 +23,7 @@ data class ConfigureState(
   val mediaInfo: Async<MediaInfo> = Uninitialized,
   val selectedFormat: SelectFormatResult? = null,
   val selectedExtensionHasManyMuxer: Boolean = false,
+  val selectedVideoEncoder: Map<Int, SelectVideoEncoderResult> = emptyMap()
 ) : MvRxState
 
 class ConfigureViewModel @Inject constructor(
@@ -36,6 +39,15 @@ class ConfigureViewModel @Inject constructor(
       getMediaInfo(args.path)
     }.execute(Dispatchers.IO) {
       copy(mediaInfo = it)
+    }
+  }
+
+  fun onRequestVideoEncoder(videoStreamIndex: Int, requestCode: String) {
+    viewModelScope.launch {
+      val result = resultManager.getResult<SelectVideoEncoderResult>(requestCode)
+      setState {
+        copy(selectedVideoEncoder = selectedVideoEncoder.copy { put(videoStreamIndex, result) })
+      }
     }
   }
 
