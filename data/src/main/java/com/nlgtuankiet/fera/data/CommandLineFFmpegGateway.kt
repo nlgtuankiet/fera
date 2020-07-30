@@ -133,9 +133,8 @@ class CommandLineFFmpegGateway @Inject constructor(
 
       val codec = Codec(
         code = CodecCode(groups[6].trim()),
-        encoder = encoders.ifEmpty { null },
-        decoder = decoders.ifEmpty { null },
-        description = groups[7].trim(),
+        encoders = encoders.ifEmpty { null },
+        decoders = decoders.ifEmpty { null },
         canDecode = groups[0] == "D",
         canEncode = groups[1] == "E",
         type = codeType,
