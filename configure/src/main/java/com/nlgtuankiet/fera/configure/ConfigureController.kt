@@ -1,6 +1,7 @@
 package com.nlgtuankiet.fera.configure
 
 import android.content.Context
+import android.view.inputmethod.EditorInfo
 import androidx.core.util.rangeTo
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.epoxy.EpoxyController
@@ -22,6 +23,7 @@ import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
 import com.nlgtuankiet.fera.core.epoxy.view.editText
 import com.nlgtuankiet.fera.core.ktx.colorOf
+import com.nlgtuankiet.fera.core.ktx.hideKeyboard
 import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.core.ktx.pxOf
 import com.nlgtuankiet.fera.core.result.createNewRequestCode
@@ -31,6 +33,7 @@ import com.nlgtuankiet.fera.domain.entity.Codecs
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.VideoStream
 import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
+import com.nlgtuankiet.fera.domain.entity.extension
 import com.nlgtuankiet.fera.domain.entity.name
 import com.nlgtuankiet.fera.domain.entity.pathOf
 import com.nlgtuankiet.fera.selectformat.SelectFormatFragmentArgs
@@ -229,7 +232,13 @@ class ConfigureController @Inject constructor(
     }
   }
 
+  // TODO improve replaceableFilePath on error
   private fun buildOutput(state: ConfigureState) {
+    if (!state.replaceableFilePath.complete) {
+      return
+    }
+
+
     val spacing16 = spacingOf(context, 16, 16, 16, 16)
     val models = buildSubModels {
       headline6TextView {
@@ -237,18 +246,48 @@ class ConfigureController @Inject constructor(
         text("Output")
         padding(spacing16)
       }
+      // TODO edit text not size after set multiple line text, force single line for now
       editText {
         id("file name")
-        content(state.outputFileName ?: pathOf(args.path).name + " super long long long")
+        if (state.userInputtedFilename) {
+          content(state.outputFileName ?: "")
+        } else {
+          // TODO move this shit to use case
+          val selectedExtension = state.selectedFormat?.extension
+          val filePath = pathOf(args.path)
+          val replaceableFileName = state.replaceableFilePath.invoke()?.name ?: filePath.name
+          if (selectedExtension == null) {
+            content(replaceableFileName)
+          } else {
+            if (selectedExtension.value == filePath.extension) {
+              content(replaceableFileName)
+            } else {
+              // append new extension
+              content(filePath.name.substringBeforeLast('.') + ".${selectedExtension.value}")
+            }
+          }
+        }
         padding(spacing16)
         onBind { _, view, _ ->
-          requestLoseOutputNameFocus = { view.clearFocus() }
+          requestLoseOutputNameFocus = {
+            view.clearFocus()
+          }
         }
         onUnbind { _, _ ->
           requestLoseOutputNameFocus = null
         }
         onTextChangeWithFocusListener { value ->
           viewModel.onNewOutputFileName(value)
+        }
+        imeOption(EditorInfo.IME_ACTION_DONE)
+        onEditorActionListener { v, actionId, _ ->
+          if (actionId == EditorInfo.IME_ACTION_DONE) {
+            requestLoseOutputNameFocus?.invoke()
+            v.hideKeyboard()
+            true
+          } else {
+            false
+          }
         }
       }
     }

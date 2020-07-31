@@ -153,9 +153,7 @@ class SelectFormatController @Inject constructor(
             padding(spacing16)
             onClickListener { _ ->
               sendSelectVideoDecoderResult(
-                SelectVideoEncoderResult(
-                  encoderCode = encoderCode,
-                )
+                SelectVideoEncoderResult(encoderCode = encoderCode)
               )
             }
           }

@@ -2,15 +2,15 @@ package com.nlgtuankiet.fera.core.epoxy.view
 
 import android.content.Context
 import android.text.Editable
+import android.text.InputType
 import android.text.TextWatcher
 import android.util.AttributeSet
-import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
-import androidx.core.widget.doOnTextChanged
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.nlgtuankiet.fera.core.epoxy.ViewBaseModel
+
 
 @ModelView(
   autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT,
@@ -20,15 +20,33 @@ class EditText @JvmOverloads constructor(
   context: Context,
   attributeSet: AttributeSet? = null
 ): AppCompatEditText(context, attributeSet) {
+  init {
+    isFocusable = true
+    isFocusableInTouchMode = true
+  }
   
   @ModelProp
   fun setContent(value: String) {
     if (!hasFocus()) {
-      println("EditText setContent $value")
       setText(value, BufferType.EDITABLE)
     }
   }
 
+  @ModelProp
+  @JvmOverloads
+  fun setInputMode(type: Int = InputType.TYPE_CLASS_TEXT) {
+    inputType = type
+  }
+
+  @ModelProp
+  fun setImeOption(value: Int) {
+    imeOptions = value
+  }
+
+  @CallbackProp
+  override fun setOnEditorActionListener(l: OnEditorActionListener?) {
+    super.setOnEditorActionListener(l)
+  }
 
   private var onTextChangeWithFocusListener: ((String) -> Unit)? = null
 

@@ -11,14 +11,17 @@ import com.nlgtuankiet.fera.core.ktx.copy
 import com.nlgtuankiet.fera.core.result.ResultManager
 import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.result.SelectVideoEncoderResult
+import com.nlgtuankiet.fera.domain.entity.Extension
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.Muxers
 import com.nlgtuankiet.fera.domain.entity.Path
 import com.nlgtuankiet.fera.domain.entity.StreamOption
 import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
+import com.nlgtuankiet.fera.domain.entity.name
 import com.nlgtuankiet.fera.domain.entity.pathOf
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
+import com.nlgtuankiet.fera.domain.interactor.GetReplaceableFilePath
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,13 +31,16 @@ data class ConfigureState(
   val selectedFormat: SelectFormatResult? = null,
   val selectedExtensionHasManyMuxer: Boolean = false,
   val streamOptions: Map<Int, StreamOption> = emptyMap(),
+  val replaceableFilePath: Async<Path> = Uninitialized,
   val outputFileName: String? = null,
+  val userInputtedFilename: Boolean = false,
   ) : MvRxState
 
 class ConfigureViewModel @Inject constructor(
   private val getMediaInfo: GetMediaInfo,
   private val resultManager: ResultManager,
   private val fFmpegGateway: FFmpegGateway,
+  private val getReplaceableFilePath: GetReplaceableFilePath,
   private val args: ConfigureFragmentArgs,
 ) : BaseMavericksViewModel<ConfigureState>(ConfigureState(), BuildConfig.DEBUG) {
 
@@ -43,6 +49,11 @@ class ConfigureViewModel @Inject constructor(
       getMediaInfo(args.path)
     }.execute(Dispatchers.IO) {
       copy(mediaInfo = it)
+    }
+    suspend {
+      getReplaceableFilePath(pathOf(args.path))
+    }.execute(Dispatchers.IO) {
+      copy(replaceableFilePath = it)
     }
   }
 
@@ -54,7 +65,7 @@ class ConfigureViewModel @Inject constructor(
           streamOptions = streamOptions.copy {
             val currentOption = get(videoStreamIndex) as? VideoStreamOption ?: VideoStreamOption()
             put(videoStreamIndex, currentOption.copy(encoderCode = result.encoderCode))
-          }
+          },
         )
       }
     }
@@ -64,14 +75,25 @@ class ConfigureViewModel @Inject constructor(
     viewModelScope.launch {
       val result = resultManager.getResult<SelectFormatResult>(requestCode)
       val hasManyMuxer = Muxers.filter { it.commonExtension.contains(result.extension) }.count() > 1
+
       setState {
-        copy(selectedFormat = result, selectedExtensionHasManyMuxer = hasManyMuxer)
+        val outputFileName = if (userInputtedFilename) {
+          outputFileName
+        } else {
+          val name = pathOf(args.path).name
+          name.substringBeforeLast('.', name) + ".${result.extension.value}"
+        }
+        copy(
+          selectedFormat = result,
+          selectedExtensionHasManyMuxer = hasManyMuxer,
+          outputFileName = outputFileName
+        )
       }
     }
   }
 
   fun onNewOutputFileName(name: String) {
-    setState { copy(outputFileName = name) }
+    setState { copy(outputFileName = name, userInputtedFilename = true) }
   }
 
   companion object : MvRxViewModelFactory<ConfigureViewModel, ConfigureState> {
