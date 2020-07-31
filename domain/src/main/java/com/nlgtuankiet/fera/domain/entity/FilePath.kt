@@ -8,5 +8,9 @@ val Path.parent: Path
 val Path.name: String
   get() = value.substringAfterLast("/")
 
+fun pathOf(value: String): Path {
+  return Path(value.removeSuffix("/"))
+}
+
 @Suppress("NOTHING_TO_INLINE")
 inline fun String.asPath() = Path(this.removeSuffix("/"))

@@ -20,6 +20,7 @@ import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
 import com.nlgtuankiet.fera.core.epoxy.spacingOf
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
+import com.nlgtuankiet.fera.core.epoxy.view.editText
 import com.nlgtuankiet.fera.core.ktx.colorOf
 import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.core.ktx.pxOf
@@ -30,6 +31,8 @@ import com.nlgtuankiet.fera.domain.entity.Codecs
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.VideoStream
 import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
+import com.nlgtuankiet.fera.domain.entity.name
+import com.nlgtuankiet.fera.domain.entity.pathOf
 import com.nlgtuankiet.fera.selectformat.SelectFormatFragmentArgs
 import java.util.UUID
 import javax.inject.Inject
@@ -39,6 +42,7 @@ import javax.inject.Singleton
 @FragmentScope
 class ConfigureController @Inject constructor(
   @Retained private val viewModel: ConfigureViewModel,
+  private val args: ConfigureFragmentArgs,
   private val fragment: ConfigureFragment,
   private val navigator: ConfigureNavigator,
 ) : AsyncEpoxyController() {
@@ -225,6 +229,41 @@ class ConfigureController @Inject constructor(
     }
   }
 
+  private fun buildOutput(state: ConfigureState) {
+    val spacing16 = spacingOf(context, 16, 16, 16, 16)
+    val models = buildSubModels {
+      headline6TextView {
+        id("output title")
+        text("Output")
+        padding(spacing16)
+      }
+      editText {
+        id("file name")
+        content(state.outputFileName ?: pathOf(args.path).name + " super long long long")
+        padding(spacing16)
+        onBind { _, view, _ ->
+          requestLoseOutputNameFocus = { view.clearFocus() }
+        }
+        onUnbind { _, _ ->
+          requestLoseOutputNameFocus = null
+        }
+        onTextChangeWithFocusListener { value ->
+          viewModel.onNewOutputFileName(value)
+        }
+      }
+    }
+
+    horizontalDividerView {
+      id("divider file name")
+      height(context.pxOf(16))
+    }
+
+    cardEpoxyRecyclerView {
+      id("card file name")
+      models(models)
+    }
+  }
+
   override fun buildModels() {
     val state = withState(viewModel) { it }
     (state.mediaInfo as? Fail)?.let { throw it.error }
@@ -233,10 +272,17 @@ class ConfigureController @Inject constructor(
     buildContainer(state, mediaInfo)
     buildVideoStreams(state, mediaInfo)
     buildAudioStreams(state, mediaInfo)
+    buildOutput(state)
 
     horizontalDividerView {
       id("last divider")
       height(context.pxOf(24))
     }
+  }
+
+  private var requestLoseOutputNameFocus: (() -> Unit)? = null
+
+  fun onScroll() {
+    requestLoseOutputNameFocus?.invoke()
   }
 }

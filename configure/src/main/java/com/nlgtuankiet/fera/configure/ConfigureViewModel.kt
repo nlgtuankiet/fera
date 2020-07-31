@@ -13,8 +13,10 @@ import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.result.SelectVideoEncoderResult
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.Muxers
+import com.nlgtuankiet.fera.domain.entity.Path
 import com.nlgtuankiet.fera.domain.entity.StreamOption
 import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
+import com.nlgtuankiet.fera.domain.entity.pathOf
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import kotlinx.coroutines.Dispatchers
@@ -25,8 +27,9 @@ data class ConfigureState(
   val mediaInfo: Async<MediaInfo> = Uninitialized,
   val selectedFormat: SelectFormatResult? = null,
   val selectedExtensionHasManyMuxer: Boolean = false,
-  val streamOptions: Map<Int, StreamOption> = emptyMap()
-) : MvRxState
+  val streamOptions: Map<Int, StreamOption> = emptyMap(),
+  val outputFileName: String? = null,
+  ) : MvRxState
 
 class ConfigureViewModel @Inject constructor(
   private val getMediaInfo: GetMediaInfo,
@@ -65,6 +68,10 @@ class ConfigureViewModel @Inject constructor(
         copy(selectedFormat = result, selectedExtensionHasManyMuxer = hasManyMuxer)
       }
     }
+  }
+
+  fun onNewOutputFileName(name: String) {
+    setState { copy(outputFileName = name) }
   }
 
   companion object : MvRxViewModelFactory<ConfigureViewModel, ConfigureState> {

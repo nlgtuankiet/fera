@@ -4,10 +4,13 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.Keep
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.nlgtuankiet.fera.configure.databinding.ConfigureFragmentBinding
 import com.nlgtuankiet.fera.core.FragmentScope
+import com.nlgtuankiet.fera.core.ktx.addOnScrollStateChangeListener
+import com.nlgtuankiet.fera.core.ktx.hideKeyboard
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import javax.inject.Inject
 import javax.inject.Provider
@@ -27,6 +30,12 @@ class ConfigureFragment @Inject constructor(
     super.onViewCreated(view, savedInstanceState)
     binding = ConfigureFragmentBinding.bind(view)
     binding.epoxyRecyclerView.setController(configureController.get())
+    binding.epoxyRecyclerView.addOnScrollStateChangeListener {
+      if (it != RecyclerView.SCROLL_STATE_IDLE) {
+        configureController.get().onScroll()
+        binding.epoxyRecyclerView.hideKeyboard()
+      }
+    }
   }
 
   override fun invalidate() {
