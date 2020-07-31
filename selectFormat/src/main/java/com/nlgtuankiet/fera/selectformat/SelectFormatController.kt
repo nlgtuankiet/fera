@@ -9,7 +9,6 @@ import androidx.navigation.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.Retained
-import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.epoxy.buildSubModels
 import com.nlgtuankiet.fera.core.epoxy.headline6TextView
 import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
@@ -19,6 +18,7 @@ import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
 import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.core.ktx.pxOf
 import com.nlgtuankiet.fera.core.result.ResultManager
+import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.result.SelectType
 import com.nlgtuankiet.fera.core.result.SelectVideoEncoderResult
 import com.nlgtuankiet.fera.core.state
@@ -139,30 +139,24 @@ class SelectFormatController @Inject constructor(
           onClickListener { _ ->
             sendSelectVideoDecoderResult(
               SelectVideoEncoderResult(
-                codecCode = codec.code,
                 encoderCode = codec.encoders.notNull().first(),
-                hasManyEncoder = hasManyEncoder,
               )
             )
           }
         }
 
-        if (hasManyEncoder) {
-          codec.encoders?.forEach { encoderCode ->
-            doubleTextView {
-              id(codec.code.value + encoderCode.value)
-              leftText("Encoder")
-              rightText(encoderCode.value)
-              padding(spacing16)
-              onClickListener { _ ->
-                sendSelectVideoDecoderResult(
-                  SelectVideoEncoderResult(
-                    codecCode = codec.code,
-                    encoderCode = encoderCode,
-                    hasManyEncoder = hasManyEncoder,
-                  )
+        codec.encoders?.forEach { encoderCode ->
+          doubleTextView {
+            id(codec.code.value + encoderCode.value)
+            leftText("Encoder")
+            rightText(encoderCode.value)
+            padding(spacing16)
+            onClickListener { _ ->
+              sendSelectVideoDecoderResult(
+                SelectVideoEncoderResult(
+                  encoderCode = encoderCode,
                 )
-              }
+              )
             }
           }
         }
@@ -183,7 +177,7 @@ class SelectFormatController @Inject constructor(
 
   override fun buildModels() {
     val state: SelectFormatState = viewModel.state
-    when(args.type) {
+    when (args.type) {
       SelectType.VideoEncoder -> buildVideoEncoder(state)
       SelectType.Muxer -> buildMuxers(state)
     }

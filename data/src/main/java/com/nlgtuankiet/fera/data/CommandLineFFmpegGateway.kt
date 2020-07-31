@@ -13,9 +13,12 @@ import com.nlgtuankiet.fera.domain.entity.CodecCode
 import com.nlgtuankiet.fera.domain.entity.CodecType
 import com.nlgtuankiet.fera.domain.entity.DecoderCode
 import com.nlgtuankiet.fera.domain.entity.EncoderCode
+import com.nlgtuankiet.fera.domain.entity.FormatOption
 import com.nlgtuankiet.fera.domain.entity.MediaFormat
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
+import com.nlgtuankiet.fera.domain.entity.Path
 import com.nlgtuankiet.fera.domain.entity.Size
+import com.nlgtuankiet.fera.domain.entity.StreamOption
 import com.nlgtuankiet.fera.domain.entity.VideoStream
 import com.nlgtuankiet.fera.domain.entity.asCodecCode
 import com.nlgtuankiet.fera.domain.entity.asDecoderCode
@@ -180,6 +183,18 @@ class CommandLineFFmpegGateway @Inject constructor(
       channels = channels.notNull(),
       bitRate = bitRate.notNull().toLong(),
     )
+  }
+
+  override suspend fun convert(
+    input: Path,
+    mediaInfo: MediaInfo,
+    formatOption: FormatOption,
+    streamOptions: Map<Int, StreamOption>,
+    output: Path
+  ) {
+    val command = buildString {
+
+    }
   }
 
   override suspend fun getMediaInfo(input: String): MediaInfo {

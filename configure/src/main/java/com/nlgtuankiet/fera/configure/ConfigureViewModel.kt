@@ -13,6 +13,8 @@ import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.result.SelectVideoEncoderResult
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.Muxers
+import com.nlgtuankiet.fera.domain.entity.StreamOption
+import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +25,7 @@ data class ConfigureState(
   val mediaInfo: Async<MediaInfo> = Uninitialized,
   val selectedFormat: SelectFormatResult? = null,
   val selectedExtensionHasManyMuxer: Boolean = false,
-  val selectedVideoEncoder: Map<Int, SelectVideoEncoderResult> = emptyMap()
+  val streamOptions: Map<Int, StreamOption> = emptyMap()
 ) : MvRxState
 
 class ConfigureViewModel @Inject constructor(
@@ -34,7 +36,6 @@ class ConfigureViewModel @Inject constructor(
 ) : BaseMavericksViewModel<ConfigureState>(ConfigureState(), BuildConfig.DEBUG) {
 
   init {
-    println("ConfigureViewModel instance is ${this}")
     suspend {
       getMediaInfo(args.path)
     }.execute(Dispatchers.IO) {
@@ -46,7 +47,12 @@ class ConfigureViewModel @Inject constructor(
     viewModelScope.launch {
       val result = resultManager.getResult<SelectVideoEncoderResult>(requestCode)
       setState {
-        copy(selectedVideoEncoder = selectedVideoEncoder.copy { put(videoStreamIndex, result) })
+        copy(
+          streamOptions = streamOptions.copy {
+            val currentOption = get(videoStreamIndex) as? VideoStreamOption ?: VideoStreamOption()
+            put(videoStreamIndex, currentOption.copy(encoderCode = result.encoderCode))
+          }
+        )
       }
     }
   }
@@ -54,13 +60,10 @@ class ConfigureViewModel @Inject constructor(
   fun onRequestFormat(requestCode: String) {
     viewModelScope.launch {
       val result = resultManager.getResult<SelectFormatResult>(requestCode)
-      println("get result: $result")
       val hasManyMuxer = Muxers.filter { it.commonExtension.contains(result.extension) }.count() > 1
       setState {
-        println("run set state with ${result}")
         copy(selectedFormat = result, selectedExtensionHasManyMuxer = hasManyMuxer)
       }
-      println("after set state")
     }
   }
 

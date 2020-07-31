@@ -21,12 +21,15 @@ import com.nlgtuankiet.fera.core.epoxy.spacingOf
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
 import com.nlgtuankiet.fera.core.ktx.colorOf
+import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.core.ktx.pxOf
 import com.nlgtuankiet.fera.core.result.createNewRequestCode
 import com.nlgtuankiet.fera.domain.entity.AudioStream
 import com.nlgtuankiet.fera.domain.entity.CodecType
+import com.nlgtuankiet.fera.domain.entity.Codecs
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.VideoStream
+import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
 import com.nlgtuankiet.fera.selectformat.SelectFormatFragmentArgs
 import java.util.UUID
 import javax.inject.Inject
@@ -111,21 +114,25 @@ class ConfigureController @Inject constructor(
         }
 
         // codec
-        val selectedCodec = state.selectedVideoEncoder[streamIndex]
+        val selectedOption = state.streamOptions[streamIndex] as? VideoStreamOption
+        val selectedEncoder = selectedOption?.encoderCode
+
 
         doubleTextView {
           id("codec $streamIndex")
           leftText("Codec")
-          if (selectedCodec != null) {
-            if (selectedCodec.hasManyEncoder) {
-              rightText("${selectedCodec.codecCode.value} (using ${selectedCodec.encoderCode.value})")
+          if (selectedEncoder != null) {
+            val selectedCodec = Codecs.first { it.encoders?.contains(selectedEncoder) == true }
+            if (selectedCodec.encoders.notNull().size > 1) {
+              rightText("${selectedCodec.code.value} (using ${selectedEncoder.value})")
             } else {
-              rightText(selectedCodec.codecCode.value)
+              rightText(selectedEncoder.value)
             }
           } else {
             rightText(stream.codec.code.value)
           }
-          backColor(if (selectedCodec != null) yellowColor else 0)
+
+          backColor(if (selectedEncoder != null) yellowColor else 0)
 
           padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
           onClickListener { _ ->
