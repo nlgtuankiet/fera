@@ -16,9 +16,11 @@ import com.nlgtuankiet.fera.core.epoxy.Spacing
 import com.nlgtuankiet.fera.core.epoxy.body1TextView
 import com.nlgtuankiet.fera.core.epoxy.buildSubModels
 import com.nlgtuankiet.fera.core.epoxy.headline1TextView
+import com.nlgtuankiet.fera.core.epoxy.headline5TextView
 import com.nlgtuankiet.fera.core.epoxy.headline6TextView
 import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
 import com.nlgtuankiet.fera.core.epoxy.spacingOf
+import com.nlgtuankiet.fera.core.epoxy.subtitle1TextView
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
 import com.nlgtuankiet.fera.core.epoxy.view.editText
@@ -234,10 +236,11 @@ class ConfigureController @Inject constructor(
 
   // TODO improve replaceableFilePath on error
   private fun buildOutput(state: ConfigureState) {
-    if (!state.replaceableFilePath.complete) {
+
+    val lastOutputFileName = state.lastOutputFileName
+    if (lastOutputFileName == null) {
       return
     }
-
 
     val spacing16 = spacingOf(context, 16, 16, 16, 16)
     val models = buildSubModels {
@@ -246,27 +249,29 @@ class ConfigureController @Inject constructor(
         text("Output")
         padding(spacing16)
       }
+
+      subtitle1TextView {
+        id("where")
+        text("Where")
+        padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 4))
+      }
+
+      body1TextView {
+        id("same")
+        text("Same as input")
+        padding(spacing16)
+      }
+
+      subtitle1TextView {
+        id("save as")
+        text("Save as")
+        padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 4))
+      }
+
       // TODO edit text not size after set multiple line text, force single line for now
       editText {
         id("file name")
-        if (state.userInputtedFilename) {
-          content(state.outputFileName ?: "")
-        } else {
-          // TODO move this shit to use case
-          val selectedExtension = state.selectedFormat?.extension
-          val filePath = pathOf(args.path)
-          val replaceableFileName = state.replaceableFilePath.invoke()?.name ?: filePath.name
-          if (selectedExtension == null) {
-            content(replaceableFileName)
-          } else {
-            if (selectedExtension.value == filePath.extension) {
-              content(replaceableFileName)
-            } else {
-              // append new extension
-              content(filePath.name.substringBeforeLast('.') + ".${selectedExtension.value}")
-            }
-          }
-        }
+        content(lastOutputFileName)
         padding(spacing16)
         onBind { _, view, _ ->
           requestLoseOutputNameFocus = {
