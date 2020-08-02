@@ -21,6 +21,7 @@ import com.nlgtuankiet.fera.core.epoxy.headline6TextView
 import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
 import com.nlgtuankiet.fera.core.epoxy.spacingOf
 import com.nlgtuankiet.fera.core.epoxy.subtitle1TextView
+import com.nlgtuankiet.fera.core.epoxy.view.button
 import com.nlgtuankiet.fera.core.epoxy.view.cardEpoxyRecyclerView
 import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
 import com.nlgtuankiet.fera.core.epoxy.view.editText
@@ -317,10 +318,18 @@ class ConfigureController @Inject constructor(
     buildVideoStreams(state, mediaInfo)
     buildAudioStreams(state, mediaInfo)
     buildOutput(state)
-
+    buildConvert(state)
     horizontalDividerView {
       id("last divider")
       height(context.pxOf(24))
+    }
+  }
+
+  private fun buildConvert(state: ConfigureState) {
+    button {
+      id("convert")
+      content("Convert!")
+      margin(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
     }
   }
 
