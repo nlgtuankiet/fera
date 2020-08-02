@@ -330,6 +330,9 @@ class ConfigureController @Inject constructor(
       id("convert")
       content("Convert!")
       margin(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
+      onClickListener { _ ->
+        viewModel.onConvertClick()
+      }
     }
   }
 

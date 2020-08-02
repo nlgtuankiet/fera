@@ -11,8 +11,8 @@ import com.nlgtuankiet.fera.core.fragment
 import com.nlgtuankiet.fera.core.ktx.copy
 import com.nlgtuankiet.fera.core.ktx.launchIO
 import com.nlgtuankiet.fera.core.result.ResultManager
-import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.result.SelectVideoEncoderResult
+import com.nlgtuankiet.fera.domain.entity.FormatOption
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.Muxers
 import com.nlgtuankiet.fera.domain.entity.Path
@@ -23,6 +23,7 @@ import com.nlgtuankiet.fera.domain.entity.name
 import com.nlgtuankiet.fera.domain.entity.parent
 import com.nlgtuankiet.fera.domain.entity.pathOf
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
+import com.nlgtuankiet.fera.domain.interactor.Convert
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import com.nlgtuankiet.fera.domain.interactor.GetReplaceableFilePath
 import kotlinx.coroutines.Dispatchers
@@ -32,7 +33,7 @@ import javax.inject.Inject
 
 data class ConfigureState(
   val mediaInfo: Async<MediaInfo> = Uninitialized,
-  val selectedFormat: SelectFormatResult? = null,
+  val selectedFormat: FormatOption? = null,
   val selectedExtensionHasManyMuxer: Boolean = false,
   val streamOptions: Map<Int, StreamOption> = emptyMap(),
   val outputFilePath: Async<Path> = Uninitialized,
@@ -41,6 +42,7 @@ data class ConfigureState(
 ) : MvRxState
 
 class ConfigureViewModel @Inject constructor(
+  private val convert: Convert,
   private val getMediaInfo: GetMediaInfo,
   private val resultManager: ResultManager,
   private val fFmpegGateway: FFmpegGateway,
@@ -91,7 +93,12 @@ class ConfigureViewModel @Inject constructor(
         copy(
           streamOptions = streamOptions.copy {
             val currentOption = get(videoStreamIndex) as? VideoStreamOption ?: VideoStreamOption()
-            put(videoStreamIndex, currentOption.copy(encoderCode = result.encoderCode))
+            val nextCodec = if (currentOption.encoderCode == result.encoderCode) {
+              null
+            } else {
+              result.encoderCode
+            }
+            put(videoStreamIndex, currentOption.copy(encoderCode = nextCodec))
           },
         )
       }
@@ -103,7 +110,7 @@ class ConfigureViewModel @Inject constructor(
   fun onRequestFormat(requestCode: String) {
     requestFormatJob?.cancel()
     requestFormatJob = viewModelScope.launchIO {
-      val result = resultManager.getResult<SelectFormatResult>(requestCode)
+      val result = resultManager.getResult<FormatOption>(requestCode)
       val hasManyMuxer = Muxers.filter { it.commonExtension.contains(result.extension) }.count() > 1
       setState {
         copy(selectedFormat = result, selectedExtensionHasManyMuxer = hasManyMuxer)
@@ -119,6 +126,18 @@ class ConfigureViewModel @Inject constructor(
         outputFilePath = Success(newOutputFilePath),
         userInputtedFilename = true,
         lastOutputFileName = newOutputFilePath.name,
+      )
+    }
+  }
+
+  fun onConvertClick() = withState { state ->
+    viewModelScope.launchIO {
+      convert.invoke(
+        input = pathOf(args.path),
+        mediaInfo = state.mediaInfo.invoke()!!,
+        formatOption = state.selectedFormat?.let { FormatOption(extension = it.extension, muxerCode = it.muxerCode) },
+        streamOptions = state.streamOptions,
+        output = state.outputFilePath.invoke()!!
       )
     }
   }

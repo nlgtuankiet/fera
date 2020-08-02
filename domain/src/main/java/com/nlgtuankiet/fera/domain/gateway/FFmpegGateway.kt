@@ -9,7 +9,7 @@ interface FFmpegGateway {
   suspend fun convert(
     input: Path,
     mediaInfo: MediaInfo,
-    formatOption: FormatOption,
+    formatOption: FormatOption?,
     streamOptions: Map<Int, StreamOption>,
     output: Path
   )

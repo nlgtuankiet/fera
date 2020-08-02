@@ -2,6 +2,7 @@ package com.nlgtuankiet.fera.data
 
 import com.nlgtuankiet.fera.core.FFmpegPath
 import com.nlgtuankiet.fera.core.FFprobePath
+import com.nlgtuankiet.fera.core.ktx.launchIO
 import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.data.ffmpeg.model.FFprobeFormatOutput
 import com.nlgtuankiet.fera.data.ffmpeg.model.FFprobeStream
@@ -20,11 +21,14 @@ import com.nlgtuankiet.fera.domain.entity.Path
 import com.nlgtuankiet.fera.domain.entity.Size
 import com.nlgtuankiet.fera.domain.entity.StreamOption
 import com.nlgtuankiet.fera.domain.entity.VideoStream
+import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
 import com.nlgtuankiet.fera.domain.entity.asCodecCode
 import com.nlgtuankiet.fera.domain.entity.asDecoderCode
 import com.nlgtuankiet.fera.domain.entity.asEncoderCode
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.squareup.moshi.Moshi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
@@ -46,6 +50,15 @@ class CommandLineFFmpegGateway @Inject constructor(
 
   private val codecs: List<Codec> by lazy {
     getAllCodecs()
+  }
+
+  init {
+//    GlobalScope.launchIO {
+//      delay(1000)
+//      runCommand("${ffmpegPath}") {
+//        println(it)
+//      }
+//    }
   }
 
   private val codecsByCode by lazy {
@@ -185,17 +198,56 @@ class CommandLineFFmpegGateway @Inject constructor(
     )
   }
 
+  // TODO how to set muxer?
+  // TODO handle auto chose extension base on input if we have no formatOption
   override suspend fun convert(
     input: Path,
     mediaInfo: MediaInfo,
-    formatOption: FormatOption,
+    formatOption: FormatOption?,
     streamOptions: Map<Int, StreamOption>,
     output: Path
   ) {
     val command = buildString {
+      appendParam(ffmpegPath)
+      appendParam("-hide_banner")
+      appendParam("-y") // overwrite output file
 
+      // input file
+      appendParamPair("-i", input.value)
+
+      // format
+      if (formatOption != null) {
+        appendParamPair("-f", formatOption.extension.value)
+      }
+
+      streamOptions.forEach { (streamIndex, streamOption) ->
+        when(streamOption) {
+          is VideoStreamOption -> {
+            streamOption.rate?.let { rate ->
+              appendParamPair("-r:v:$streamIndex", rate.value)
+            }
+            streamOption.size?.let { size ->
+              appendParamPair("-s:v:${streamIndex}", "${size.width}x${size.height}")
+            }
+            streamOption.encoderCode?.let { encoder ->
+              appendParamPair("-c:v:0", encoder.value)
+            }
+            streamOption.bitrate?.let { bitrate ->
+              appendParamPair("-b:v:${streamIndex}", bitrate.value)
+            }
+          }
+        }
+      }
+
+      // output
+      appendParam(output.value)
+    }
+
+    runCommand(command) {
+      println(it)
     }
   }
+
 
   override suspend fun getMediaInfo(input: String): MediaInfo {
     val jsonResult = buildString {
@@ -238,5 +290,13 @@ class CommandLineFFmpegGateway @Inject constructor(
       ffprobePath
     }
     return runCommandToString("$program $command")
+  }
+
+  private fun StringBuilder.appendParam(param: String): StringBuilder {
+    return this.append("$param ")
+  }
+
+  private fun StringBuilder.appendParamPair(param: String, value: Any): StringBuilder {
+    return this.append("$param $value ")
   }
 }

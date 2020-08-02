@@ -9,16 +9,15 @@ import javax.inject.Inject
 
 
 class Convert @Inject constructor(
-  private val getMediaInfo: GetMediaInfo,
   private val fFmpegGateway: FFmpegGateway
 ) {
   suspend operator fun invoke(
     input: Path,
     mediaInfo: MediaInfo,
-    formatOption: FormatOption,
+    formatOption: FormatOption?,
     streamOptions: Map<Int, StreamOption>,
     output: Path,
   ) {
-
+    fFmpegGateway.convert(input, mediaInfo, formatOption, streamOptions, output)
   }
 }

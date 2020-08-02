@@ -18,10 +18,10 @@ import com.nlgtuankiet.fera.core.epoxy.view.doubleTextView
 import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.core.ktx.pxOf
 import com.nlgtuankiet.fera.core.result.ResultManager
-import com.nlgtuankiet.fera.core.result.SelectFormatResult
 import com.nlgtuankiet.fera.core.result.SelectType
 import com.nlgtuankiet.fera.core.result.SelectVideoEncoderResult
 import com.nlgtuankiet.fera.core.state
+import com.nlgtuankiet.fera.domain.entity.FormatOption
 import javax.inject.Inject
 
 @FragmentScope
@@ -86,7 +86,7 @@ class SelectFormatController @Inject constructor(
           text(entry.extension.value.withForeground(queryRegex))
           padding(spacing16)
           onClickListener { _ ->
-            sendSelectFormatResult(SelectFormatResult(entry.extension, entry.muxers.first().code))
+            sendSelectFormatResult(FormatOption(entry.extension, entry.muxers.first().code))
           }
         }
         if (!isSingleMuxer) {
@@ -98,7 +98,7 @@ class SelectFormatController @Inject constructor(
               rightText(muxerCode.withForeground(queryRegex))
               padding(spacing16)
               onClickListener { _ ->
-                sendSelectFormatResult(SelectFormatResult(entry.extension, muxer.code))
+                sendSelectFormatResult(FormatOption(entry.extension, muxer.code))
               }
             }
           }
@@ -130,11 +130,15 @@ class SelectFormatController @Inject constructor(
     }
 
     state.videoEncodecs.forEach { codec ->
+      val hasMatch = queryRegex.matches(codec.code.value)
+      if (!hasMatch) {
+        return@forEach
+      }
       val models = buildSubModels {
         val hasManyEncoder = codec.encoders?.size != 1
         headline6TextView {
           id(codec.code.value)
-          text(codec.code.value)
+          text(codec.code.value.withForeground(queryRegex))
           padding(spacing16)
           onClickListener { _ ->
             sendSelectVideoDecoderResult(
@@ -188,7 +192,7 @@ class SelectFormatController @Inject constructor(
     controller.popBackStack()
   }
 
-  private fun sendSelectFormatResult(result: SelectFormatResult) {
+  private fun sendSelectFormatResult(result: FormatOption) {
     val controller = fragment.requireView().findNavController()
     resultManager.sendResult(args.requestCode, result)
     controller.popBackStack()

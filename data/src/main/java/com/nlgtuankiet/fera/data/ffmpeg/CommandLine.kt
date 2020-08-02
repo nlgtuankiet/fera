@@ -23,6 +23,7 @@ suspend fun runCommand(
   command: String,
   onProcess: (String) -> Unit
 ): Unit = suspendCancellableCoroutine { continuation ->
+  println("run command: $command")
   val error = StringBuilder()
   val args = command.splitToSequence(" ")
     .map { it.trim() }
