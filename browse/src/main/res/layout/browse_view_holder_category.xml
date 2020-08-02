@@ -14,9 +14,14 @@
       name="title"
       type="String" />
 
+    <variable
+      name="onClickListener"
+      type="android.view.View.OnClickListener" />
+
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
+    android:onClick="@{onClickListener}"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:padding="16dp">

@@ -52,9 +52,15 @@
     <variable
       name="rightPlayIsVisible"
       type="Boolean" />
+
+    <variable
+      name="onClickListener"
+      type="android.view.View.OnClickListener" />
+
   </data>
 
   <com.google.android.material.card.MaterialCardView
+    android:onClick="@{onClickListener}"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:foreground="?attr/selectableItemBackground"

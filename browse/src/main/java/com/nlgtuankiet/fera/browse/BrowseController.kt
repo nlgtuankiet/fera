@@ -3,6 +3,7 @@ package com.nlgtuankiet.fera.browse
 import android.content.Context
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.airbnb.mvrx.withState
+import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.Retained
 import com.nlgtuankiet.fera.core.epoxy.BuildInstruction
 import com.nlgtuankiet.fera.core.epoxy.Spacing
@@ -17,16 +18,18 @@ import com.nlgtuankiet.fera.core.ktx.second
 import com.nlgtuankiet.fera.core.recyclerview.snapCarousel
 import com.nlgtuankiet.fera.domain.entity.MediaFile
 import com.nlgtuankiet.fera.domain.entity.MediaType
+import com.nlgtuankiet.fera.domain.entity.parent
 import javax.inject.Inject
 import javax.inject.Provider
 
 @Suppress("NOTHING_TO_INLINE")
+@FragmentScope
 class BrowseController @Inject constructor(
-  @Retained private val viewModelProvider: Provider<BrowseViewModel>,
-  private val context: Context
+  @Retained private val viewModel: BrowseViewModel,
+  private val fragment: BrowseFragment,
+  private val navigator: BrowseNavigator,
+  private val context: Context,
 ) : AsyncEpoxyController() {
-  private val viewModel: BrowseViewModel
-    get() = viewModelProvider.get()
 
   private val blocks = listOf(
     ::buildRecent,
@@ -35,7 +38,7 @@ class BrowseController @Inject constructor(
   )
 
   override fun buildModels() {
-    val state = withState(viewModelProvider.get()) { it }
+    val state = withState(viewModel) { it }
     for (block in blocks) {
       val nextInstruction = block.invoke(state)
       when (nextInstruction) {
@@ -65,9 +68,7 @@ class BrowseController @Inject constructor(
       if (index != lastIndex) {
         horizontalDividerView {
           id(storage.hashCode())
-//          padding(Spacing(start = context.pxOf(16 + 24 + 16)))
           height(context.pxOf(1))
-//          color(context.colorOf(R.color.browse_color_on_surface_a12))
         }
       }
     }
@@ -100,13 +101,14 @@ class BrowseController @Inject constructor(
             MediaType.Video -> "Videos"
           }
         )
+        onClickListener { _ ->
+          navigator.toBrowseType(mediaType)
+        }
       }
       if (index != lastIndex) {
         horizontalDividerView {
           id(mediaType.hashCode())
-//          padding(Spacing(start = context.pxOf(16 + 24 + 16)))
           height(context.pxOf(1))
-//          color(context.colorOf(R.color.browse_color_on_surface_a12))
         }
       }
     }
@@ -117,7 +119,7 @@ class BrowseController @Inject constructor(
     return if (type == MediaType.Audio) {
       R.drawable.browse_outline_audiotrack_purple_24
     } else {
-      path.toString()
+      path.value
     }
   }
 
@@ -166,6 +168,9 @@ class BrowseController @Inject constructor(
           leftText(leftText)
           rightText(rightText)
           type(type)
+          onClickListener { _ ->
+            navigator.toBrowseType(firstMedia.type, firstMedia.path.parent)
+          }
         }
       } else {
         val secondMedia = group.medias.second()
@@ -185,6 +190,10 @@ class BrowseController @Inject constructor(
           leftText(leftText)
           rightText(rightText)
           type(type)
+
+          onClickListener { _ ->
+            navigator.toBrowseType(firstMedia.type, firstMedia.path.parent)
+          }
         }
       }
     }

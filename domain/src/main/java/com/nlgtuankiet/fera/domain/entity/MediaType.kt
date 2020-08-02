@@ -6,6 +6,14 @@ enum class MediaType {
   Audio,
 }
 
+fun MediaType.asString(): String {
+  return when(this) {
+    MediaType.Video -> "video"
+    MediaType.Image -> "image"
+    MediaType.Audio -> "audio"
+  }
+}
+
 fun String.asMediaType(): MediaType {
   return when (this) {
     "video" -> MediaType.Video

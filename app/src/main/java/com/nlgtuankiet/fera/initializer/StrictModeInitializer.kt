@@ -39,7 +39,7 @@ fun addWhitelistStrictMode() {
     "android.content.Context.getDrawable",
     "android.graphics.",
     "com.samsung.android.knox.",
-
+    "android.content.res.TypedArray.getDrawable",
     // https://bumptech.github.io/glide/doc/placeholders.html#are-placeholders-loaded-asynchronously
     "com.bumptech.glide.load.resource.drawable.DrawableDecoderCompat.getDrawable",
   )

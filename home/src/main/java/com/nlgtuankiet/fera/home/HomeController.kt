@@ -48,6 +48,7 @@ class HomeController @Inject constructor(
         }
       models(models as List<EpoxyModel<Any>>)
       onViewMoreClick { _ ->
+        navigator.toBrowse()
       }
     }
   }

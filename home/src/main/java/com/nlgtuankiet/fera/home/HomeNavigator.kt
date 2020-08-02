@@ -17,4 +17,8 @@ class HomeNavigator @Inject constructor(
   fun toConfigure(args: ConfigureFragmentArgs) {
     navController?.navigate(R.id.configure, args.toBundle())
   }
+
+  fun toBrowse() {
+    navController?.navigate(R.id.browse)
+  }
 }

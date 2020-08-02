@@ -4,6 +4,7 @@ import androidx.annotation.Keep
 import com.nlgtuankiet.fera.core.CoreComponent
 import com.nlgtuankiet.fera.core.FragmentComponent
 import com.nlgtuankiet.fera.core.FragmentComponentFactoryProvider
+import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.Retained
 import dagger.Component
 import dagger.Module
@@ -26,7 +27,7 @@ class BrowseFragmentComponentFactoryProvider : FragmentComponentFactoryProvider 
     HomeProvision::class
   ]
 )
-@Singleton
+@FragmentScope
 interface BrowseComponent : FragmentComponent<BrowseFragment> {
   @Component.Factory
   interface Factory : FragmentComponent.Factory<BrowseFragment>
