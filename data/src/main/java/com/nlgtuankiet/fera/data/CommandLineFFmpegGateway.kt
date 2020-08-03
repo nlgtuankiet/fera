@@ -256,6 +256,7 @@ class CommandLineFFmpegGateway @Inject constructor(
           """$ffprobePath -v quiet -hide_banner -print_format json -show_format -show_streams $input"""
       ) { line ->
         append(line)
+        println(line)
       }
     }
     val jsonTrimed = jsonResult.replace("""\s+""".toRegex(), "")

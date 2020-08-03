@@ -130,7 +130,7 @@ class SelectFormatController @Inject constructor(
     }
 
     state.videoEncodecs.forEach { codec ->
-      val hasMatch = queryRegex.matches(codec.code.value)
+      val hasMatch = queryRegex.pattern.isEmpty() || queryRegex.matches(codec.code.value)
       if (!hasMatch) {
         return@forEach
       }
