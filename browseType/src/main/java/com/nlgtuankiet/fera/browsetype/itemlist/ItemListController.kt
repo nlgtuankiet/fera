@@ -4,7 +4,7 @@ import android.view.View
 import androidx.navigation.findNavController
 import com.airbnb.epoxy.AsyncEpoxyController
 import com.nlgtuankiet.fera.browsetype.BrowseTypeViewModel
-import com.nlgtuankiet.fera.browsetype.grid2ImageMedia
+import com.nlgtuankiet.fera.browsetype.view.imageMediaView
 import com.nlgtuankiet.fera.configure.ConfigureFragmentArgs
 import com.nlgtuankiet.fera.core.epoxy.FullSpan
 import com.nlgtuankiet.fera.core.epoxy.body1TextView
@@ -37,9 +37,9 @@ class ItemListController constructor(
         spanSizeOverride(FullSpan)
       }
       items.forEach {
-        grid2ImageMedia {
+        imageMediaView {
           id(it.hashCode())
-          imageSource(it.path.value)
+          mediaFile(it)
           onClickListener { view: View ->
             view.findNavController().navigate(
               com.nlgtuankiet.fera.core.R.id.configure,

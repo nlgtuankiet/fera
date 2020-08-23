@@ -8,7 +8,7 @@ import com.airbnb.mvrx.MavericksView
 import com.airbnb.mvrx.fragmentViewModel
 import com.airbnb.mvrx.withState
 import com.google.android.material.tabs.TabLayoutMediator
-import com.nlgtuankiet.fera.browsetype.databinding.BrowsetypeFragmentBinding
+import com.nlgtuankiet.fera.browsetype.databinding.BrowseTypeFragmentBinding
 import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import javax.inject.Inject
 import javax.inject.Provider
@@ -20,17 +20,17 @@ class BrowseTypeFragment @Inject constructor(
   val viewModelFactory: Provider<BrowseTypeViewModel>,
   private val getMediaInfo: GetMediaInfo,
   private val pagerAdapterFactory: BrowseTypePagerAdapter.Factory
-) : Fragment(R.layout.browsetype_fragment), MavericksView {
+) : Fragment(R.layout.browse_type_fragment), MavericksView {
 
   init {
     println("init BrowseTypeFragment")
   }
   val viewModel: BrowseTypeViewModel by fragmentViewModel()
-  private lateinit var binding: BrowsetypeFragmentBinding
+  private lateinit var binding: BrowseTypeFragmentBinding
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    binding = BrowsetypeFragmentBinding.bind(view)
+    binding = BrowseTypeFragmentBinding.bind(view)
     val pagerAdapter = pagerAdapterFactory.create(this)
     binding.pager.adapter = pagerAdapter
     TabLayoutMediator(binding.tabLayout, binding.pager) { tab, position ->
