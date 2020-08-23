@@ -89,7 +89,7 @@ ext {
     }
   }
 
-  minSdk = 21
+  ext.minSdk = 21
   ext.targetSdk = 28
   ext.vcode = 1
   ext.vname = "1.0"
@@ -157,7 +157,6 @@ ext.applyKaptConfig = applyKaptConfig
 
 def applyAndroidConfig = { handler ->
   handler.compileOptions {
-    //    coreLibraryDesugaringEnabled true
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
@@ -167,7 +166,7 @@ def applyAndroidConfig = { handler ->
   handler.compileSdkVersion 29
   handler.buildToolsVersion "29.0.3"
   handler.defaultConfig {
-    minSdkVersion minSdk
+    minSdkVersion 21
     targetSdkVersion targetSdk
     versionCode vcode
     versionName vname

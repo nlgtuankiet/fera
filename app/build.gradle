@@ -12,7 +12,6 @@ android {
     multiDexEnabled true
     applicationId "com.nlgtuankiet.fera"
     minSdkVersion minSdk
-    println "min sdk is $minSdk"
     targetSdkVersion targetSdk
     versionCode vcode
     versionName vname
