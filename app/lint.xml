@@ -13,4 +13,11 @@
   <issue id="RestrictedApi">
     <ignore path="build" />
   </issue>
+
+  <issue id="UnusedAttribute" severity="ignore" />
+  <issue id="DefaultLocale" severity="ignore" />
+  <issue id="Autofill" severity="ignore" />
+  <issue id="UnusedAttribute" severity="ignore" />
+  <issue id="UnusedAttribute" severity="ignore" />
+
 </lint>

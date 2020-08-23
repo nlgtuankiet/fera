@@ -231,7 +231,7 @@ def addAllExternalDependencies = { handler ->
   handler.api(deps.moshi) {
     exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
   }
-  handler.testImplementation("junit:junit:4.12")
+  handler.testImplementation("junit:junit:4.13")
   handler.androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
   handler.androidTestImplementation("androidx.test.ext:junit:1.1.1")
 }
