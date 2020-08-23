@@ -2,16 +2,25 @@ package com.nlgtuankiet.fera.data
 
 import com.nlgtuankiet.fera.core.FFmpegPath
 import com.nlgtuankiet.fera.core.FFprobePath
+import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.data.ffmpeg.model.FFprobeFormatOutput
+import com.nlgtuankiet.fera.data.ffmpeg.model.FFprobeStream
 import com.nlgtuankiet.fera.data.ffmpeg.runCommand
 import com.nlgtuankiet.fera.data.ffmpeg.runCommandToString
+import com.nlgtuankiet.fera.domain.entity.AudioStream
 import com.nlgtuankiet.fera.domain.entity.Codec
 import com.nlgtuankiet.fera.domain.entity.CodecCode
 import com.nlgtuankiet.fera.domain.entity.CodecType
 import com.nlgtuankiet.fera.domain.entity.DecoderCode
 import com.nlgtuankiet.fera.domain.entity.EncoderCode
+import com.nlgtuankiet.fera.domain.entity.FormatOption
+import com.nlgtuankiet.fera.domain.entity.MediaFormat
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
-import com.nlgtuankiet.fera.domain.entity.Stream
+import com.nlgtuankiet.fera.domain.entity.Path
+import com.nlgtuankiet.fera.domain.entity.Size
+import com.nlgtuankiet.fera.domain.entity.StreamOption
+import com.nlgtuankiet.fera.domain.entity.VideoStream
+import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
 import com.nlgtuankiet.fera.domain.entity.asCodecCode
 import com.nlgtuankiet.fera.domain.entity.asDecoderCode
 import com.nlgtuankiet.fera.domain.entity.asEncoderCode
@@ -38,6 +47,15 @@ class CommandLineFFmpegGateway @Inject constructor(
 
   private val codecs: List<Codec> by lazy {
     getAllCodecs()
+  }
+
+  init {
+//    GlobalScope.launchIO {
+//      delay(1000)
+//      runCommand("${ffmpegPath}") {
+//        println(it)
+//      }
+//    }
   }
 
   private val codecsByCode by lazy {
@@ -128,9 +146,8 @@ class CommandLineFFmpegGateway @Inject constructor(
 
       val codec = Codec(
         code = CodecCode(groups[6].trim()),
-        encoder = encoders.ifEmpty { null },
-        decoder = decoders.ifEmpty { null },
-        description = groups[7].trim(),
+        encoders = encoders.ifEmpty { null },
+        decoders = decoders.ifEmpty { null },
         canDecode = groups[0] == "D",
         canEncode = groups[1] == "E",
         type = codeType,
@@ -143,6 +160,91 @@ class CommandLineFFmpegGateway @Inject constructor(
     return codecs
   }
 
+  private fun FFprobeStream.asVideoStream(): VideoStream {
+    return VideoStream(
+      index = index,
+      codec = codecsByCode.getValue(codecName.notNull().asCodecCode()),
+      codecLongName = codecLongName,
+      profile = profile,
+      codecTimeBase = codecTimeBase,
+      codecTag = codecTag,
+      codecTagString = codecTagString,
+      size = Size(width = codedWidth.notNull(), height = codedHeight.notNull()),
+      ratio = displayAspectRatio.notNull(),
+      frameRate = run {
+        val rates = avgFrameRate.notNull().split("/")
+        require(rates.size == 2)
+        rates[0].toDouble() / rates[1].toDouble()
+      },
+      bitRate = bitRate.notNull().toLong(),
+    )
+  }
+
+  private fun FFprobeStream.asAudioStream(): AudioStream {
+    return AudioStream(
+      index = index,
+      codec = codecsByCode.getValue(codecName.notNull().asCodecCode()),
+      codecLongName = codecLongName,
+      profile = profile,
+      codecTimeBase = codecTimeBase,
+      codecTag = codecTag,
+      codecTagString = codecTagString,
+      sampleRate = sampleRate.notNull().toLong(),
+      channels = channels.notNull(),
+      bitRate = bitRate.notNull().toLong(),
+    )
+  }
+
+  // TODO how to set muxer?
+  // TODO handle auto chose extension base on input if we have no formatOption
+  override suspend fun convert(
+    input: Path,
+    mediaInfo: MediaInfo,
+    formatOption: FormatOption?,
+    streamOptions: Map<Int, StreamOption>,
+    output: Path
+  ) {
+    val command = buildString {
+      appendParam(ffmpegPath)
+      appendParam("-hide_banner")
+      appendParam("-y") // overwrite output file
+
+      // input file
+      appendParamPair("-i", input.value)
+
+      // format
+      if (formatOption != null) {
+        appendParamPair("-f", formatOption.extension.value)
+      }
+
+      streamOptions.forEach { (streamIndex, streamOption) ->
+        when (streamOption) {
+          is VideoStreamOption -> {
+            streamOption.rate?.let { rate ->
+              appendParamPair("-r:v:$streamIndex", rate.value)
+            }
+            streamOption.size?.let { size ->
+              appendParamPair("-s:v:$streamIndex", "${size.width}x${size.height}")
+            }
+            streamOption.encoderCode?.let { encoder ->
+              appendParamPair("-c:v:0", encoder.value)
+            }
+            streamOption.bitrate?.let { bitrate ->
+              appendParamPair("-b:v:$streamIndex", bitrate.value)
+            }
+          }
+        }
+      }
+
+      // output
+      appendParam(output.value)
+    }
+
+    runCommand(command) {
+      println(it)
+    }
+  }
+
   override suspend fun getMediaInfo(input: String): MediaInfo {
     val jsonResult = buildString {
       runCommand(
@@ -150,39 +252,48 @@ class CommandLineFFmpegGateway @Inject constructor(
           """$ffprobePath -v quiet -hide_banner -print_format json -show_format -show_streams $input"""
       ) { line ->
         append(line)
+        println(line)
       }
     }
-    println("json result: $jsonResult")
-
+    val jsonTrimed = jsonResult.replace("""\s+""".toRegex(), "")
+    println("getMediaInfo json: $jsonTrimed")
     @Suppress("BlockingMethodInNonBlockingContext")
     val formatOutput = moshi.adapter(FFprobeFormatOutput::class.java).fromJson(jsonResult)
     requireNotNull(formatOutput)
-    val streams = formatOutput.streams.map {
-      Stream(
-        index = it.index,
-        codec = codecsByCode.getValue(requireNotNull(it.codecName).asCodecCode()),
-        codecLongName = it.codecLongName,
-        profile = it.profile,
-        codecTimeBase = it.codecTimeBase,
-        codecTag = it.codecTag,
-        codecTagString = it.codecTagString
-      )
+    val streams = formatOutput.streams.sortedBy { it.index }.map { stream ->
+      val codec = codecsByCode.getValue(stream.codecName.notNull().asCodecCode())
+      when (codec.type) {
+        CodecType.Video -> stream.asVideoStream()
+        CodecType.Audio -> stream.asAudioStream()
+        else -> error("")
+      }
     }
+    val format = MediaFormat(
+      name = formatOutput.format.name,
+      longName = "",
+    )
 
     return MediaInfo(
-      streams = streams
+      streams = streams,
+      format = format,
     )
   }
 
   // for debug only
-  override suspend fun test(command: String, useFfmpeg: Boolean) {
+  override suspend fun runRawCommand(command: String, useFfmpeg: Boolean): String {
     val program = if (useFfmpeg) {
       ffmpegPath
     } else {
       ffprobePath
     }
-    runCommand("$program $command") {
-      println(it)
-    }
+    return runCommandToString("$program $command")
+  }
+
+  private fun StringBuilder.appendParam(param: String): StringBuilder {
+    return this.append("$param ")
+  }
+
+  private fun StringBuilder.appendParamPair(param: String, value: Any): StringBuilder {
+    return this.append("$param $value ")
   }
 }

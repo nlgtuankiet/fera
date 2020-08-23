@@ -4,11 +4,11 @@ import androidx.annotation.Keep
 import com.nlgtuankiet.fera.core.CoreComponent
 import com.nlgtuankiet.fera.core.FragmentComponent
 import com.nlgtuankiet.fera.core.FragmentComponentFactoryProvider
+import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.Retained
 import dagger.Component
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Keep
 @Suppress("unused")
@@ -26,7 +26,7 @@ class ConfigureFragmentComponentFactoryProvider : FragmentComponentFactoryProvid
     ConfigureProvision::class
   ]
 )
-@Singleton
+@FragmentScope
 interface ConfigureComponent : FragmentComponent<ConfigureFragment> {
   @Component.Factory
   interface Factory : FragmentComponent.Factory<ConfigureFragment>

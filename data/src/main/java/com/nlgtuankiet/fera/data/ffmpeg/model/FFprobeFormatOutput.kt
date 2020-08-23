@@ -6,7 +6,18 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class FFprobeFormatOutput(
   @Json(name = "streams")
-  val streams: List<FFprobeStream>
+  val streams: List<FFprobeStream>,
+  @Json(name = "format")
+  val format: FFprobeFormat,
+)
+
+@JsonClass(generateAdapter = true)
+data class FFprobeFormat(
+  @Json(name = "format_name")
+  val name: String,
+  // TODO where is it?
+//  @Json(name = "format_long_name")
+//  val longName: String
 )
 
 @JsonClass(generateAdapter = true)
@@ -64,7 +75,7 @@ data class FFprobeStream(
   @Json(name = "sample_fmt")
   val sampleFmt: String?,
   @Json(name = "sample_rate")
-  val sampleRate: Int?,
+  val sampleRate: Long?,
   @Json(name = "channels")
   val channels: Int?,
   @Json(name = "channel_layout")

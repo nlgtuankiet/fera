@@ -106,13 +106,33 @@ class CaptionTextView @JvmOverloads constructor(
   autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT,
   baseModelClass = TextBaseModel::class
 )
+class Subtitle1TextView @JvmOverloads constructor(
+  context: Context,
+  attributeSet: AttributeSet? = null,
+  defStyleAttr: Int = 0,
+) : AppCompatTextView(context.wrap(R.style.Subtitle1), attributeSet, defStyleAttr)
+
+@ModelView(
+  autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT,
+  baseModelClass = TextBaseModel::class
+)
+class Subtitle2TextView @JvmOverloads constructor(
+  context: Context,
+  attributeSet: AttributeSet? = null,
+  defStyleAttr: Int = 0,
+) : AppCompatTextView(context.wrap(R.style.Subtitle2), attributeSet, defStyleAttr)
+
+@ModelView(
+  autoLayout = ModelView.Size.WRAP_WIDTH_WRAP_HEIGHT,
+  baseModelClass = TextBaseModel::class
+)
 class OverlineTextView @JvmOverloads constructor(
   context: Context,
   attributeSet: AttributeSet? = null,
   defStyleAttr: Int = 0,
 ) : AppCompatTextView(context.wrap(R.style.Overline), attributeSet, defStyleAttr)
 
-abstract class TextBaseModel<T : AppCompatTextView> : EpoxyModel<T>() {
+abstract class TextBaseModel<T : AppCompatTextView> : ViewBaseModel<T>() {
 
   @EpoxyAttribute
   var text: CharSequence? = null

@@ -9,6 +9,7 @@ ext {
     "home",
     "browse",
     "browseType",
+    "selectFormat",
     "configure",
     "data",
     "image",
@@ -88,7 +89,7 @@ ext {
     }
   }
 
-  minSdk = 21
+  ext.minSdk = 21
   ext.targetSdk = 28
   ext.vcode = 1
   ext.vname = "1.0"
@@ -155,13 +156,7 @@ def applyKaptConfig = { handler ->
 ext.applyKaptConfig = applyKaptConfig
 
 def applyAndroidConfig = { handler ->
-  if (project.name != "image") {
-    handler.dataBinding {
-      enabled = true
-    }
-  }
   handler.compileOptions {
-    //    coreLibraryDesugaringEnabled true
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
   }
@@ -171,7 +166,7 @@ def applyAndroidConfig = { handler ->
   handler.compileSdkVersion 29
   handler.buildToolsVersion "29.0.3"
   handler.defaultConfig {
-    minSdkVersion minSdk
+    minSdkVersion 21
     targetSdkVersion targetSdk
     versionCode vcode
     versionName vname
@@ -227,7 +222,6 @@ def addAllExternalDependencies = { handler ->
     'app.cash.contour:contour:0.1.7',
     'com.google.android.material:material:1.3.0-alpha01',
     'androidx.lifecycle:lifecycle-process:2.3.0-alpha04',
-    'com.airbnb.android:epoxy-databinding:2.6.0',
     'com.github.bumptech.glide:glide:4.11.0',
     "org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}",
     // TODO how to include only 1 jdk?
@@ -237,7 +231,7 @@ def addAllExternalDependencies = { handler ->
   handler.api(deps.moshi) {
     exclude group: "org.jetbrains.kotlin", module: "kotlin-reflect"
   }
-  handler.testImplementation("junit:junit:4.12")
+  handler.testImplementation("junit:junit:4.13")
   handler.androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
   handler.androidTestImplementation("androidx.test.ext:junit:1.1.1")
 }

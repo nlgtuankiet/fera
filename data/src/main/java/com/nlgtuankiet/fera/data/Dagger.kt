@@ -13,6 +13,7 @@ import com.nlgtuankiet.fera.domain.Log
 import com.nlgtuankiet.fera.domain.entity.asPath
 import com.nlgtuankiet.fera.domain.entity.parent
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
+import com.nlgtuankiet.fera.domain.gateway.FileGateway
 import com.nlgtuankiet.fera.domain.gateway.TimeGateway
 import com.nlgtuankiet.fera.domain.repository.MediaFileRepository
 import com.nlgtuankiet.fera.domain.repository.StorageRepository
@@ -53,6 +54,9 @@ interface DataComponentImpl : DataComponent {
 interface DataBindingModule {
   @Binds
   fun ffmpegGateway(impl: CommandLineFFmpegGateway): FFmpegGateway
+
+  @Binds
+  fun fileGateway(impl: FileGatewayImpl): FileGateway
 
   @Binds
   @ExperimentalCoroutinesApi

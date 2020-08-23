@@ -22,3 +22,4 @@
 */build
 /app/src/main/jniLibs/
 data/src/main/jniLibs
+/sample.json
