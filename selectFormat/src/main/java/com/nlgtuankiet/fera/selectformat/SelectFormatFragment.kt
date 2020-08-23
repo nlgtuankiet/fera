@@ -7,19 +7,15 @@ import android.widget.ImageView
 import androidx.core.view.isInvisible
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.recyclerview.widget.RecyclerView
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.mvrx.MavericksView
-import com.airbnb.mvrx.MvRxViewModelFactory
 import com.airbnb.mvrx.fragmentViewModel
 import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.ktx.addOnScrollStateChangeListener
 import com.nlgtuankiet.fera.core.ktx.hideKeyboard
-import com.nlgtuankiet.fera.core.result.ResultManager
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 
 @FragmentScope
 class SelectFormatFragment @Inject constructor(

@@ -2,12 +2,9 @@ package com.nlgtuankiet.fera.core.result
 
 import kotlinx.coroutines.CancellableContinuation
 import kotlinx.coroutines.suspendCancellableCoroutine
-import okhttp3.internal.SuppressSignatureCheck
 import javax.inject.Inject
 import javax.inject.Singleton
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 @Singleton
 class ResultManager @Inject constructor() {
@@ -36,5 +33,4 @@ class ResultManager @Inject constructor() {
     @Suppress("UNCHECKED_CAST")
     return request as? CancellableContinuation<T>
   }
-
 }

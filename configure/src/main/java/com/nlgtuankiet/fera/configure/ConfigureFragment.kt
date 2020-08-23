@@ -11,10 +11,8 @@ import com.nlgtuankiet.fera.configure.databinding.ConfigureFragmentBinding
 import com.nlgtuankiet.fera.core.FragmentScope
 import com.nlgtuankiet.fera.core.ktx.addOnScrollStateChangeListener
 import com.nlgtuankiet.fera.core.ktx.hideKeyboard
-import com.nlgtuankiet.fera.domain.interactor.GetMediaInfo
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 
 @Keep
 @FragmentScope

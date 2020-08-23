@@ -113,7 +113,6 @@ class BrowseController @Inject constructor(
     return BuildInstruction.Continue
   }
 
-
   private fun buildRecent(state: BrowseState): BuildInstruction {
     val mediaGroup = state.mediaGroups.invoke().orEmpty()
     val models = buildSubModels {

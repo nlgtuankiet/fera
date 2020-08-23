@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.inputmethod.EditorInfo
 import androidx.core.util.rangeTo
 import com.airbnb.epoxy.AsyncEpoxyController
-import com.airbnb.epoxy.EpoxyController
 import com.airbnb.mvrx.Fail
 import com.airbnb.mvrx.withState
 import com.nlgtuankiet.fera.core.FragmentScope
@@ -12,11 +11,8 @@ import com.nlgtuankiet.fera.core.OneGbps
 import com.nlgtuankiet.fera.core.OneKbps
 import com.nlgtuankiet.fera.core.OneMbps
 import com.nlgtuankiet.fera.core.Retained
-import com.nlgtuankiet.fera.core.epoxy.Spacing
 import com.nlgtuankiet.fera.core.epoxy.body1TextView
 import com.nlgtuankiet.fera.core.epoxy.buildSubModels
-import com.nlgtuankiet.fera.core.epoxy.headline1TextView
-import com.nlgtuankiet.fera.core.epoxy.headline5TextView
 import com.nlgtuankiet.fera.core.epoxy.headline6TextView
 import com.nlgtuankiet.fera.core.epoxy.horizontalDividerView
 import com.nlgtuankiet.fera.core.epoxy.spacingOf
@@ -29,21 +25,14 @@ import com.nlgtuankiet.fera.core.ktx.colorOf
 import com.nlgtuankiet.fera.core.ktx.hideKeyboard
 import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.core.ktx.pxOf
-import com.nlgtuankiet.fera.core.result.createNewRequestCode
 import com.nlgtuankiet.fera.domain.entity.AudioStream
-import com.nlgtuankiet.fera.domain.entity.CodecType
 import com.nlgtuankiet.fera.domain.entity.Codecs
 import com.nlgtuankiet.fera.domain.entity.MediaInfo
 import com.nlgtuankiet.fera.domain.entity.VideoStream
 import com.nlgtuankiet.fera.domain.entity.VideoStreamOption
 import com.nlgtuankiet.fera.domain.entity.extension
 import com.nlgtuankiet.fera.domain.entity.name
-import com.nlgtuankiet.fera.domain.entity.pathOf
-import com.nlgtuankiet.fera.selectformat.SelectFormatFragmentArgs
-import java.util.UUID
 import javax.inject.Inject
-import javax.inject.Provider
-import javax.inject.Singleton
 
 @FragmentScope
 class ConfigureController @Inject constructor(
@@ -96,7 +85,7 @@ class ConfigureController @Inject constructor(
   }
 
   private fun getBitRateText(rate: Long): String {
-    return when(rate) {
+    return when (rate) {
       in 0 until OneKbps -> "$rate bps"
       OneKbps -> "1 Kbps"
       in OneKbps until OneMbps -> "%.1f Kbps".format(rate.toDouble() / OneKbps)
@@ -126,7 +115,6 @@ class ConfigureController @Inject constructor(
         // codec
         val selectedOption = state.streamOptions[streamIndex] as? VideoStreamOption
         val selectedEncoder = selectedOption?.encoderCode
-
 
         doubleTextView {
           id("codec $streamIndex")
@@ -199,14 +187,14 @@ class ConfigureController @Inject constructor(
 
         // codec
         doubleTextView {
-          id("codec of ${streamIndex}}")
+          id("codec of $streamIndex}")
           leftText("Codec")
           rightText(stream.codec.code.value)
           padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
         }
 
         doubleTextView {
-          id("sample rate of ${streamIndex}}")
+          id("sample rate of $streamIndex}")
           leftText("Sample rate")
           // TODO improve KHz
           rightText("${stream.sampleRate} Hz")
@@ -214,14 +202,14 @@ class ConfigureController @Inject constructor(
         }
 
         doubleTextView {
-          id("channels of ${streamIndex}}")
+          id("channels of $streamIndex}")
           leftText("Channels")
           rightText(stream.channels.toString())
           padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))
         }
 
         doubleTextView {
-          id("bitrate of ${streamIndex}}")
+          id("bitrate of $streamIndex}")
           leftText("Bitrate")
           rightText(getBitRateText(stream.bitRate))
           padding(spacingOf(context = context, start = 16, top = 16, end = 16, bottom = 16))

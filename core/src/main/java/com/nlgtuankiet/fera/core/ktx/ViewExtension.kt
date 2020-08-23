@@ -8,7 +8,6 @@ import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 
-
 fun <T : View> View.bind(@IdRes id: Int, initializer: ((T) -> Unit)? = null): Lazy<T> =
   lazy(LazyThreadSafetyMode.NONE) {
     val view = findViewById<T>(id).notNull()

@@ -4,7 +4,6 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.doOnLayout
 import androidx.core.view.updateLayoutParams
 import androidx.core.view.updateMargins
@@ -63,5 +62,4 @@ class QuadItemCardView @JvmOverloads constructor(
   fun setOnViewMoreClickListener(l: View.OnClickListener?) {
     action.setOnClickListener(l)
   }
-
 }

@@ -11,7 +11,6 @@ import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.nlgtuankiet.fera.core.epoxy.ViewBaseModel
 
-
 @ModelView(
   autoLayout = ModelView.Size.MATCH_WIDTH_WRAP_HEIGHT,
   baseModelClass = ViewBaseModel::class
@@ -19,12 +18,12 @@ import com.nlgtuankiet.fera.core.epoxy.ViewBaseModel
 class EditText @JvmOverloads constructor(
   context: Context,
   attributeSet: AttributeSet? = null
-): AppCompatEditText(context, attributeSet) {
+) : AppCompatEditText(context, attributeSet) {
   init {
     isFocusable = true
     isFocusableInTouchMode = true
   }
-  
+
   @ModelProp
   fun setContent(value: String) {
     if (!hasFocus()) {
@@ -52,7 +51,6 @@ class EditText @JvmOverloads constructor(
 
   private val onTextChangeWithFocusWatcher = object : TextWatcher {
     override fun afterTextChanged(s: Editable?) {
-
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -62,7 +60,6 @@ class EditText @JvmOverloads constructor(
       if (this@EditText.hasFocus()) {
         onTextChangeWithFocusListener?.invoke(s?.toString() ?: "")
       }
-
     }
   }
 
@@ -75,5 +72,4 @@ class EditText @JvmOverloads constructor(
       addTextChangedListener(onTextChangeWithFocusWatcher)
     }
   }
-  
 }

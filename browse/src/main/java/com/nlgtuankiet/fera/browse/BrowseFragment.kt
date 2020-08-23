@@ -16,7 +16,6 @@ import java.io.File
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Provider
-import javax.inject.Singleton
 
 @Keep
 @FragmentScope

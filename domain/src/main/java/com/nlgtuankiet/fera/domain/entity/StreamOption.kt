@@ -15,13 +15,12 @@ data class VideoStreamOption(
   val bitrate: Bit? = null,
 ) : StreamOption {
   override fun isEmpty(): Boolean {
-    return rate == null
-        && size == null
-        && encoderCode == null
-        && bitrate == null
+    return rate == null &&
+      size == null &&
+      encoderCode == null &&
+      bitrate == null
   }
 }
-
 
 interface StreamOption {
   fun isEmpty(): Boolean

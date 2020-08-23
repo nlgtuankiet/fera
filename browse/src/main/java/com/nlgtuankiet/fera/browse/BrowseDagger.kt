@@ -9,7 +9,6 @@ import com.nlgtuankiet.fera.core.Retained
 import dagger.Component
 import dagger.Module
 import dagger.Provides
-import javax.inject.Singleton
 
 @Keep
 @Suppress("unused")

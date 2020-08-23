@@ -7,7 +7,6 @@ import com.nlgtuankiet.fera.domain.entity.StreamOption
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import javax.inject.Inject
 
-
 class Convert @Inject constructor(
   private val fFmpegGateway: FFmpegGateway
 ) {

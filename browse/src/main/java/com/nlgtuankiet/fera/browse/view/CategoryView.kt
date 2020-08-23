@@ -21,7 +21,7 @@ import com.nlgtuankiet.fera.core.ktx.pxOf
 class CategoryView @JvmOverloads constructor(
   context: Context,
   attributeSet: AttributeSet? = null
-): ConstraintLayout(context, attributeSet) {
+) : ConstraintLayout(context, attributeSet) {
   private val icon by bind<ImageView>(R.id.icon)
   private val title by bind<TextView>(R.id.title)
 

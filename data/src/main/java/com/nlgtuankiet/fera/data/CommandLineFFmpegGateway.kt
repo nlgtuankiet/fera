@@ -2,7 +2,6 @@ package com.nlgtuankiet.fera.data
 
 import com.nlgtuankiet.fera.core.FFmpegPath
 import com.nlgtuankiet.fera.core.FFprobePath
-import com.nlgtuankiet.fera.core.ktx.launchIO
 import com.nlgtuankiet.fera.core.ktx.notNull
 import com.nlgtuankiet.fera.data.ffmpeg.model.FFprobeFormatOutput
 import com.nlgtuankiet.fera.data.ffmpeg.model.FFprobeStream
@@ -27,8 +26,6 @@ import com.nlgtuankiet.fera.domain.entity.asDecoderCode
 import com.nlgtuankiet.fera.domain.entity.asEncoderCode
 import com.nlgtuankiet.fera.domain.gateway.FFmpegGateway
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Provider
@@ -221,19 +218,19 @@ class CommandLineFFmpegGateway @Inject constructor(
       }
 
       streamOptions.forEach { (streamIndex, streamOption) ->
-        when(streamOption) {
+        when (streamOption) {
           is VideoStreamOption -> {
             streamOption.rate?.let { rate ->
               appendParamPair("-r:v:$streamIndex", rate.value)
             }
             streamOption.size?.let { size ->
-              appendParamPair("-s:v:${streamIndex}", "${size.width}x${size.height}")
+              appendParamPair("-s:v:$streamIndex", "${size.width}x${size.height}")
             }
             streamOption.encoderCode?.let { encoder ->
               appendParamPair("-c:v:0", encoder.value)
             }
             streamOption.bitrate?.let { bitrate ->
-              appendParamPair("-b:v:${streamIndex}", bitrate.value)
+              appendParamPair("-b:v:$streamIndex", bitrate.value)
             }
           }
         }
@@ -248,7 +245,6 @@ class CommandLineFFmpegGateway @Inject constructor(
     }
   }
 
-
   override suspend fun getMediaInfo(input: String): MediaInfo {
     val jsonResult = buildString {
       runCommand(
@@ -260,15 +256,15 @@ class CommandLineFFmpegGateway @Inject constructor(
       }
     }
     val jsonTrimed = jsonResult.replace("""\s+""".toRegex(), "")
-    println("getMediaInfo json: ${jsonTrimed}")
+    println("getMediaInfo json: $jsonTrimed")
     @Suppress("BlockingMethodInNonBlockingContext")
     val formatOutput = moshi.adapter(FFprobeFormatOutput::class.java).fromJson(jsonResult)
     requireNotNull(formatOutput)
     val streams = formatOutput.streams.sortedBy { it.index }.map { stream ->
       val codec = codecsByCode.getValue(stream.codecName.notNull().asCodecCode())
-      when(codec.type) {
+      when (codec.type) {
         CodecType.Video -> stream.asVideoStream()
-        CodecType.Audio-> stream.asAudioStream()
+        CodecType.Audio -> stream.asAudioStream()
         else -> error("")
       }
     }

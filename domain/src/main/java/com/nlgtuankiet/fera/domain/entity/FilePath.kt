@@ -10,7 +10,7 @@ val Path.extension: String
 
 fun Path.append(childName: String): Path {
   require(childName.isNotBlank())
-  return pathOf("${value}/$childName")
+  return pathOf("$value/$childName")
 }
 
 val Path.name: String

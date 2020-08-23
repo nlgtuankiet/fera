@@ -12,7 +12,7 @@ data class VideoStream(
   val ratio: String,
   val frameRate: Double,
   val bitRate: Long,
-): Stream
+) : Stream
 
 data class AudioStream(
   override val index: Int,
@@ -25,7 +25,7 @@ data class AudioStream(
   val sampleRate: Long,
   val channels: Int,
   val bitRate: Long
-): Stream
+) : Stream
 
 interface Stream {
   val index: Int

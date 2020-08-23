@@ -2,7 +2,6 @@ package com.nlgtuankiet.fera.core.epoxy.view
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.Button
 import com.airbnb.epoxy.ModelProp
 import com.airbnb.epoxy.ModelView
 import com.google.android.material.button.MaterialButton
@@ -14,7 +13,7 @@ import com.nlgtuankiet.fera.core.epoxy.ViewBaseModel
 )
 class Button @JvmOverloads constructor(
   context: Context,
-   attributeSet: AttributeSet? = null
+  attributeSet: AttributeSet? = null
 ) : MaterialButton(context, attributeSet) {
 
   @ModelProp

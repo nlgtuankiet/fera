@@ -3,7 +3,6 @@ package com.nlgtuankiet.fera.core.epoxy.view
 import android.content.Context
 import android.util.AttributeSet
 import android.view.View
-import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.EpoxyModel
 import com.airbnb.epoxy.EpoxyRecyclerView
 import com.airbnb.epoxy.ModelProp

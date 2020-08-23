@@ -1,7 +1,6 @@
 package com.nlgtuankiet.fera.home
 
 import androidx.navigation.NavController
-import androidx.navigation.Navigation
 import androidx.navigation.findNavController
 import com.nlgtuankiet.fera.configure.ConfigureFragmentArgs
 import com.nlgtuankiet.fera.core.R

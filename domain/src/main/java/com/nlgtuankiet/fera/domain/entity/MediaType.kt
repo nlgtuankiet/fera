@@ -7,7 +7,7 @@ enum class MediaType {
 }
 
 fun MediaType.asString(): String {
-  return when(this) {
+  return when (this) {
     MediaType.Video -> "video"
     MediaType.Image -> "image"
     MediaType.Audio -> "audio"

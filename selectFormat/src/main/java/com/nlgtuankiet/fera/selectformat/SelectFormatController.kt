@@ -71,8 +71,8 @@ class SelectFormatController @Inject constructor(
         if (isSingleMuxer) {
           entry.extension.value.contains(queryRegex)
         } else {
-          entry.extension.value.contains(queryRegex)
-              || entry.muxers.any { it.code.value.contains(queryRegex) }
+          entry.extension.value.contains(queryRegex) ||
+            entry.muxers.any { it.code.value.contains(queryRegex) }
         }
       }
 
@@ -109,7 +109,6 @@ class SelectFormatController @Inject constructor(
         id(entry.extension.value)
         models(models)
         onClickListener { _ ->
-
         }
       }
 

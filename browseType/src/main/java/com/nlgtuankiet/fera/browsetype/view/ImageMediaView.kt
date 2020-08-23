@@ -17,7 +17,7 @@ import com.nlgtuankiet.fera.domain.entity.MediaFile
 class ImageMediaView @JvmOverloads constructor(
   context: Context,
   attributeSet: AttributeSet? = null
-): ConstraintLayout(context, attributeSet) {
+) : ConstraintLayout(context, attributeSet) {
   private val image by bind<ImageView>(R.id.image)
 
   init {
@@ -27,7 +27,6 @@ class ImageMediaView @JvmOverloads constructor(
   @ModelProp
   fun setMediaFile(mediaFile: MediaFile) {
     image.imageLoad(mediaFile.path.value) {
-
     }
   }
 

@@ -5,7 +5,6 @@ import android.util.AttributeSet
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isGone
 import com.airbnb.epoxy.CallbackProp
 import com.airbnb.epoxy.ModelProp
