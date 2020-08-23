@@ -15,7 +15,6 @@ import com.nlgtuankiet.fera.core.image.imageLoad
 
 @BindingAdapter(value = ["source", "option"], requireAll = false)
 fun setSource(imageView: ImageView, source: Any, option: RequestOption? = null) {
-  println("load2 $source $option")
   imageView.imageLoad(source, option = option)
 }
 

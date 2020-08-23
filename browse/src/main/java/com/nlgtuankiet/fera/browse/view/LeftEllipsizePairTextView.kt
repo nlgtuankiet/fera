@@ -95,12 +95,12 @@ class LeftEllipsizePairTextView @JvmOverloads constructor(
   }
 
   @Suppress("unused")
-  fun setRightText(text: String) {
+  fun setRightText(text: CharSequence) {
     rightTextView.text = text
   }
 
   @Suppress("unused")
-  fun setLeftText(text: String) {
+  fun setLeftText(text: CharSequence) {
     leftTextView.text = text
   }
 }
