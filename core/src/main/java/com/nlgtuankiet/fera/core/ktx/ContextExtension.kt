@@ -19,9 +19,7 @@ fun Context.pxOf(@Dimension(unit = Dimension.DP) value: Int): Int {
     TypedValue.COMPLEX_UNIT_DIP,
     value.toFloat(),
     resources.displayMetrics
-  ).toInt().also {
-    println("$value dp is $it px")
-  }
+  ).toInt()
 }
 
 fun Context.colorOf(@ColorRes value: Int): Int {

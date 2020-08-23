@@ -1,8 +1,10 @@
 package com.nlgtuankiet.fera.core.ktx
 
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.IdRes
+import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.recyclerview.widget.RecyclerView
 
@@ -18,6 +20,10 @@ fun View.showKeyboard() {
   val imm: InputMethodManager = getSystemService(context, InputMethodManager::class.java)
     .notNull()
   imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
+}
+
+fun ViewGroup.inflate(@LayoutRes resource: Int) {
+  View.inflate(this.context, resource, this)
 }
 
 fun View.hideKeyboard() {
